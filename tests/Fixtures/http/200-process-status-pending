@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Content-Type: application/vnd.retailer.v3+json
+X-RateLimit-Limit: 10
+X-RateLimit-Reset: 1539261914
+X-RateLimit-Remaining: 2
+
+{
+  "id" : 1,
+  "entityId" : "555551",
+  "eventType" : "CONFIRM_SHIPMENT",
+  "description" : "This is a mocked process status.",
+  "status" : "PENDING",
+  "createTimestamp" : "2019-07-23T16:59:39.018+02:00",
+  "links" : [ {
+    "rel" : "self",
+    "href" : "https://api.bol.com/retailer-demo/process-status/1",
+    "method" : "GET"
+  } ]
+}

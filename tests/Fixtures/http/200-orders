@@ -1,0 +1,32 @@
+HTTP/1.1 200 OK
+Content-Type: application/vnd.retailer.v3+json
+X-RateLimit-Limit: 10
+X-RateLimit-Reset: 1539261914
+X-RateLimit-Remaining: 2
+
+{
+  "orders" : [ {
+    "orderId" : "1043946570",
+    "dateTimeOrderPlaced" : "2019-04-29T16:18:21+02:00",
+    "orderItems" : [ {
+      "orderItemId" : "6042823871",
+      "ean" : "8785075035214",
+      "cancelRequest" : false,
+      "quantity" : 3
+    } ]
+  }, {
+    "orderId" : "1042831430",
+    "dateTimeOrderPlaced" : "2019-04-20T10:58:39+02:00",
+    "orderItems" : [ {
+      "orderItemId" : "6107331382",
+      "ean" : "8712626055143",
+      "cancelRequest" : false,
+      "quantity" : 1
+    }, {
+      "orderItemId" : "6107331383",
+      "ean" : "8804269223123",
+      "cancelRequest" : false,
+      "quantity" : 1
+    } ]
+  } ]
+}

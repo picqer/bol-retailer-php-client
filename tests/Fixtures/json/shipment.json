@@ -1,0 +1,34 @@
+{
+    "shipmentId" : 953992381,
+    "shipmentDate" : "2018-04-20T15:10:05+02:00",
+    "shipmentReference" : "Shipment5",
+    "shipmentItems" : [ {
+        "orderItemId" : "6107989317",
+        "orderId" : "7616247328",
+        "orderDate" : "2018-04-20T10:58:39+02:00",
+        "latestDeliveryDate" : "2018-04-21T00:00:00+02:00",
+        "ean" : "8718526069334",
+        "title" : "Star Wars - Nappy Star wars T-shirt - XL",
+        "quantity" : 1,
+        "offerPrice" : 25.0,
+        "offerCondition" : "NEW",
+        "offerReference" : "Test4",
+        "fulfilmentMethod" : "FBB"
+    } ],
+    "transport" : {
+        "transportId" : 356972369,
+        "transporterCode" : "TNT",
+        "trackAndTrace" : "3SCOLD1234567"
+    },
+    "customerDetails" : {
+        "salutationCode" : "01",
+        "firstName" : "Chewbakka",
+        "surname" : "Wookiee",
+        "streetName" : "Kashyyykstraat",
+        "houseNumber" : "100",
+        "zipCode" : "3528BJ",
+        "city" : "Utrecht",
+        "countryCode" : "NL",
+        "email" : "2awq74thj24b7rsxqubtvl3v3efq66@verkopen.test2.bol.com"
+    }
+}

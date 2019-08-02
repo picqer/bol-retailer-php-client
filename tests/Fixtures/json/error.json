@@ -1,0 +1,14 @@
+{
+    "type": "http://api.bol.com/problems",
+    "title": "Error validating request body. Consult the bol.com API documentation for more information.",
+    "status": "40X",
+    "detail": "Bad request",
+    "host": "Instance-001",
+    "instance": "https://api.bol.com//retailer/resource",
+    "violations": [
+        {
+            "name": "exampleValue",
+            "reason": "Request contains invalid value(s): 'INVALID', allowed values: ALLOWED_VALUE1, ALLOWED_VALUE2."
+        }
+    ]
+}

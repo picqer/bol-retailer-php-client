@@ -1,0 +1,53 @@
+HTTP/1.1 200 OK
+Content-Type: application/vnd.retailer.v3+json
+X-RateLimit-Limit: 10
+X-RateLimit-Reset: 1539261914
+X-RateLimit-Remaining: 2
+
+{
+  "shipments" : [ {
+    "shipmentId" : 914587795,
+    "shipmentDate" : "2018-04-20T17:20:11+02:00",
+    "shipmentReference" : "Shipment1",
+    "shipmentItems" : [ {
+      "orderItemId" : "6107434013",
+      "orderId" : "7616222250"
+    } ],
+    "transport" : {
+      "transportId" : 358612589
+    }
+  }, {
+    "shipmentId" : 953266576,
+    "shipmentDate" : "2018-04-20T17:10:19+02:00",
+    "shipmentReference" : "Shipment2",
+    "shipmentItems" : [ {
+      "orderItemId" : "6107331383",
+      "orderId" : "7616222700"
+    } ],
+    "transport" : {
+      "transportId" : 356988715
+    }
+  }, {
+    "shipmentId" : 953267579,
+    "shipmentDate" : "2018-04-20T16:46:01+02:00",
+    "shipmentReference" : "Shipment3",
+    "shipmentItems" : [ {
+      "orderItemId" : "6107432387",
+      "orderId" : "7616222700"
+    } ],
+    "transport" : {
+      "transportId" : 356988715
+    }
+  }, {
+    "shipmentId" : 953316694,
+    "shipmentDate" : "2018-04-20T07:33:11+02:00",
+    "shipmentReference" : "Shipment4",
+    "shipmentItems" : [ {
+      "orderItemId" : "6702312887",
+      "orderId" : "4616526971"
+    } ],
+    "transport" : {
+      "transportId" : 356567193
+    }
+  } ]
+}

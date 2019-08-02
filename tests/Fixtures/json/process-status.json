@@ -1,0 +1,13 @@
+{
+    "id" : 1,
+    "entityId" : "555551",
+    "eventType" : "CONFIRM_SHIPMENT",
+    "description" : "Lorem ipsum dolor sit amet.",
+    "status" : "PENDING",
+    "createTimestamp" : "2019-07-23T16:59:39.018+02:00",
+    "links" : [ {
+        "rel" : "self",
+        "href" : "https://api.bol.com/retailer-demo/process-status/1",
+        "method" : "GET"
+    } ]
+}
