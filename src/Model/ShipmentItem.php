@@ -42,21 +42,19 @@ class ShipmentItem extends AbstractModel
 
     protected function getOrderDate(): ?DateTime
     {
-        $parsedTimestamp = DateTime::createFromFormat(
-            DateTime::ATOM,
-            $this->data['orderDate'] ?? null
-        );
+        if (empty($this->data['orderDate'])) {
+            return null;
+        }
 
-        return $parsedTimestamp instanceof DateTime ? $parsedTimestamp : null;
+        return DateTime::createFromFormat(DateTime::ATOM, $this->data['orderDate']);
     }
 
     protected function getLatestDeliveryDate(): ?DateTime
     {
-        $parsedTimestamp = DateTime::createFromFormat(
-            DateTime::ATOM,
-            $this->data['latestDeliveryDate'] ?? null
-        );
+        if (empty($this->data['latestDeliveryDate'])) {
+            return null;
+        }
 
-        return $parsedTimestamp instanceof DateTime ? $parsedTimestamp : null;
+        return DateTime::createFromFormat(DateTime::ATOM, $this->data['latestDeliveryDate']);
     }
 }

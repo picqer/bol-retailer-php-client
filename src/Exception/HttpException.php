@@ -22,22 +22,42 @@ class HttpException extends \RuntimeException
         $this->error = $error;
     }
 
+    /**
+     * Get the type of the HTTP error.
+     *
+     * @return mixed
+     */
     public function getType()
     {
         return $this->error['type'];
     }
 
+    /**
+     * Get the status code of the HTTP error.
+     *
+     * @return mixed
+     */
     public function getStatus()
     {
         return $this->error['status'];
     }
 
+    /**
+     * Get the detail of the HTTP error.
+     *
+     * @return mixed
+     */
     public function getDetail()
     {
         return $this->error['detail'];
     }
 
-    public function getError()
+    /**
+     * Get the actual HTTP error.
+     *
+     * @return array
+     */
+    public function getError(): array
     {
         return $this->error;
     }

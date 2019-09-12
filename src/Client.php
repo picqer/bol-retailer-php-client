@@ -22,7 +22,7 @@ class Client
      * @param string $clientId     The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
      */
-    public static function setCredentials(string $clientId, string $clientSecret)
+    public static function setCredentials(string $clientId, string $clientSecret): void
     {
         $params  = [ 'client_id' => $clientId, 'client_secret' => $clientSecret, 'grant_type' => 'client_credentials' ];
         $headers = [ 'Accept' => 'application/json' ];
@@ -103,7 +103,7 @@ class Client
 
     private static function addAuthenticationOptions(array $options): array
     {
-        if (!static::isAuthenticated()) {
+        if (!static::isAuthenticated() || !is_array(static::$token)) {
             return $options;
         }
 

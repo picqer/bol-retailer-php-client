@@ -47,8 +47,10 @@ class OrderItem extends AbstractModel
 
     protected function getLatestDeliveryDate(): ?DateTime
     {
-        $parsedTimestamp = DateTime::createFromFormat('Y-m-d', $this->data['latestDeliveryDate'] ?? null);
+        if (empty($this->data['latestDeliveryDate'])) {
+            return null;
+        }
 
-        return $parsedTimestamp instanceof DateTime ? $parsedTimestamp : null;
+        return DateTime::createFromFormat('Y-m-d', $this->data['latestDeliveryDate']);
     }
 }

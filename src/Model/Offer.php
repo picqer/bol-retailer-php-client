@@ -23,8 +23,11 @@ class Offer extends AbstractModel
 
     protected function getPricing(): array
     {
-        return array_map(function (array $data) {
+        /** @var array<array-key, mixed> */
+        $pricing = $this->data['pricing']['bundlePrices'] ?? [];
+
+        return array_map(function (array $data): Pricing {
             return new Pricing($data);
-        }, $this->data['pricing']['bundlePrices'] ?? []);
+        }, $pricing);
     }
 }

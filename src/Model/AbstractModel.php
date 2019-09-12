@@ -19,7 +19,7 @@ abstract class AbstractModel
     /**
      * {@inheritdoc}
      */
-    public function __get($property)
+    public function __get(string $property)
     {
         $getter = sprintf('get%s', ucfirst($property));
 

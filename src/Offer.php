@@ -12,17 +12,17 @@ class Offer extends Model\Offer
      *
      * @param string $id The identifier of the offer to retrieve.
      *
-     * @return Offer
+     * @return self
      */
     public static function get(string $id): Offer
     {
         try {
             $response = Client::request('GET', "offers/${id}");
-
-            return new Offer(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new Offer(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -36,11 +36,11 @@ class Offer extends Model\Offer
     {
         try {
             $response = Client::request('POST', "offers", ['body' => json_encode($data)]);
-
-            return new ProcessStatus(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -72,11 +72,11 @@ class Offer extends Model\Offer
 
         try {
             $response = Client::request('PUT', "offers/${id}", ['body' => json_encode($data)]);
-
-            return new ProcessStatus(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -97,11 +97,11 @@ class Offer extends Model\Offer
 
         try {
             $response = Client::request('PUT', "offers/${id}/stock", ['body' => $content]);
-
-            return new ProcessStatus(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -115,14 +115,14 @@ class Offer extends Model\Offer
 
         try {
             $response = Client::request('DELETE', "offers/${id}");
-
-            return new ProcessStatus(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
     }
 
-    private static function handleException(ClientException $e)
+    private static function handleException(ClientException $e): void
     {
         $response = $e->getResponse();
 
