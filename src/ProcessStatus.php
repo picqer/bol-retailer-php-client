@@ -19,11 +19,11 @@ class ProcessStatus extends Model\ProcessStatus
     {
         try {
             $response = Client::request('GET', "process-status/${id}");
-
-            return new self(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new self(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -66,7 +66,7 @@ class ProcessStatus extends Model\ProcessStatus
         }
     }
 
-    private static function handleException(ClientException $e)
+    private static function handleException(ClientException $e): void
     {
         $response = $e->getResponse();
 

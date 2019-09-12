@@ -15,19 +15,21 @@ class Order extends AbstractModel
 {
     protected function getOrderItems(): array
     {
+        /** @var array<array-key, mixed> */
+        $items = $this->data['orderItems'] ?? [];
+
         return array_map(function (array $data) {
             return new OrderItem($this, $data);
-        }, $this->data['orderItems'] ?? []);
+        }, $items);
     }
 
     protected function getOrderPlacedAt(): ?DateTime
     {
-        $parsedTimestamp = DateTime::createFromFormat(
-            DateTime::ATOM,
-            $this->data['dateTimeOrderPlaced'] ?? null
-        );
+        if (empty($this->data['dateTimeOrderPlaced'])) {
+            return null;
+        }
 
-        return $parsedTimestamp instanceof DateTime ? $parsedTimestamp : null;
+        return DateTime::createFromFormat(DateTime::ATOM, $this->data['dateTimeOrderPlaced']);
     }
 
     protected function getCustomerDetails(): OrderCustomerDetails

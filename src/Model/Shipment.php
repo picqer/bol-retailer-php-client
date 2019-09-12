@@ -15,18 +15,20 @@ class Shipment extends AbstractModel
 {
     protected function getShipmentDate(): ?DateTime
     {
-        $parsedTimestamp = DateTime::createFromFormat(
-            DateTime::ATOM,
-            $this->data['shipmentDate'] ?? null
-        );
-
-        return $parsedTimestamp instanceof DateTime ? $parsedTimestamp : null;
+        if (empty($this->data['shipmentDate'])) {
+            return null;
+        }
+        
+        return DateTime::createFromFormat(DateTime::ATOM, $this->data['shipmentDate']);
     }
 
     protected function getShipmentItems(): array
     {
+        /** @var array<array-key, mixed> */
+        $items = $this->data['shipmentItems'] ?? [];
+
         return array_map(function (array $data) {
             return new ShipmentItem($this, $data);
-        }, $this->data['shipmentItems'] ?? []);
+        }, $items);
     }
 }

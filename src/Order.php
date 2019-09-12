@@ -19,11 +19,11 @@ final class Order extends Model\Order
     {
         try {
             $response = Client::request('GET', "orders/${id}");
-
-            return new Order(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new Order(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -45,12 +45,15 @@ final class Order extends Model\Order
             static::handleException($e);
         }
 
+        /** @var array<array-key, mixed> */
+        $orders = $response['orders'] ?? [];
+
         return array_map(function (array $data) {
             return new Model\ReducedOrder($data);
-        }, $response['orders'] ?? []);
+        }, $orders);
     }
 
-    private static function handleException(ClientException $e)
+    private static function handleException(ClientException $e): void
     {
         $response = $e->getResponse();
 

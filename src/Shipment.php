@@ -22,11 +22,11 @@ final class Shipment extends Model\Shipment
     {
         try {
             $response = Client::request('GET', "shipments/${id}");
-
-            return new self(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new self(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -49,9 +49,12 @@ final class Shipment extends Model\Shipment
             static::handleException($e);
         }
 
+        /** @var array<array-key, mixed> */
+        $shipments = $response['shipments'] ?? [];
+
         return array_map(function (array $data) {
             return new self($data);
-        }, $response['shipments'] ?? []);
+        }, $shipments);
     }
 
     /**
@@ -72,11 +75,11 @@ final class Shipment extends Model\Shipment
 
         try {
             $response = Client::request('PUT', $uri, ['body' => json_encode($data)]);
-
-            return new ProcessStatus(json_decode((string) $response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
     }
 
     /**
@@ -96,7 +99,7 @@ final class Shipment extends Model\Shipment
         }, is_null($order) ? [] : $order->orderItems);
     }
 
-    private static function handleException(ClientException $e)
+    private static function handleException(ClientException $e): void
     {
         $response = $e->getResponse();
 
