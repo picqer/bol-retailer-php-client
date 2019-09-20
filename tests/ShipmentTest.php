@@ -69,7 +69,7 @@ class ShipmentTest extends \PHPUnit\Framework\TestCase
         $response = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/200-shipments'));
 
         $this->http
-            ->request('GET', 'shipments', [ 'query' => [ 'page' => 2, 'order-id' => "1234", 'fulfilment-method' => 'FBR' ]])
+            ->request('GET', 'shipments', [ 'query' => [ 'page' => 2, 'order-id' => "1234" ]])
             ->willReturn($response);
 
         $shipments = Shipment::all(2, '1234');
