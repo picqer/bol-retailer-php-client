@@ -40,7 +40,9 @@ final class Shipment extends Model\Shipment
      */
     public static function all(int $page = 1, ?string $order = null, string $method = 'FBR'): array
     {
-        $query = array_filter([ 'page' => $page, 'order-id' => $order, 'fulfilment-method' => $method ]);
+        $query = is_null($order)
+            ? [ 'page' => $page, 'fulfilment-method' => $method ]
+            : [ 'page' => $page, 'order-id' => $order ];
 
         try {
             $response = Client::request('GET', 'shipments', ['query' => $query]);
