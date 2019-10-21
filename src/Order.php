@@ -6,7 +6,7 @@ use Picqer\BolRetailer\Exception\HttpException;
 use Picqer\BolRetailer\Exception\OrderNotFoundException;
 use Picqer\BolRetailer\Model;
 
-final class Order extends Model\Order
+class Order extends Model\Order
 {
     /**
      * Get a single order.
