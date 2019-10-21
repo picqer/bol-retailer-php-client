@@ -9,7 +9,7 @@ use Picqer\BolRetailer\Model\ReducedOrderItem;
 use Picqer\BolRetailer\Exception\HttpException;
 use Picqer\BolRetailer\Exception\ShipmentNotFoundException;
 
-final class Shipment extends Model\Shipment
+class Shipment extends Model\Shipment
 {
     /**
      * Get a single shipment.
