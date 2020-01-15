@@ -9,7 +9,7 @@ class OrderTest extends \PHPUnit\Framework\TestCase
 {
     private $order;
 
-    public function setup()
+    public function setup(): void
     {
         $this->order = new Order(
             json_decode(file_get_contents(__DIR__ . '/../Fixtures/json/order.json'), true)

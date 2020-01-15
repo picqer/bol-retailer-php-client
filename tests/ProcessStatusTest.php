@@ -7,13 +7,15 @@ use GuzzleHttp\ClientInterface;
 use Picqer\BolRetailer\Model;
 use Picqer\BolRetailer\Client;
 use Picqer\BolRetailer\ProcessStatus;
+use Picqer\BolRetailer\Exception\ProcessStillPendingException;
+use Picqer\BolRetailer\Exception\ProcessStatusNotFoundException;
 use Psr\Http\Message\RequestInterface;
 
 class ProcessStatusTest extends \PHPUnit\Framework\TestCase
 {
     private $http;
 
-    public function setup()
+    public function setup(): void
     {
         $this->http = $this->prophesize(ClientInterface::class);
 
@@ -70,12 +72,11 @@ class ProcessStatusTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($processStatus->isSuccess);
     }
 
-    /**
-     * @expectedException        Picqer\BolRetailer\Exception\ProcessStillPendingException
-     * @expectedExceptionMessage The process "1" is still in status "PENDING" after the maximum number of retries is reached.
-     */
     public function testThrowExceptionIfRetryLimitIsReached()
     {
+        $this->expectException(ProcessStillPendingException::class);
+        $this->expectExceptionMessage('The process "1" is still in status "PENDING" after the maximum number of retries is reached.');
+
         $response = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/200-process-status-pending'));
 
         $this->http
@@ -87,11 +88,10 @@ class ProcessStatusTest extends \PHPUnit\Framework\TestCase
         $processStatus->waitUntilComplete(20, 0);
     }
 
-    /**
-     * @expectedException Picqer\BolRetailer\Exception\ProcessStatusNotFoundException
-     */
     public function testThrowExceptionWhenProcessStatusNotFound()
     {
+        $this->expectException(ProcessStatusNotFoundException::class);
+
         $request   = $this->prophesize(RequestInterface::class);
         $response  = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
         $exception = new ClientException('', $request->reveal(), $response);

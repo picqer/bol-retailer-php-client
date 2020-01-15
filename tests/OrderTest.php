@@ -7,13 +7,14 @@ use GuzzleHttp\ClientInterface;
 use Picqer\BolRetailer\Order;
 use Picqer\BolRetailer\Client;
 use Picqer\BolRetailer\Model;
+use Picqer\BolRetailer\Exception\OrderNotFoundException;
 use Psr\Http\Message\RequestInterface;
 
 class OrderTest extends \PHPUnit\Framework\TestCase
 {
     private $http;
 
-    public function setup()
+    public function setup(): void
     {
         $this->http = $this->prophesize(ClientInterface::class);
 
@@ -85,11 +86,10 @@ class OrderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('1043946570', $order->orderId);
     }
 
-    /**
-     * @expectedException Picqer\BolRetailer\Exception\OrderNotFoundException
-     */
     public function testThrowExceptionWhenOrderNotFound()
     {
+        $this->expectException(OrderNotFoundException::class);
+
         $request   = $this->prophesize(RequestInterface::class);
         $response  = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
         $exception = new ClientException('', $request->reveal(), $response);

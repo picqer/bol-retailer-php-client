@@ -8,7 +8,7 @@ class ReducedOrderTest extends \PHPUnit\Framework\TestCase
 {
     private $order;
 
-    public function setup()
+    public function setup(): void
     {
         $this->order = new ReducedOrder(
             json_decode(file_get_contents(__DIR__ . '/../Fixtures/json/reduced-order.json'), true)

@@ -9,7 +9,7 @@ class OfferTest extends \PHPUnit\Framework\TestCase
 {
     private $offer;
 
-    public function setup()
+    public function setup(): void
     {
         $this->offer = new Offer(
             json_decode(file_get_contents(__DIR__ . '/../Fixtures/json/offer.json'), true)

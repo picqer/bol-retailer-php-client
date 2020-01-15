@@ -8,7 +8,7 @@ class ShipmentTest extends \PHPUnit\Framework\TestCase
 {
     private $shipment;
 
-    public function setup()
+    public function setup(): void
     {
         $this->shipment = new Shipment(
             json_decode(file_get_contents(__DIR__ . '/../Fixtures/json/shipment.json'), true)

@@ -8,7 +8,7 @@ class HttpExceptionTest extends \PHPUnit\Framework\TestCase
     private $previous;
     private $exception;
 
-    public function setup()
+    public function setup(): void
     {
         $this->previous  = new \Exception();
         $this->exception = new HttpException(
