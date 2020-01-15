@@ -9,7 +9,7 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
     private $order;
     private $item;
 
-    public function setup()
+    public function setup(): void
     {
         $this->order = $this->prophesize(Order::class)->reveal();
 

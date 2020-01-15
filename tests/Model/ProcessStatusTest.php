@@ -7,7 +7,7 @@ class ProcessStatusTest extends \PHPUnit\Framework\TestCase
 {
     private $processStatus;
 
-    public function setup()
+    public function setup(): void
     {
         $this->processStatus = new ProcessStatus(
             json_decode(file_get_contents(__DIR__ . '/../Fixtures/json/process-status.json'), true)

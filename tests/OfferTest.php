@@ -8,13 +8,14 @@ use Picqer\BolRetailer\Model;
 use Picqer\BolRetailer\Offer;
 use Picqer\BolRetailer\Client;
 use Picqer\BolRetailer\ProcessStatus;
+use Picqer\BolRetailer\Exception\OfferNotFoundException;
 use Psr\Http\Message\RequestInterface;
 
 class OfferTest extends \PHPUnit\Framework\TestCase
 {
     private $http;
 
-    public function setup()
+    public function setup(): void
     {
         $this->http = $this->prophesize(ClientInterface::class);
 
@@ -35,11 +36,10 @@ class OfferTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('6ff736b5-cdd0-4150-8c67-78269ee986f5', $offer->offerId);
     }
 
-    /**
-     * @expectedException Picqer\BolRetailer\Exception\OfferNotFoundException
-     */
     public function testThrowExceptionWhenProcessStatusNotFound()
     {
+        $this->expectException(OfferNotFoundException::class);
+
         $request   = $this->prophesize(RequestInterface::class);
         $response  = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
         $exception = new ClientException('', $request->reveal(), $response);

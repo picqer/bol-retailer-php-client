@@ -15,7 +15,7 @@ class ShipmentTest extends \PHPUnit\Framework\TestCase
 {
     private $http;
 
-    public function setup()
+    public function setup(): void
     {
         $this->http = $this->prophesize(ClientInterface::class);
 

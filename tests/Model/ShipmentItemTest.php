@@ -9,7 +9,7 @@ class ShipmentItemTest extends \PHPUnit\Framework\TestCase
     private $item;
     private $shipment;
 
-    public function setup()
+    public function setup(): void
     {
         $this->shipment = $this->prophesize(Shipment::class)->reveal();
         $this->item     = new ShipmentItem(

@@ -11,7 +11,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     private $http;
     private $client;
 
-    public function setup()
+    public function setup(): void
     {
         $this->http = $this->prophesize(ClientInterface::class);
 
