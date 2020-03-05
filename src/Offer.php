@@ -142,4 +142,44 @@ class Offer extends Model\Offer
 
         throw $e;
     }
+
+    /**
+     * Exports all offers
+     *
+     * @param string $format
+     *
+     * @return ProcessStatus
+     */
+    public static function export(string $format = 'CSV'): ProcessStatus
+    {
+        $content  = json_encode([ 'format' => $format ]);
+
+        try {
+            $response = Client::request('POST', "offers/export", ['body' => $content]);
+        } catch (ClientException $e) {
+            static::handleException($e);
+        }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+    }
+
+    /**
+     * Returns offer export
+     *
+     * @param string $id
+     *
+     * @return string
+     */
+    public static function getExport(string $id): string
+    {
+        $headers = ['Accept' => 'application/vnd.retailer.v3+csv'];
+
+        try {
+            $response = Client::request('GET', "offers/export/${id}", ['headers' => $headers]);
+        } catch (ClientException $e) {
+            static::handleException($e);
+        }
+
+        return $response->getBody();
+    }
 }
