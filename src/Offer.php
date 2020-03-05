@@ -180,6 +180,6 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return $response->getBody();
+        return (string) $response->getBody();
     }
 }
