@@ -60,4 +60,17 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($response, Client::request('GET', 'status', [ 'query' => [ 'foo' => 'bar' ]]));
     }
+
+    public function testPerformHttpRequestWithUserAgent()
+    {
+        $response = $this->prophesize(ResponseInterface::class)->reveal();
+
+        $this->http
+            ->request('GET', 'status', [ 'headers' => [ 'User-Agent' => 'foo' ]])
+            ->willReturn($response);
+
+        Client::setUserAgent('foo');
+
+        $this->assertEquals($response, Client::request('GET', 'status'));
+    }
 }

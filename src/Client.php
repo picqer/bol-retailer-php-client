@@ -16,6 +16,9 @@ class Client
     /** @var bool */
     private static $isDemoMode = false;
 
+    /** @var string|null */
+    private static $userAgent = null;
+
     /**
      * Set the API credentials of the client.
      *
@@ -86,6 +89,7 @@ class Client
      */
     public static function request(string $method, string $uri, array $options = []): ResponseInterface
     {
+        $options = static::addUserAgentOptions($options);
         $options = static::addAuthenticationOptions($options);
 
         return static::getHttp()->request($method, $uri, $options);
@@ -101,6 +105,16 @@ class Client
         static::$http = $http;
     }
 
+    /**
+     * Set the user agent reported with API calls.
+     *
+     * @param string|null $userAgent
+     */
+    public static function setUserAgent(?string $userAgent): void
+    {
+        static::$userAgent = $userAgent;
+    }
+
     private static function addAuthenticationOptions(array $options): array
     {
         if (!static::isAuthenticated() || !is_array(static::$token)) {
@@ -112,6 +126,19 @@ class Client
         ];
 
         $options['headers'] = array_merge($options['headers'] ?? [], $authorization);
+
+        return $options;
+    }
+
+    private static function addUserAgentOptions(array $options): array
+    {
+        if (static::$userAgent === null) {
+            return $options;
+        }
+
+        $userAgent = [ 'User-Agent' => static::$userAgent ];
+
+        $options['headers'] = array_merge($options['headers'] ?? [], $userAgent);
 
         return $options;
     }
