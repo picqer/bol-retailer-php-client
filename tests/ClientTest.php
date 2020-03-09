@@ -18,6 +18,11 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         Client::setHttp($this->http->reveal());
     }
 
+    public function tearDown(): void
+    {
+        Client::setUserAgent(null);
+    }
+
     public function testAuthenticateWithCredentials()
     {
         $response = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
