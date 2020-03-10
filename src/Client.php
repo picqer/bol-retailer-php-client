@@ -108,9 +108,9 @@ class Client
     /**
      * Set the user agent reported with API calls.
      *
-     * @param string|null $userAgent
+     * @param string $userAgent
      */
-    public static function setUserAgent(?string $userAgent): void
+    public static function setUserAgent(string $userAgent): void
     {
         static::$userAgent = $userAgent;
     }
@@ -132,7 +132,7 @@ class Client
 
     private static function addUserAgentOptions(array $options): array
     {
-        if (static::$userAgent === null) {
+        if (static::$userAgent === null || strlen(static::$userAgent) === 0) {
             return $options;
         }
 

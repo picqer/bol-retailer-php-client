@@ -20,7 +20,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     public function tearDown(): void
     {
-        Client::setUserAgent(null);
+        Client::setUserAgent('');
     }
 
     public function testAuthenticateWithCredentials()
