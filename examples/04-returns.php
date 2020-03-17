@@ -24,12 +24,11 @@ $return = Picqer\BolRetailer\ReturnItem::get(123456);
 
 var_dump($return);
 
-
 // handle return
 
 Picqer\BolRetailer\ReturnItem::handle(
     $return->rmaId,
-    Picqer\BolRetailer\ReturnItem::HANDLING_RESULT_RETURN_RECIEVED,
+    Picqer\BolRetailer\ReturnItem::HANDLING_RESULT_RETURN_RECEIVED,
     $return->quantity
 );
 
