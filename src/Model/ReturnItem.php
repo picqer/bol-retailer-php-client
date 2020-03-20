@@ -4,21 +4,21 @@ namespace  Picqer\BolRetailer\Model;
 use DateTime;
 
 /**
- * @property int           $rmaId
- * @property string        $orderId
- * @property string        $ean
- * @property int           $quantity
- * @property DateTime      $registrationDateTime
- * @property string        $returnReason
- * @property string        $returnReasonComments
- * @property string        $fulfilmentMethod
- * @property bool          $handled
- * @property string|null   $trackAndTrace
- * @property string|null   $title
- * @property string|null   $handlingResult
- * @property string|null   $processingResult
- * @property DateTime|null $processingDateTime
- * @property array|null    $customerDetails
+ * @property int                 $rmaId
+ * @property string              $orderId
+ * @property string              $ean
+ * @property int                 $quantity
+ * @property DateTime            $registrationDateTime
+ * @property string              $returnReason
+ * @property string              $returnReasonComments
+ * @property string              $fulfilmentMethod
+ * @property bool                $handled
+ * @property string|null         $trackAndTrace
+ * @property string|null         $title
+ * @property string|null         $handlingResult
+ * @property string|null         $processingResult
+ * @property DateTime|null       $processingDateTime
+ * @property AddressDetails|null $customerDetails
  */
 class ReturnItem extends AbstractModel
 {
@@ -47,8 +47,12 @@ class ReturnItem extends AbstractModel
         return DateTime::createFromFormat(DateTime::ATOM, $this->data['processingDateTime']);
     }
 
-    protected function getCustomerDetails(): AddressDetails
+    protected function getCustomerDetails(): ?AddressDetails
     {
+        if (empty($this->data['customerDetails'])) {
+            return null;
+        }
+
         return new AddressDetails($this->data['customerDetails']);
     }
 }

@@ -58,6 +58,7 @@ class Order extends Model\Order
      *
      * @param string $orderItemId The id of the order item to cancel.
      * @param string $reasonCode  The code representing the reason for cancellation of this item.
+     *
      * @return Model\ProcessStatus
      */
     public static function cancelOrderItem(string $orderItemId, string $reasonCode): Model\ProcessStatus
