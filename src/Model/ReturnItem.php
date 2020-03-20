@@ -34,7 +34,7 @@ class ReturnItem extends AbstractModel
         if (empty($this->data['registrationDateTime'])) {
             return null;
         }
-        
+
         return DateTime::createFromFormat(DateTime::ATOM, $this->data['registrationDateTime']);
     }
 
@@ -45,5 +45,10 @@ class ReturnItem extends AbstractModel
         }
 
         return DateTime::createFromFormat(DateTime::ATOM, $this->data['processingDateTime']);
+    }
+
+    protected function getCustomerDetails(): AddressDetails
+    {
+        return new AddressDetails($this->data['customerDetails']);
     }
 }
