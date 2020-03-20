@@ -24,7 +24,7 @@ class ReturnItem extends Model\ReturnItem
 
         return new self(json_decode((string) $response->getBody(), true));
     }
-    
+
     /**
      * Get all returns.
      *
