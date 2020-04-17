@@ -8,7 +8,7 @@ use DateTime;
  * @property string        $orderId              The id of the customer order this return item is in.
  * @property string        $ean                  The EAN number associated with this product.
  * @property int           $quantity             The quantity that is returned by the customer.
- * @property DateTime      $registrationDateTime The date and time in ISO 8601 format when this return was registered.
+ * @property DateTime      $registrationDateTime The date and time when this return was registered.
  * @property string        $returnReason         The reason why the customer returned this product.
  * @property string        $returnReasonComments Additional details from the customer as to why this item was returned.
  * @property string        $fulfilmentMethod     Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.
@@ -17,7 +17,7 @@ use DateTime;
  * @property string|null   $title                The product title.
  * @property string|null   $handlingResult       The handling result requested by the retailer.
  * @property string|null   $processingResult     The processing result of the return.
- * @property DateTime|null $processingDateTime   The date and time in ISO 8601 format when the return was processed.
+ * @property DateTime|null $processingDateTime   The date and time when the return was processed.
  * @property array|null    $customerDetails      The customer details
  */
 class ReturnItem extends AbstractModel
