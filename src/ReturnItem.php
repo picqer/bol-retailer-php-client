@@ -24,7 +24,7 @@ class ReturnItem extends Model\ReturnItem
 
         return new self(json_decode((string) $response->getBody(), true));
     }
-    
+
     /**
      * Get all returns.
      *
@@ -59,6 +59,7 @@ class ReturnItem extends Model\ReturnItem
      * @param int    $rmaId            The RMA id that identifies this particular return.
      * @param string $handlingResult   The return item handling type.
      * @param int    $quantityReturned The amount of items returned.
+     *
      * @return Model\ProcessStatus
      */
     public static function handle(int $rmaId, string $handlingResult, int $quantityReturned): Model\ProcessStatus
