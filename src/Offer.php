@@ -3,6 +3,7 @@ namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Exception\ClientException;
 use Picqer\BolRetailer\Exception\HttpException;
+use Picqer\BolRetailer\Exception\RateLimitException;
 use Picqer\BolRetailer\Exception\OfferNotFoundException;
 
 class Offer extends Model\Offer
@@ -130,6 +131,12 @@ class Offer extends Model\Offer
             throw new OfferNotFoundException(
                 json_decode((string) $response->getBody(), true),
                 404,
+                $e
+            );
+        } elseif ($response && $response->getStatusCode() === 429) {
+            throw new RateLimitException(
+                json_decode((string) $response->getBody(), true),
+                429,
                 $e
             );
         } elseif ($response) {
