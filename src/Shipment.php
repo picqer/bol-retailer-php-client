@@ -7,6 +7,7 @@ use Picqer\BolRetailer\Model\ReducedOrder;
 use Picqer\BolRetailer\Model\OrderItem;
 use Picqer\BolRetailer\Model\ReducedOrderItem;
 use Picqer\BolRetailer\Exception\HttpException;
+use Picqer\BolRetailer\Exception\RateLimitException;
 use Picqer\BolRetailer\Exception\ShipmentNotFoundException;
 
 class Shipment extends Model\Shipment
@@ -109,6 +110,12 @@ class Shipment extends Model\Shipment
             throw new ShipmentNotFoundException(
                 json_decode((string) $response->getBody(), true),
                 404,
+                $e
+            );
+        } elseif ($response && $response->getStatusCode() === 429) {
+            throw new RateLimitException(
+                json_decode((string) $response->getBody(), true),
+                429,
                 $e
             );
         } elseif ($response) {

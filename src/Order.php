@@ -2,9 +2,10 @@
 namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Exception\ClientException;
-use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Exception\OrderNotFoundException;
 use Picqer\BolRetailer\Model;
+use Picqer\BolRetailer\Exception\HttpException;
+use Picqer\BolRetailer\Exception\RateLimitException;
+use Picqer\BolRetailer\Exception\OrderNotFoundException;
 
 class Order extends Model\Order
 {
@@ -61,6 +62,12 @@ class Order extends Model\Order
             throw new OrderNotFoundException(
                 json_decode((string) $response->getBody(), true),
                 404,
+                $e
+            );
+        } elseif ($response && $response->getStatusCode() === 429) {
+            throw new RateLimitException(
+                json_decode((string) $response->getBody(), true),
+                429,
                 $e
             );
         } elseif ($response) {
