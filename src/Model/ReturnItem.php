@@ -4,21 +4,21 @@ namespace  Picqer\BolRetailer\Model;
 use DateTime;
 
 /**
- * @property int           $rmaId                The RMA (Return Merchandise Authorization) id that identifies this particular return.
- * @property string        $orderId              The id of the customer order this return item is in.
- * @property string        $ean                  The EAN number associated with this product.
- * @property int           $quantity             The quantity that is returned by the customer.
- * @property DateTime      $registrationDateTime The date and time when this return was registered.
- * @property string        $returnReason         The reason why the customer returned this product.
- * @property string        $returnReasonComments Additional details from the customer as to why this item was returned.
- * @property string        $fulfilmentMethod     Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.
- * @property bool          $handled              Indicates if this return item has been handled (by the retailer).
- * @property string|null   $trackAndTrace        The track and trace code that is associated with this transport.
- * @property string|null   $title                The product title.
- * @property string|null   $handlingResult       The handling result requested by the retailer.
- * @property string|null   $processingResult     The processing result of the return.
- * @property DateTime|null $processingDateTime   The date and time when the return was processed.
- * @property array|null    $customerDetails      The customer details
+ * @property int                 $rmaId                The RMA (Return Merchandise Authorization) id that identifies this particular return.
+ * @property string              $orderId              The id of the customer order this return item is in.
+ * @property string              $ean                  The EAN number associated with this product.
+ * @property int                 $quantity             The quantity that is returned by the customer.
+ * @property DateTime            $registrationDateTime The date and time when this return was registered.
+ * @property string              $returnReason         The reason why the customer returned this product.
+ * @property string              $returnReasonComments Additional details from the customer as to why this item was returned.
+ * @property string              $fulfilmentMethod     Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.
+ * @property bool                $handled              Indicates if this return item has been handled (by the retailer).
+ * @property string|null         $trackAndTrace        The track and trace code that is associated with this transport.
+ * @property string|null         $title                The product title.
+ * @property string|null         $handlingResult       The handling result requested by the retailer.
+ * @property string|null         $processingResult     The processing result of the return.
+ * @property DateTime|null       $processingDateTime   The date and time when the return was processed.
+ * @property AddressDetails|null $customerDetails      The customer details
  */
 class ReturnItem extends AbstractModel
 {
@@ -45,5 +45,14 @@ class ReturnItem extends AbstractModel
         }
 
         return DateTime::createFromFormat(DateTime::ATOM, $this->data['processingDateTime']);
+    }
+
+    protected function getCustomerDetails(): ?AddressDetails
+    {
+        if (empty($this->data['customerDetails'])) {
+            return null;
+        }
+
+        return new AddressDetails($this->data['customerDetails']);
     }
 }
