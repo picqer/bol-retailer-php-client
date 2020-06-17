@@ -54,6 +54,27 @@ class Order extends Model\Order
         }, $orders);
     }
 
+    /**
+     * Cancel an order item by order item id.
+     *
+     * @param string $orderItemId The id of the order item to cancel.
+     * @param string $reasonCode  The code representing the reason for cancellation of this item.
+     *
+     * @return Model\ProcessStatus
+     */
+    public static function cancelOrderItem(string $orderItemId, string $reasonCode): Model\ProcessStatus
+    {
+        $data = [ 'reasonCode' => $reasonCode ];
+
+        try {
+            $response = Client::request('PUT', "orders/${orderItemId}/cancellation", ['body' => json_encode($data)]);
+        } catch (ClientException $e) {
+            static::handleException($e);
+        }
+
+        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+    }
+
     private static function handleException(ClientException $e): void
     {
         $response = $e->getResponse();

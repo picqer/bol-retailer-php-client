@@ -19,7 +19,7 @@ use DateTime;
  * @property Order         $order              The order the order item belongs to.
  * @property bool          $cancelRequest      Indicates whether the order was cancelled on request of the customer
  *                                             before the retailer has shipped it.
- * @property string       $fulfilmentMethod    Specifies whether this shipment has been fulfilled by the retailer
+ * @property string        $fulfilmentMethod   Specifies whether this shipment has been fulfilled by the retailer
  *                                             (`FBR`) or fulfilled by bol.com (`FBB`). Defaults to `FBR`.
  */
 class OrderItem extends AbstractModel
