@@ -3,7 +3,10 @@ namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Client as Http;
 use GuzzleHttp\ClientInterface as HttpInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
+use Picqer\BolRetailer\Exception\AuthenticationException;
 
 class Client
 {
@@ -22,18 +25,30 @@ class Client
     /**
      * Set the API credentials of the client.
      *
-     * @param string $clientId     The client ID to use for authentication.
+     * @param string $clientId The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
+     *
+     * @throws AuthenticationException when an error occurs during the authentication process.
      */
     public static function setCredentials(string $clientId, string $clientSecret): void
     {
         $params  = [ 'client_id' => $clientId, 'client_secret' => $clientSecret, 'grant_type' => 'client_credentials' ];
         $headers = [ 'Accept' => 'application/json' ];
 
-        $response = static::getHttp()->request('POST', 'https://login.bol.com/token', [
-            'headers'     => $headers,
-            'form_params' => $params
-        ]);
+        try {
+            $response = static::getHttp()->request('POST', 'https://login.bol.com/token', [
+                'headers'     => $headers,
+                'form_params' => $params
+            ]);
+        } catch (GuzzleException $e) {
+            if ($e instanceof RequestException) {
+                $response = json_decode((string) $e->getResponse()->getBody(), true);
+
+                throw new AuthenticationException($response['error_description'] ?? null, $e->getCode(), $e);
+            }
+
+            throw new AuthenticationException(null, $e->getCode(), $e);
+        }
 
         $token               = json_decode((string) $response->getBody(), true);
         $token['expires_at'] = time() + $token['expires_in'] ?? 0;
