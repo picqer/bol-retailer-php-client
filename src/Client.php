@@ -25,7 +25,7 @@ class Client
     /**
      * Set the API credentials of the client.
      *
-     * @param string $clientId The client ID to use for authentication.
+     * @param string $clientId     The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
      *
      * @throws AuthenticationException when an error occurs during the authentication process.
