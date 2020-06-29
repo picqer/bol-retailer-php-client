@@ -1,0 +1,10 @@
+HTTP/1.1 401 Unauthorized
+Content-Type: application/vnd.retailer.v3+json
+X-RateLimit-Limit: 10
+X-RateLimit-Reset: 1539261914
+X-RateLimit-Remaining: 2
+
+{
+  "error": "invalid_client",
+  "error_description": "Bad client credentials"
+}

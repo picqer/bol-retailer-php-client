@@ -11,7 +11,7 @@ class HttpException extends \RuntimeException
     /**
      * Constructor.
      *
-     * @param array     $error    The error message from Bol.co
+     * @param array     $error    The error message from Bol.com
      * @param integer   $code     The error code from Bol.com
      * @param Exception $previous The previous exception from Bol.com
      */
