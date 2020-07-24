@@ -24,6 +24,8 @@ class Order extends Model\Order
             static::handleException($e);
         }
 
+        self::throwExceptionIfNotSuccessfull($response);
+
         return new Order(json_decode((string) $response->getBody(), true));
     }
 
@@ -100,5 +102,22 @@ class Order extends Model\Order
         }
 
         throw $e;
+    }
+
+    private static function throwExceptionIfNotSuccessfull($response)
+    {
+        if ($response && $response->getStatusCode() === 404) {
+            throw new OrderNotFoundException(
+                json_decode((string) $response->getBody(), true),
+                404
+            );
+        }
+
+        if ($response && $response->getStatusCode() === 429) {
+            throw new RateLimitException(
+                json_decode((string) $response->getBody(), true),
+                429
+            );
+        }
     }
 }
