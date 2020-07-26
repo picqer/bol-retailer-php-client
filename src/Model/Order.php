@@ -1,4 +1,5 @@
 <?php
+
 namespace Picqer\BolRetailer\Model;
 
 use DateTime;
@@ -6,9 +7,9 @@ use DateTime;
 /**
  * An order.
  *
- * @property string               $orderId         The identifier of the order.
- * @property DateTime|null        $orderPlacedAt   The date and time the order was placed.
- * @property OrderItem[]          $orderItems      The items of the order.
+ * @property string $orderId         The identifier of the order.
+ * @property DateTime|null $orderPlacedAt   The date and time the order was placed.
+ * @property OrderItem[] $orderItems      The items of the order.
  * @property OrderCustomerDetails $customerDetails The details of the customer that placed the order.
  */
 class Order extends AbstractModel

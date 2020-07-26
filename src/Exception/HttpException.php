@@ -1,4 +1,5 @@
 <?php
+
 namespace Picqer\BolRetailer\Exception;
 
 use Exception;
@@ -11,8 +12,8 @@ class HttpException extends \RuntimeException
     /**
      * Constructor.
      *
-     * @param array     $error    The error message from Bol.com
-     * @param integer   $code     The error code from Bol.com
+     * @param array $error The error message from Bol.com
+     * @param integer $code The error code from Bol.com
      * @param Exception $previous The previous exception from Bol.com
      */
     public function __construct(array $error, int $code = 0, Exception $previous = null)

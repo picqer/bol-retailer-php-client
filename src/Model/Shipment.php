@@ -1,15 +1,16 @@
 <?php
-namespace  Picqer\BolRetailer\Model;
+
+namespace Picqer\BolRetailer\Model;
 
 use DateTime;
 
 /**
- * @property string          $shipmentId
- * @property DateTime        $shipmentDate
- * @property string          $shipmentReference
- * @property ShipmentItem[]  $shipmentItems
- * @property array           $transport
- * @property array           $customerDetails
+ * @property string $shipmentId
+ * @property DateTime $shipmentDate
+ * @property string $shipmentReference
+ * @property ShipmentItem[] $shipmentItems
+ * @property array $transport
+ * @property array $customerDetails
  */
 class Shipment extends AbstractModel
 {
@@ -18,7 +19,7 @@ class Shipment extends AbstractModel
         if (empty($this->data['shipmentDate'])) {
             return null;
         }
-        
+
         return DateTime::createFromFormat(DateTime::ATOM, $this->data['shipmentDate']);
     }
 

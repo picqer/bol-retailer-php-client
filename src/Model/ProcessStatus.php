@@ -1,4 +1,5 @@
 <?php
+
 namespace Picqer\BolRetailer\Model;
 
 /**
@@ -10,10 +11,10 @@ namespace Picqer\BolRetailer\Model;
  * @property string $status       Status of the action being processed.
  * @property string $errorMessage Shows error message if applicable.
  *
- * @property bool   $isPending    Indicates if the process is pending.
- * @property bool   $isSuccess    Indicates if the process is succesful.
- * @property bool   $isFailure    Indicates if the process is failure.
- * @property bool   $isTimeout    Indicates if the process is timed out.
+ * @property bool $isPending    Indicates if the process is pending.
+ * @property bool $isSuccess    Indicates if the process is succesful.
+ * @property bool $isFailure    Indicates if the process is failure.
+ * @property bool $isTimeout    Indicates if the process is timed out.
  */
 class ProcessStatus extends AbstractModel
 {

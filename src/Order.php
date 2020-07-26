@@ -1,11 +1,12 @@
 <?php
+
 namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Exception\ClientException;
-use Picqer\BolRetailer\Model;
 use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Exception\RateLimitException;
 use Picqer\BolRetailer\Exception\OrderNotFoundException;
+use Picqer\BolRetailer\Exception\RateLimitException;
+use Picqer\BolRetailer\Model;
 
 class Order extends Model\Order
 {
@@ -26,24 +27,24 @@ class Order extends Model\Order
 
         self::throwExceptionIfNotSuccessfull($response);
 
-        return new Order(json_decode((string) $response->getBody(), true));
+        return new Order(json_decode((string)$response->getBody(), true));
     }
 
     /**
      * Get all open orders.
      *
-     * @param int    $page   The page to get the orders from.
+     * @param int $page The page to get the orders from.
      * @param string $method The fulfilment method of the orders to list.
      *
      * @return Model\ReducedOrder[]
      */
     public static function all(int $page = 1, string $method = 'FBR'): array
     {
-        $query = [ 'page' => $page, 'fulfilment-method' => $method ];
+        $query = ['page' => $page, 'fulfilment-method' => $method];
 
         try {
             $response = Client::request('GET', 'orders', ['query' => $query]);
-            $response = json_decode((string) $response->getBody(), true);
+            $response = json_decode((string)$response->getBody(), true);
         } catch (ClientException $e) {
             static::handleException($e);
         }
@@ -60,13 +61,13 @@ class Order extends Model\Order
      * Cancel an order item by order item id.
      *
      * @param string $orderItemId The id of the order item to cancel.
-     * @param string $reasonCode  The code representing the reason for cancellation of this item.
+     * @param string $reasonCode The code representing the reason for cancellation of this item.
      *
      * @return Model\ProcessStatus
      */
     public static function cancelOrderItem(string $orderItemId, string $reasonCode): Model\ProcessStatus
     {
-        $data = [ 'reasonCode' => $reasonCode ];
+        $data = ['reasonCode' => $reasonCode];
 
         try {
             $response = Client::request('PUT', "orders/${orderItemId}/cancellation", ['body' => json_encode($data)]);
@@ -74,7 +75,7 @@ class Order extends Model\Order
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     private static function handleException(ClientException $e): void
@@ -83,19 +84,19 @@ class Order extends Model\Order
 
         if ($response && $response->getStatusCode() === 404) {
             throw new OrderNotFoundException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 404,
                 $e
             );
         } elseif ($response && $response->getStatusCode() === 429) {
             throw new RateLimitException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 429,
                 $e
             );
         } elseif ($response) {
             throw new HttpException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 $response->getStatusCode(),
                 $e
             );
@@ -108,14 +109,14 @@ class Order extends Model\Order
     {
         if ($response->getStatusCode() === 404) {
             throw new OrderNotFoundException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 404
             );
         }
 
         if ($response->getStatusCode() === 429) {
             throw new RateLimitException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 429
             );
         }

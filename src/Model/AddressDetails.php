@@ -1,4 +1,5 @@
 <?php
+
 namespace Picqer\BolRetailer\Model;
 
 /**

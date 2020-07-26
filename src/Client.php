@@ -1,12 +1,13 @@
 <?php
+
 namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Client as Http;
 use GuzzleHttp\ClientInterface as HttpInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\ResponseInterface;
 use Picqer\BolRetailer\Exception\AuthenticationException;
+use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
@@ -25,24 +26,24 @@ class Client
     /**
      * Set the API credentials of the client.
      *
-     * @param string $clientId     The client ID to use for authentication.
+     * @param string $clientId The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
      *
      * @throws AuthenticationException when an error occurs during the authentication process.
      */
     public static function setCredentials(string $clientId, string $clientSecret): void
     {
-        $params  = [ 'client_id' => $clientId, 'client_secret' => $clientSecret, 'grant_type' => 'client_credentials' ];
-        $headers = [ 'Accept' => 'application/json' ];
+        $params = ['client_id' => $clientId, 'client_secret' => $clientSecret, 'grant_type' => 'client_credentials'];
+        $headers = ['Accept' => 'application/json'];
 
         try {
             $response = static::getHttp()->request('POST', 'https://login.bol.com/token', [
-                'headers'     => $headers,
+                'headers' => $headers,
                 'form_params' => $params
             ]);
         } catch (GuzzleException $e) {
             if ($e instanceof RequestException) {
-                $response = json_decode((string) $e->getResponse()->getBody(), true);
+                $response = json_decode((string)$e->getResponse()->getBody(), true);
 
                 throw new AuthenticationException($response['error_description'] ?? null, $e->getCode(), $e);
             }
@@ -50,7 +51,7 @@ class Client
             throw new AuthenticationException(null, $e->getCode(), $e);
         }
 
-        $token               = json_decode((string) $response->getBody(), true);
+        $token = json_decode((string)$response->getBody(), true);
         $token['expires_at'] = time() + $token['expires_in'] ?? 0;
 
         static::$token = $token;
@@ -71,11 +72,11 @@ class Client
      */
     public static function isAuthenticated(): bool
     {
-        if (!is_array(static::$token)) {
+        if (! is_array(static::$token)) {
             return false;
         }
 
-        if (!isset(static::$token['expires_at']) || !isset(static::$token['access_token'])) {
+        if (! isset(static::$token['expires_at']) || ! isset(static::$token['access_token'])) {
             return false;
         }
 
@@ -89,16 +90,16 @@ class Client
      */
     public static function setDemoMode(bool $enabled): void
     {
-        static::$http       = null;
+        static::$http = null;
         static::$isDemoMode = $enabled;
     }
 
     /**
      * Perform an API call.
      *
-     * @param string $method  The HTTP method used for the API call.
-     * @param string $uri     The URI to call.
-     * @param array  $options The request options.
+     * @param string $method The HTTP method used for the API call.
+     * @param string $uri The URI to call.
+     * @param array $options The request options.
      *
      * @return ResponseInterface
      */
@@ -132,7 +133,7 @@ class Client
 
     private static function addAuthenticationOptions(array $options): array
     {
-        if (!static::isAuthenticated() || !is_array(static::$token)) {
+        if (! static::isAuthenticated() || ! is_array(static::$token)) {
             return $options;
         }
 
@@ -151,7 +152,7 @@ class Client
             return $options;
         }
 
-        $userAgent = [ 'User-Agent' => static::$userAgent ];
+        $userAgent = ['User-Agent' => static::$userAgent];
 
         $options['headers'] = array_merge($options['headers'] ?? [], $userAgent);
 
@@ -160,7 +161,7 @@ class Client
 
     private static function getHttp(): HttpInterface
     {
-        if (!static::$http instanceof HttpInterface) {
+        if (! static::$http instanceof HttpInterface) {
             $baseUri = static::$isDemoMode ? 'https://api.bol.com/retailer-demo/' : 'https://api.bol.com/retailer/';
 
             static::$http = new Http([

@@ -1,14 +1,15 @@
 <?php
+
 namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Exception\ClientException;
-use Picqer\BolRetailer\Model\Order;
-use Picqer\BolRetailer\Model\ReducedOrder;
-use Picqer\BolRetailer\Model\OrderItem;
-use Picqer\BolRetailer\Model\ReducedOrderItem;
 use Picqer\BolRetailer\Exception\HttpException;
 use Picqer\BolRetailer\Exception\RateLimitException;
 use Picqer\BolRetailer\Exception\ShipmentNotFoundException;
+use Picqer\BolRetailer\Model\Order;
+use Picqer\BolRetailer\Model\OrderItem;
+use Picqer\BolRetailer\Model\ReducedOrder;
+use Picqer\BolRetailer\Model\ReducedOrderItem;
 
 class Shipment extends Model\Shipment
 {
@@ -27,27 +28,27 @@ class Shipment extends Model\Shipment
             static::handleException($e);
         }
 
-        return new self(json_decode((string) $response->getBody(), true));
+        return new self(json_decode((string)$response->getBody(), true));
     }
 
     /**
      * Get all existing shipments.
      *
-     * @param integer $page   The page to get the shipments from.
-     * @param string  $order  The order to get the shipments for.
-     * @param string  $method The fulfilment method used for the orders to list the shipments for.
+     * @param integer $page The page to get the shipments from.
+     * @param string $order The order to get the shipments for.
+     * @param string $method The fulfilment method used for the orders to list the shipments for.
      *
      * @return self[]
      */
     public static function all(int $page = 1, ?string $order = null, string $method = 'FBR'): array
     {
         $query = is_null($order)
-            ? [ 'page' => $page, 'fulfilment-method' => $method ]
-            : [ 'page' => $page, 'order-id' => $order ];
+            ? ['page' => $page, 'fulfilment-method' => $method]
+            : ['page' => $page, 'order-id' => $order];
 
         try {
             $response = Client::request('GET', 'shipments', ['query' => $query]);
-            $response = json_decode((string) $response->getBody(), true);
+            $response = json_decode((string)$response->getBody(), true);
         } catch (ClientException $e) {
             static::handleException($e);
         }
@@ -64,7 +65,7 @@ class Shipment extends Model\Shipment
      * Create a new shipment for the given order item.
      *
      * @param string|OrderItem|ReducedOrderItem $orderItem The order item to create the shipment for.
-     * @param array                             $data      The data of the shipment to create.
+     * @param array $data The data of the shipment to create.
      *
      * @return ProcessStatus
      */
@@ -82,20 +83,20 @@ class Shipment extends Model\Shipment
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     /**
      * Create a shipment for each ordered item.
      *
      * @param string|Order|ReducedOrder $order The order to create shipments for.
-     * @param array                     $data  The data of the shipment created.
+     * @param array $data The data of the shipment created.
      *
      * @return ProcessStatus[]
      */
     public static function createForOrder($order, array $data): array
     {
-        $order = is_string($order)  ? \Picqer\BolRetailer\Order::get($order)  : $order;
+        $order = is_string($order) ? \Picqer\BolRetailer\Order::get($order) : $order;
 
         return array_map(function ($orderItem) use ($data) {
             return static::create($orderItem, $data);
@@ -108,19 +109,19 @@ class Shipment extends Model\Shipment
 
         if ($response && $response->getStatusCode() === 404) {
             throw new ShipmentNotFoundException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 404,
                 $e
             );
         } elseif ($response && $response->getStatusCode() === 429) {
             throw new RateLimitException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 429,
                 $e
             );
         } elseif ($response) {
             throw new HttpException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 $response->getStatusCode(),
                 $e
             );

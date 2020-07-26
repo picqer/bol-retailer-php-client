@@ -1,11 +1,12 @@
 <?php
+
 namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Exception\ClientException;
 use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Exception\RateLimitException;
-use Picqer\BolRetailer\Exception\ProcessStillPendingException;
 use Picqer\BolRetailer\Exception\ProcessStatusNotFoundException;
+use Picqer\BolRetailer\Exception\ProcessStillPendingException;
+use Picqer\BolRetailer\Exception\RateLimitException;
 
 class ProcessStatus extends Model\ProcessStatus
 {
@@ -24,7 +25,7 @@ class ProcessStatus extends Model\ProcessStatus
             static::handleException($e);
         }
 
-        return new self(json_decode((string) $response->getBody(), true));
+        return new self(json_decode((string)$response->getBody(), true));
     }
 
     /**
@@ -37,7 +38,7 @@ class ProcessStatus extends Model\ProcessStatus
         try {
             $response = Client::request('GET', "process-status/${id}");
 
-            $this->merge(json_decode((string) $response->getBody(), true));
+            $this->merge(json_decode((string)$response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
@@ -50,7 +51,7 @@ class ProcessStatus extends Model\ProcessStatus
      * of `maxRetries`.
      *
      * @param int $maxRetries The maximum number of times the process status should be refreshed.
-     * @param int $timeout    The number of seconds to wait between fetching updates from the server.
+     * @param int $timeout The number of seconds to wait between fetching updates from the server.
      *
      * @throws ProcessStillPendingException when the maximum number of retries is reached and the process is still
      *                                      in the `PENDING` status.
@@ -73,19 +74,19 @@ class ProcessStatus extends Model\ProcessStatus
 
         if ($response && $response->getStatusCode() === 404) {
             throw new ProcessStatusNotFoundException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 404,
                 $e
             );
         } elseif ($response && $response->getStatusCode() === 429) {
             throw new RateLimitException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 429,
                 $e
             );
         } elseif ($response) {
             throw new HttpException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 $response->getStatusCode(),
                 $e
             );

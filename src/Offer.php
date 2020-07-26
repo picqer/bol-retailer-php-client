@@ -1,10 +1,11 @@
 <?php
+
 namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Exception\ClientException;
 use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Exception\RateLimitException;
 use Picqer\BolRetailer\Exception\OfferNotFoundException;
+use Picqer\BolRetailer\Exception\RateLimitException;
 
 class Offer extends Model\Offer
 {
@@ -23,7 +24,7 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return new Offer(json_decode((string) $response->getBody(), true));
+        return new Offer(json_decode((string)$response->getBody(), true));
     }
 
     /**
@@ -41,7 +42,7 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     /**
@@ -54,7 +55,7 @@ class Offer extends Model\Offer
         try {
             $response = Client::request('GET', "offers/${id}");
 
-            $this->merge(json_decode((string) $response->getBody(), true));
+            $this->merge(json_decode((string)$response->getBody(), true));
         } catch (ClientException $e) {
             static::handleException($e);
         }
@@ -77,14 +78,14 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     /**
      * Update the stock level of an offer.
      *
-     * @param integer $amount            The stock level of the offer.
-     * @param bool    $managedByRetailer Configures whether the retailer manages the stock levels or that bol.com
+     * @param integer $amount The stock level of the offer.
+     * @param bool $managedByRetailer Configures whether the retailer manages the stock levels or that bol.com
      *                                   should calculate the corrected stock based on actual open orders. In case the
      *                                   configuration is set to `false`, all open orders are used to calculate the
      *                                   corrected stock. In case the configuration is set to `true`, only orders that
@@ -93,8 +94,8 @@ class Offer extends Model\Offer
      */
     public function updateStock(int $amount, bool $managedByRetailer = true): ProcessStatus
     {
-        $id       = $this->offerId;
-        $content  = json_encode([ 'amount' => $amount, 'managedByRetailer' => $managedByRetailer ]);
+        $id = $this->offerId;
+        $content = json_encode(['amount' => $amount, 'managedByRetailer' => $managedByRetailer]);
 
         try {
             $response = Client::request('PUT', "offers/${id}/stock", ['body' => $content]);
@@ -102,7 +103,7 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     /**
@@ -120,7 +121,7 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     /**
@@ -132,7 +133,7 @@ class Offer extends Model\Offer
      */
     public static function export(string $format = 'CSV'): ProcessStatus
     {
-        $content  = json_encode([ 'format' => $format ]);
+        $content = json_encode(['format' => $format]);
 
         try {
             $response = Client::request('POST', "offers/export", ['body' => $content]);
@@ -140,7 +141,7 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return new ProcessStatus(json_decode((string) $response->getBody(), true));
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
     }
 
     /**
@@ -160,7 +161,7 @@ class Offer extends Model\Offer
             static::handleException($e);
         }
 
-        return (string) $response->getBody();
+        return (string)$response->getBody();
     }
 
     private static function handleException(ClientException $e): void
@@ -169,19 +170,19 @@ class Offer extends Model\Offer
 
         if ($response && $response->getStatusCode() === 404) {
             throw new OfferNotFoundException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 404,
                 $e
             );
         } elseif ($response && $response->getStatusCode() === 429) {
             throw new RateLimitException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 429,
                 $e
             );
         } elseif ($response) {
             throw new HttpException(
-                json_decode((string) $response->getBody(), true),
+                json_decode((string)$response->getBody(), true),
                 $response->getStatusCode(),
                 $e
             );

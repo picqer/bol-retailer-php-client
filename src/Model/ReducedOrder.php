@@ -1,11 +1,12 @@
 <?php
+
 namespace Picqer\BolRetailer\Model;
 
 use DateTime;
 
 /**
- * @property string             $orderId       The identifier of the order.
- * @property DateTime           $orderPlacedAt The date and time the order was placed.
+ * @property string $orderId       The identifier of the order.
+ * @property DateTime $orderPlacedAt The date and time the order was placed.
  * @property ReducedOrderItem[] $orderItems    The items of the order.
  */
 class ReducedOrder extends AbstractModel
