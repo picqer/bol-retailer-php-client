@@ -11,6 +11,10 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
+    protected const API_ENDPOINT = 'https://api.bol.com/retailer/';
+    protected const API_DEMO_ENDPOINT = 'https://api.bol.com/retailer-demo/';
+    protected const API_VERSION_CONTENT_TYPE = 'application/vnd.retailer.v3+json';
+
     /** @var HttpInterface|null */
     private static $http;
 
@@ -162,13 +166,13 @@ class Client
     private static function getHttp(): HttpInterface
     {
         if (! static::$http instanceof HttpInterface) {
-            $baseUri = static::$isDemoMode ? 'https://api.bol.com/retailer-demo/' : 'https://api.bol.com/retailer/';
+            $baseUri = static::$isDemoMode ? self::API_DEMO_ENDPOINT : self::API_ENDPOINT;
 
             static::$http = new Http([
                 'base_uri' => $baseUri,
                 'headers' => [
-                    'Accept' => 'application/vnd.retailer.v3+json',
-                    'Content-Type' => 'application/vnd.retailer.v3+json',
+                    'Accept' => self::API_VERSION_CONTENT_TYPE,
+                    'Content-Type' => self::API_VERSION_CONTENT_TYPE,
                 ]
             ]);
         }

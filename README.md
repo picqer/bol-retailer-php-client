@@ -1,5 +1,5 @@
 # Bol.com Retailer API client for PHP
-This is an open source PHP client for the [Bol.com Retailer API](https://developers.bol.com/newretailerapiv3/), versions 3 and 4.
+This is an open source PHP client for the [Bol.com Retailer API](https://developers.bol.com/newretailerapiv3/) version 3.
 
 ## Installation
 This project can easily be installad through Composer:
