@@ -2,6 +2,6 @@
 
 namespace Picqer\BolRetailer\Exception;
 
-class ShipmentNotFoundException extends HttpException
+class ShipmentNotFoundException extends ItemNotFoundException
 {
 }

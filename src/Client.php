@@ -4,9 +4,14 @@ namespace Picqer\BolRetailer;
 
 use GuzzleHttp\Client as Http;
 use GuzzleHttp\ClientInterface as HttpInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Picqer\BolRetailer\Exception\AuthenticationException;
+use Picqer\BolRetailer\Exception\HttpException;
+use Picqer\BolRetailer\Exception\ItemNotFoundException;
+use Picqer\BolRetailer\Exception\RateLimitException;
+use Picqer\BolRetailer\Exception\UnknownResponseException;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
@@ -112,7 +117,26 @@ class Client
         $options = static::addUserAgentOptions($options);
         $options = static::addAuthenticationOptions($options);
 
-        return static::getHttp()->request($method, $uri, $options);
+        try {
+            $response = static::getHttp()->request($method, $uri, $options);
+        } catch (ClientException $exception) {
+            // TODO: This exception should also have request and response, but HttpException has to specific requirements
+            throw new UnknownResponseException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+
+        // Successful response
+        if (in_array($response->getStatusCode(), [200, 201])) {
+            return $response;
+        }
+
+        // Errored response
+        if ($response->getStatusCode() == 404) {
+            throw new ItemNotFoundException(json_decode((string)$response->getBody(), true), 404);
+        } elseif ($response->getStatusCode() == 429) {
+            throw new RateLimitException(json_decode((string)$response->getBody(), true), 429);
+        } else {
+            throw new HttpException(json_decode((string)$response->getBody(), true), $response->getStatusCode());
+        }
     }
 
     /**
