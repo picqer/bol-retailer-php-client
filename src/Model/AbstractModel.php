@@ -39,10 +39,10 @@ abstract class AbstractModel
         $getter = sprintf('get%s', ucfirst($property));
 
         if (method_exists($this, $getter)) {
-            return true;
+            return $this->{$getter}() !== null;
         }
 
-        return isset($this->data[$property]);
+        return isset($this->data[$property]) && $this->data[$property] !== null;
     }
 
     /**
