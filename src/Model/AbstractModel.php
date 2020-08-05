@@ -32,6 +32,20 @@ abstract class AbstractModel
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function __isset(string $property)
+    {
+        $getter = sprintf('get%s', ucfirst($property));
+
+        if (method_exists($this, $getter)) {
+            return true;
+        }
+
+        return isset($this->data[$property]);
+    }
+
+    /**
      * Merge the given data into the model.
      *
      * @param array $data The data to merge into the model.
