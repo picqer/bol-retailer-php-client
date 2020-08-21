@@ -45,17 +45,21 @@ class Client
                 'headers' => $headers,
                 'form_params' => $params
             ]);
-        } catch (GuzzleException $e) {
-            if ($e instanceof RequestException) {
-                $response = json_decode((string)$e->getResponse()->getBody(), true);
+        } catch (GuzzleException $exception) {
+            if ($exception instanceof RequestException) {
+                $response = json_decode((string)$exception->getResponse()->getBody(), true);
 
-                throw new AuthenticationException($response['error_description'] ?? null, $e->getCode(), $e);
+                throw new AuthenticationException($response['error_description'] ?? null);
             }
 
-            throw new AuthenticationException(null, $e->getCode(), $e);
+            throw new AuthenticationException($exception->getMessage());
         }
 
         $token = json_decode((string)$response->getBody(), true);
+        if (! is_array($token) || empty($token['access_token']) || empty($token['expires_in'])) {
+            throw new AuthenticationException('Could not retrieve valid token from Bol API');
+        }
+
         $token['expires_at'] = time() + $token['expires_in'] ?? 0;
 
         static::$token = $token;
