@@ -56,7 +56,7 @@ class Client
         }
 
         $token = json_decode((string)$response->getBody(), true);
-        if (! is_array($token) || ! isset($token['expires_in'])) {
+        if (! is_array($token) || empty($token['access_token']) || empty($token['expires_in'])) {
             throw new AuthenticationException('Could not retrieve valid token from Bol API');
         }
 
