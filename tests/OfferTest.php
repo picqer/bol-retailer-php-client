@@ -70,4 +70,24 @@ class OfferTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInstanceOf(ProcessStatus::class, $processStatus);
     }
+
+    public function testUpdatePricing()
+    {
+        $responses   = [];
+        $responses[] = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/200-offer'));
+        $responses[] = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/202-process-status'));
+
+        $this->http
+            ->request('GET', 'offers/6ff736b5-cdd0-4150-8c67-78269ee986f5', [])
+            ->willReturn($responses[0]);
+
+        $this->http
+            ->request('PUT', 'offers/6ff736b5-cdd0-4150-8c67-78269ee986f5/price', [ 'body' => json_encode(['pricing' => ['bundlePrices'=> ['quantity' => 1, 'price' => 9.99]]])])
+            ->willReturn($responses[1]);
+
+        $offer = Offer::get('6ff736b5-cdd0-4150-8c67-78269ee986f5');
+        $processStatus = $offer->updatePricing(['quantity' => 1, 'price' => 9.99]);
+
+        $this->assertInstanceOf(ProcessStatus::class, $processStatus);
+    }
 }
