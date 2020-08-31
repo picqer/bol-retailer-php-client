@@ -60,6 +60,6 @@ abstract class AbstractModel implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return json_encode($this->data);
+        return $this->data;
     }
 }
