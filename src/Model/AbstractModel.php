@@ -2,7 +2,7 @@
 
 namespace Picqer\BolRetailer\Model;
 
-abstract class AbstractModel
+abstract class AbstractModel implements \JsonSerializable
 {
     /** @var array */
     protected $data = [];
@@ -53,5 +53,13 @@ abstract class AbstractModel
     public function merge(array $data): void
     {
         $this->data = array_merge($this->data, $data);
+    }
+
+    /**
+     * @return false|mixed|string
+     */
+    public function jsonSerialize()
+    {
+        return json_encode($this->data);
     }
 }
