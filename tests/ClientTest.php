@@ -4,6 +4,7 @@ namespace Picqer\BolRetailer\Tests;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\ClientInterface;
+use Picqer\BolRetailer\Exception\AuthenticationException;
 use Picqer\BolRetailer\Exception\HttpException;
 use Prophecy\Argument;
 use Psr\Http\Message\RequestInterface;
@@ -53,7 +54,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
      */
     public function testThrowExceptionForInvalidCredentials()
     {
-        $this->expectException(HttpException::class);
+        $this->expectException(AuthenticationException::class);
 
         $request   = $this->prophesize(RequestInterface::class);
         $response  = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));

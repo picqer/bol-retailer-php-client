@@ -107,6 +107,25 @@ class Offer extends Model\Offer
     }
 
     /**
+     * Update pricing of an offer.
+     *
+     * @param array $bundlePrices The bundle prices of the offer.
+     */
+    public function updatePricing(array $bundlePrices): ProcessStatus
+    {
+        $id = $this->offerId;
+        $content = json_encode(['pricing' => ['bundlePrices'=> $bundlePrices]]);
+
+        try {
+            $response = Client::request('PUT', "offers/${id}/price", ['body' => $content]);
+        } catch (ClientException $e) {
+            static::handleException($e);
+        }
+
+        return new ProcessStatus(json_decode((string)$response->getBody(), true));
+    }
+
+    /**
      * Delete an existing offer.
      *
      * @return ProcessStatus
