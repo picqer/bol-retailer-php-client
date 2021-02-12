@@ -143,14 +143,14 @@ class BaseClient
      * @param string $method HTTP Method
      * @param string $url Url
      * @param array $options Request options to apply
-     * @param string $responseType Name of the response model
+     * @param string $responseModel Name of the response model
      * @return AbstractModel Model representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
      * @throws Exception when something unexpected went wrong.
      * @throws ResponseException when no suitable model could be found for the response.
      */
-    protected function request(string $method, string $url, array $options, string $responseType): AbstractModel
+    protected function request(string $method, string $url, array $options, string $responseModel): AbstractModel
     {
         // TODO check if autenticated
 
@@ -168,11 +168,8 @@ class BaseClient
         $response = $this->rawRequest($method, $url, $options);
         $data = $this->jsonDecodeBody($response);
 
-        // TODO remove dependency of apispec
-        $modelCreator = new ModelCreator();
-
-        // TODO catch exceptions and map them to ResponseException
-        return $modelCreator->createInstance($responseType, $data);
+        $modelFQN = __NAMESPACE__ . '\Model\\' . $responseModel;
+        return $modelFQN::fromData($data);
     }
 
     /**

@@ -32,6 +32,7 @@ class ModelGenerator extends ModelCreator
         $code[] = sprintf('class %s extends AbstractModel', $type);
         $code[] = '{';
         // TODO Add enums
+        $this->generateDefinition($modelDefinition, $code);
         $this->generateFields($modelDefinition, $code);
         $this->generateDateTimeGetters($modelDefinition, $code);
         $code[] = '}';
@@ -40,6 +41,36 @@ class ModelGenerator extends ModelCreator
         //print_r($modelDefinition);
 
         file_put_contents(__DIR__ . '/../Model/' . $type . '.php', implode("\n", $code));
+    }
+
+    protected function generateDefinition(array $modelDefinition, array &$code): void
+    {
+        $code[] = '    protected static $modelDefinition = [';
+
+
+
+        foreach ($modelDefinition['properties'] as $name => $propDefinition) {
+            $model = 'null';
+            $array = 'false';
+
+            if (isset($propDefinition['type'])) {
+                if ($propDefinition['type'] == 'array') {
+                    $array = 'true';
+                    if (isset($propDefinition['items']['$ref'])) {
+                        $model = $this->getType($propDefinition['items']['$ref']) . '::class';
+                    }
+                }
+            } elseif (isset($propDefinition['$ref'])) {
+                $model = $this->getType($propDefinition['$ref']) . '::class';
+            } else {
+                // TODO create exception class for this one
+                throw new \Exception('Unknown property definition');
+            }
+
+            $code[] = sprintf('        \'%s\' => [ \'model\' => %s, \'array\' => %s ],', $name, $model, $array);
+        }
+
+        $code[] = '    ];';
     }
 
     protected function generateFields(array $modelDefinition, array &$code): void
