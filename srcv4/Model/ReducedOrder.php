@@ -6,9 +6,9 @@ namespace Picqer\BolRetailerV4\Model;
 class ReducedOrder extends AbstractModel
 {
     protected static $modelDefinition = [
-        'orderId' => ['model' => null, 'array' => false ],
-        'orderPlacedDateTime' => ['model' => null, 'array' => false ],
-        'orderItems' => ['model' => ReducedOrderItem::class, 'array' => true ],
+        'orderId' => [ 'model' => null, 'array' => false ],
+        'orderPlacedDateTime' => [ 'model' => null, 'array' => false ],
+        'orderItems' => [ 'model' => ReducedOrderItem::class, 'array' => true ],
     ];
 
     /**
