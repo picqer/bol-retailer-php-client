@@ -3,7 +3,6 @@
 
 namespace Picqer\BolRetailerV4\OpenApi;
 
-
 class ClientGenerator
 {
     protected $specs;
