@@ -3,8 +3,15 @@
 
 namespace Picqer\BolRetailerV4\OpenApi;
 
-class ModelGenerator extends ModelCreator
+class ModelGenerator
 {
+    protected $specs;
+
+    public function __construct()
+    {
+        $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
+    }
+
     public function generateModels(): void
     {
         foreach ($this->specs['definitions'] as $type => $modelDefinition) {
@@ -46,8 +53,6 @@ class ModelGenerator extends ModelCreator
     protected function generateDefinition(array $modelDefinition, array &$code): void
     {
         $code[] = '    protected static $modelDefinition = [';
-
-
 
         foreach ($modelDefinition['properties'] as $name => $propDefinition) {
             $model = 'null';
@@ -131,5 +136,17 @@ class ModelGenerator extends ModelCreator
             $code[] = sprintf('        return \DateTime::createFromFormat(\DateTime::ATOM, $this->%s);', $name);
             $code[] = '    }';
         }
+    }
+
+    protected function getType(string $ref): string
+    {
+        //strip #/definitions/
+        return substr($ref, strrpos($ref, '/') + 1);
+    }
+
+    protected function getModelNamespace(): string
+    {
+        $namespace = substr(__NAMESPACE__, 0, strrpos(__NAMESPACE__, '\\'));
+        return $namespace . '\Model';
     }
 }
