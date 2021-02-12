@@ -148,7 +148,6 @@ class BaseClient
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
      * @throws Exception when something unexpected went wrong.
-     * @throws ResponseException when no suitable model could be found for the response.
      */
     protected function request(string $method, string $url, array $options, string $responseModel): AbstractModel
     {
