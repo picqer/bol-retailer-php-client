@@ -143,15 +143,16 @@ class BaseClient
      * @param string $method HTTP Method
      * @param string $url Url
      * @param array $options Request options to apply
+     * @param string $responseType Name of the response model
      * @return AbstractModel Model representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
      * @throws Exception when something unexpected went wrong.
      * @throws ResponseException when no suitable model could be found for the response.
      */
-    protected function request(string $method, string $url, array $options = []): AbstractModel
+    protected function request(string $method, string $url, array $options, string $responseType): AbstractModel
     {
-        $uri = '/retailer/' . $url;
+        // TODO check if autenticated
 
         $url = $this->getEndpoint() . '/' . $url;
 
@@ -161,27 +162,17 @@ class BaseClient
             'Authorization' => sprintf('Bearer %s', $this->token['access_token']),
         ];
 
-        // TODO merge headers
+        // TODO merge headers?
         $options['headers'] = $headers;
 
         $response = $this->rawRequest($method, $url, $options);
         $data = $this->jsonDecodeBody($response);
 
+        // TODO remove dependency of apispec
         $modelCreator = new ModelCreator();
-        $type = $modelCreator->getResponseType($method, $uri, $response->getStatusCode());
-
-        if ($type == null) {
-            throw new ResponseException(
-                sprintf(
-                    'Could not find response type for uri \'%s\' and status \'%d\'',
-                    $uri,
-                    $response->getStatusCode()
-                )
-            );
-        }
 
         // TODO catch exceptions and map them to ResponseException
-        return $modelCreator->createInstance($type, $data);
+        return $modelCreator->createInstance($responseType, $data);
     }
 
     /**

@@ -22,6 +22,6 @@ class Client extends BaseClient
         $query = ['page' => $page, 'fulfilment-method' => $fulfilmentMethod];
 
         /** @var Model\ReducedOrders $reducedOrders */
-        return $this->request('GET', 'orders', ['query' => $query]);
+        return $this->request('GET', 'orders', ['query' => $query], 'ReducedOrders');
     }
 }
