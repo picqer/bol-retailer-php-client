@@ -108,10 +108,10 @@ class ModelGenerator
             $code[] = '';
             $code[] = '    /**';
 
-            if ($isObjectArray) {
-                $code[] = sprintf('     * @var %s', $propType);
-            } else {
+            if (isset($propDefinition['description'])) {
                 $code[] = sprintf('     * @var %s %s', $propType, $propDefinition['description']);
+            } else {
+                $code[] = sprintf('     * @var %s', $propType);
             }
 
             $code[] = '     */';
