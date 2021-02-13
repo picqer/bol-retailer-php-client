@@ -64,10 +64,13 @@ class ClientGenerator
         $methodName = $this->kebabCaseToCamelCase($methodDefinition['operationId']);
         $arguments = $this->extractArguments($methodDefinition['parameters'] ?? []);
 
-        $phpDocReturnType = $returnType;
+        $nullableReturnType = false;
         if (isset($methodDefinition['responses']['404'])) {
-            $phpDocReturnType = $returnType . '|null';
-            $returnType = '?' . $returnType;
+            $nullableReturnType = true;
+            if (! isset($returnType['property'])) {
+                $returnType['doc'] = $returnType['doc'] . '|null';
+                $returnType['php'] = '?' . $returnType['php'];
+            }
         }
 
         $argumentsList = $this->getArgumentsList($arguments);
@@ -77,13 +80,13 @@ class ClientGenerator
         // TODO break at 120 chars
         $code[] = '     * ' . $methodDefinition['description'];
         $this->addParamsPhpDoc($arguments, $code);
-        $code[] = sprintf('     * @return %s', $phpDocReturnType);
+        $code[] = sprintf('     * @return %s', $returnType['doc']);
         $code[] = '     * @throws Exception\ConnectException when an error occurred in the HTTP connection.';
         $code[] = '     * @throws Exception\ResponseException when an unexpected response was received.';
         $code[] = '     * @throws Exception\UnauthorizedException when request was unauthorized.';
         $code[] = '     * @throws Exception\Exception when something unexpected went wrong.';
         $code[] = '     */';
-        $code[] = sprintf('    public function %s(%s): %s', $methodName, $argumentsList, $returnType);
+        $code[] = sprintf('    public function %s(%s): %s', $methodName, $argumentsList, $returnType['php']);
         $code[] = '    {';
         $code[] = sprintf('        $url = "%s";', $this->getUrl($path, $arguments));
 
@@ -98,11 +101,31 @@ class ClientGenerator
         $this->addResponseTypes($methodDefinition['responses'], $code);
 
         $code[] = '';
-        $code[] = sprintf(
-            '        return $this->request(\'%s\', $url, %s, $responseTypes);',
-            strtoupper($httpMethod),
-            $options
-        );
+        if (isset($returnType['property']) && $nullableReturnType) {
+            $code[] = sprintf(
+                '        $result = $this->request(\'%s\', $url, %s, $responseTypes);',
+                strtoupper($httpMethod),
+                $options
+            );
+            $code[] = sprintf(
+                '        return $result === null ? [] : $result->%s;',
+                $returnType['property']
+            );
+        } elseif (isset($returnType['property'])) {
+            $code[] = sprintf(
+                '        return $this->request(\'%s\', $url, %s, $responseTypes)->%s;',
+                strtoupper($httpMethod),
+                $options,
+                $returnType['property']
+            );
+        } else {
+            $code[] = sprintf(
+                '        return $this->request(\'%s\', $url, %s, $responseTypes);',
+                strtoupper($httpMethod),
+                $options
+            );
+        }
+
         $code[] = '    }';
 
         echo "ok\n";
@@ -302,7 +325,7 @@ class ClientGenerator
         $code[] = '        ];';
     }
 
-    protected function getReturnType(array $responses): ?string
+    protected function getReturnType(array $responses): array
     {
         $response = $responses['200'] ?? $responses['202'] ?? null;
         if ($response === null) {
@@ -311,16 +334,36 @@ class ClientGenerator
 
         if (! isset($response['schema'])) {
             // There are 2 methods that return a csv, but have no response type defined
-            return 'string';
+            return ['doc' => 'string', 'php' => 'string'];
         } elseif (isset($response['schema']['$ref'])) {
-            return 'Model\\' . $this->getType($response['schema']['$ref']);
+
+            //strip #/definitions/
+            $ref = $refName = $response['schema']['$ref'];
+
+            $apiType = substr($ref, strrpos($ref, '/') + 1);
+
+            // extract property if it's a model that wraps an array
+            $refDefinition = $this->specs['definitions'][$apiType];
+            if (count($refDefinition['properties']) == 1) {
+                $property = array_keys($refDefinition['properties'])[0];
+                if ($refDefinition['properties'][$property]['type'] == 'array') {
+                    return [
+                        'doc' => 'Model\\' . $this->getType($refDefinition['properties'][$property]['items']['$ref']) . '[]',
+                        'php' => 'array',
+                        'property' => $property
+                    ];
+                }
+            }
+
+            $type = 'Model\\' . $this->getType($ref);
+            return ['doc' => $type, 'php' => $type];
         } else {
             // currently only array is support
 
             if ($response['schema']['type'] != 'array' || $response['schema']['items']['format'] != 'byte') {
                 throw new \Exception("Only Models and raw bytes are supported as response type");
             }
-            return 'string';
+            return ['doc' => 'string', 'php' => 'string', ''];
         }
     }
 }
