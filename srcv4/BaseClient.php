@@ -4,6 +4,7 @@ namespace Picqer\BolRetailerV4;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface as HttpInterface;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
@@ -231,8 +232,8 @@ class BaseClient
                 $connectException->getCode(),
                 $connectException
             );
-        } catch (GuzzleClientException $clientException) {
-            $response = $clientException->getResponse();
+        } catch (BadResponseException $badResponseException) {
+            $response = $badResponseException->getResponse();
 
             $data = [];
             try {
@@ -240,16 +241,18 @@ class BaseClient
             } catch (ResponseException $responseException) {
             }
 
-            //TODO possible add more situations
-            //400 will return data of type 'Problem'
+            $statusCode = $response->getStatusCode();
 
-            switch ($response->getStatusCode()) {
-                case 401:
-                    throw new UnauthorizedException($data['error_description'] ?? 'No description provided');
+            $message = $data['detail'] ??
+                $data['error_description'] ??
+                $statusCode . ' ' . $response->getReasonPhrase();
+
+            if ($statusCode == 401) {
+                throw new UnauthorizedException($message);
+            } else {
+                throw new ResponseException($message);
             }
         } catch (GuzzleException $guzzleException) {
-            // TODO Uncaught GuzzleHttp\Exception\ServerException: Server error:
-            // `GET https://api.bol.com/retailer-demo//orders/B3K8290LP0x` resulted in a `500 Internal Server Error`
             throw new Exception(
                 "Unexpected Guzzle exception: " . $guzzleException->getMessage(),
                 0,
