@@ -83,7 +83,7 @@ class BaseClient
      * @param string $clientSecret The client secret to use for authentication.
      *
      * @throws ConnectException when an error occurred in the HTTP connection.
-     * @throws ResponseException when response could not be decoded.
+     * @throws ResponseException when an unexpected response was received.
      * @throws UnauthorizedException when authentication failed.
      * @throws Exception when something unexpected went wrong.
      */
@@ -143,13 +143,14 @@ class BaseClient
      * @param string $method HTTP Method
      * @param string $url Url
      * @param array $options Request options to apply
-     * @param array $responses Name of the response model per http status
+     * @param array $responseTypes Expected response type per HTTP status code
      * @return AbstractModel|string|null Model or array representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
+     * @throws ResponseException when no suitable responseType could be applied.
      * @throws Exception when something unexpected went wrong.
      */
-    protected function request(string $method, string $url, array $options, array $responses)
+    protected function request(string $method, string $url, array $options, array $responseTypes)
     {
         // TODO check if authenticated
 
@@ -171,11 +172,11 @@ class BaseClient
         $response = $this->rawRequest($method, $url, $options);
         $statusCode = $response->getStatusCode();
 
-        if (!array_key_exists($statusCode, $responses)) {
+        if (!array_key_exists($statusCode, $responseTypes)) {
             throw new ResponseException("No model specified for '{$url}' with status '{$statusCode}'");
         }
 
-        $responseType = $responses[$statusCode];
+        $responseType = $responseTypes[$statusCode];
 
         // return null if responseType is null (e.g. 404)
         if ($responseType === 'null') {

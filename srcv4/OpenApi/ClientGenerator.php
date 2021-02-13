@@ -79,6 +79,7 @@ class ClientGenerator
         $this->addParamsPhpDoc($arguments, $code);
         $code[] = sprintf('     * @return %s', $phpDocReturnType);
         $code[] = '     * @throws Exception\ConnectException when an error occurred in the HTTP connection.';
+        $code[] = '     * @throws Exception\ResponseException when an unexpected response was received.';
         $code[] = '     * @throws Exception\UnauthorizedException when request was unauthorized.';
         $code[] = '     * @throws Exception\Exception when something unexpected went wrong.';
         $code[] = '     */';
@@ -94,11 +95,11 @@ class ClientGenerator
         $code[] = '        ];';
         $options = '$options';
 
-        $this->addResponses($methodDefinition['responses'], $code);
+        $this->addResponseTypes($methodDefinition['responses'], $code);
 
         $code[] = '';
         $code[] = sprintf(
-            '        return $this->request(\'%s\', $url, %s, $responses);',
+            '        return $this->request(\'%s\', $url, %s, $responseTypes);',
             strtoupper($httpMethod),
             $options
         );
@@ -277,9 +278,9 @@ class ClientGenerator
         }
     }
 
-    protected function addResponses(array $responses, array &$code): void
+    protected function addResponseTypes(array $responses, array &$code): void
     {
-        $code[] = '        $responses = [';
+        $code[] = '        $responseTypes = [';
         foreach ($responses as $httpStatus => $response) {
             $type = null;
             if (in_array($httpStatus, ['200', '202'])) {
