@@ -161,6 +161,11 @@ class BaseClient
             'Authorization' => sprintf('Bearer %s', $this->token['access_token']),
         ];
 
+        // encode the body if a model is supplied for it
+        if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
+            $options['body'] = json_encode($options['body']);
+        }
+
         // TODO merge headers?
         $options['headers'] = $headers;
 
