@@ -11,7 +11,7 @@ abstract class AbstractModel
      * @param array $data Associative array with field values
      * @return AbstractModel
      */
-    public static function fromData(array $data): AbstractModel
+    public static function fromArray(array $data): AbstractModel
     {
         $model = new static;
 

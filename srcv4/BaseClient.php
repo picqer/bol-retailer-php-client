@@ -190,7 +190,7 @@ class BaseClient
         // create new instance of model and fill it with the response data
         $modelFQN = __NAMESPACE__ . '\Model\\' . $responseType;
         $data = $this->jsonDecodeBody($response);
-        return $modelFQN::fromData($data);
+        return $modelFQN::fromArray($data);
     }
 
     /**
