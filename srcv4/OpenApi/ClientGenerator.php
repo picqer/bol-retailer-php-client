@@ -194,7 +194,7 @@ class ClientGenerator
             }
             $code[] = sprintf('                \'%s\' => $%s,', $argument['paramName'], $argument['name']);
         }
-        $code[] = '            ];';
+        $code[] = '            ],';
     }
 
     protected function addBodyParam(array $arguments, array &$code): void
@@ -204,7 +204,7 @@ class ClientGenerator
                 continue;
             }
 
-            $code[] = sprintf('            \'body\' => $%s', $argument['name']);
+            $code[] = sprintf('            \'body\' => $%s,', $argument['name']);
 
             return;
         }
@@ -212,6 +212,7 @@ class ClientGenerator
 
     protected function getReturnType(array $responses): string
     {
+        // TODO take into account that a resource could not be found
         if (isset($responses['200'])) {
             $ref = $responses['200']['schema']['$ref'];
         } elseif (isset($responses['202'])) {

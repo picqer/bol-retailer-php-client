@@ -21,7 +21,7 @@ class Client extends BaseClient
             'query' => [
                 'page' => $page,
                 'fulfilment-method' => $fulfilmentMethod,
-            ];
+            ],
         ];
 
         return $this->request('GET', 'orders', $options, 'ReducedOrders');
@@ -38,7 +38,7 @@ class Client extends BaseClient
     public function postOffer(Model\CreateOfferRequest $createOfferRequest): Model\ProcessStatus
     {
         $options = [
-            'body' => $createOfferRequest
+            'body' => $createOfferRequest,
         ];
 
         return $this->request('POST', 'offers', $options, 'ProcessStatus');
