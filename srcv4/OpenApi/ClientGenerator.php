@@ -33,10 +33,11 @@ class ClientGenerator
         $code[] = '{';
         $this->generateMethod('/retailer/orders', 'get', $code);
         $this->generateMethod('/retailer/offers', 'post', $code);
+        $this->generateMethod('/retailer/orders/{order-id}', 'get', $code);
         $code[] = '}';
         $code[] = '';
 
-        echo implode("\n", $code);
+        //echo implode("\n", $code);
 
         file_put_contents(__DIR__ . '/../Client.php', implode("\n", $code));
     }
@@ -45,38 +46,58 @@ class ClientGenerator
     {
         $methodDefinition = $this->specs['paths'][$path][$httpMethod];
 
+        echo "{$methodDefinition['operationId']}\n";
+
         $methodName = $this->kebabCaseToCamelCase($methodDefinition['operationId']);
         $arguments = $this->extractArguments($methodDefinition['parameters']);
-        $returnType = $this->getReturnType($methodDefinition['responses']);
+        $returnType = 'Model\\' . $this->getReturnType($methodDefinition['responses']);
+
+        $phpDocReturnType = $returnType;
+        if (isset($methodDefinition['responses']['404'])) {
+            $phpDocReturnType = $returnType . '|null';
+            $returnType = '?' . $returnType;
+        }
 
         $argumentsList = $this->getArgumentsList($arguments);
+
+        $hasOptions = array_reduce($arguments, function ($amount, $argument) {
+            return in_array($argument['in'], ['query', 'body']) ? $amount+1 : $amount;
+        }) > 0;
 
         $code[] = '';
         $code[] = '    /**';
         // TODO break at 120 chars
         $code[] = '     * ' . $methodDefinition['description'];
         $this->addParamsPhpDoc($arguments, $code);
-        $code[] = sprintf('     * @return Model\%s', $returnType);
+        $code[] = sprintf('     * @return %s', $phpDocReturnType);
         $code[] = '     * @throws Exception\ConnectException when an error occurred in the HTTP connection.';
         $code[] = '     * @throws Exception\UnauthorizedException when request was unauthorized.';
         $code[] = '     * @throws Exception\Exception when something unexpected went wrong.';
         $code[] = '     */';
-        $code[] = sprintf('    public function %s(%s): Model\%s', $methodName, $argumentsList, $returnType);
+        $code[] = sprintf('    public function %s(%s): %s', $methodName, $argumentsList, $returnType);
         $code[] = '    {';
-        $code[] = '        $options = [';
-        $this->addQueryParams($arguments, $code);
-        $this->addBodyParam($arguments, $code);
-        $code[] = '        ];';
+        $code[] = sprintf('        $url = "%s";', $this->getUrl($path, $arguments));
+
+        $options = '[]';
+        if ($hasOptions) {
+            $code[] = '        $options = [';
+            $this->addQueryParams($arguments, $code);
+            $this->addBodyParam($arguments, $code);
+            $code[] = '        ];';
+            $options = '$options';
+        }
+
+        $this->addResponses($methodDefinition['responses'], $code);
+
         $code[] = '';
         $code[] = sprintf(
-            '        return $this->request(\'%s\', \'%s\', $options, \'%s\');',
+            '        return $this->request(\'%s\', $url, %s, $responses);',
             strtoupper($httpMethod),
-            $this->shortPath($path),
-            $returnType
+            $options
         );
         $code[] = '    }';
 
-        print_r($methodDefinition);
+        //print_r($methodDefinition);
     }
 
     protected function getType(string $ref): string
@@ -111,13 +132,32 @@ class ClientGenerator
         }
     }
 
-    protected function kebabCaseToCamelCase($name): string
+    protected function kebabCaseToCamelCase(string $name): string
     {
         $nameElems = explode('-', $name);
         for ($i=1; $i<count($nameElems); $i++) {
             $nameElems[$i] = ucfirst($nameElems[$i]);
         }
         return implode('', $nameElems);
+    }
+
+    protected function getUrl(string $path, array $arguments): string
+    {
+        $url = substr($path, strlen('/retailer/'));
+
+        foreach ($arguments as $argument) {
+            if ($argument['in'] != 'path') {
+                continue;
+            }
+
+            $url = str_replace(
+                '{' . $argument['paramName'] . '}',
+                '${' . $argument['name'] . '}',
+                $url
+            );
+        }
+
+        return $url;
     }
 
     protected function extractArguments(array $parameters): array
@@ -186,7 +226,7 @@ class ClientGenerator
             return;
         }
 
-        $code[] = sprintf('            \'query\' => [', $in);
+        $code[] = '            \'query\' => [';
 
         foreach ($arguments as $argument) {
             if ($argument['in'] != 'query') {
@@ -210,6 +250,23 @@ class ClientGenerator
         }
     }
 
+    protected function addResponses(array $responses, array &$code): void
+    {
+        $code[] = '        $responses = [';
+        foreach ($responses as $httpStatus => $response) {
+            $type = null;
+            if (in_array($httpStatus, ['200', '202'])) {
+                $type = '\'' . $this->getType($response['schema']['$ref']) . '\'';
+            } elseif ($httpStatus == '404') {
+                $type = 'null';
+            }
+            if ($type !== null) {
+                $code[] = sprintf('            \'%s\' => %s,', $httpStatus, $type);
+            }
+        }
+        $code[] = '        ];';
+    }
+
     protected function getReturnType(array $responses): string
     {
         // TODO take into account that a resource could not be found
@@ -222,10 +279,5 @@ class ClientGenerator
         }
 
         return $this->getType($ref);
-    }
-
-    protected function shortPath($path): string
-    {
-        return substr($path, strlen('/retailer/'));
     }
 }

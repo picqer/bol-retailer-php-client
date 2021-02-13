@@ -17,14 +17,18 @@ class Client extends BaseClient
      */
     public function getOrders(int $page = 1, string $fulfilmentMethod = 'FBR'): Model\ReducedOrders
     {
+        $url = "orders";
         $options = [
             'query' => [
                 'page' => $page,
                 'fulfilment-method' => $fulfilmentMethod,
             ],
         ];
+        $responses = [
+            '200' => 'ReducedOrders',
+        ];
 
-        return $this->request('GET', 'orders', $options, 'ReducedOrders');
+        return $this->request('GET', $url, $options, $responses);
     }
 
     /**
@@ -37,10 +41,33 @@ class Client extends BaseClient
      */
     public function postOffer(Model\CreateOfferRequest $createOfferRequest): Model\ProcessStatus
     {
+        $url = "offers";
         $options = [
             'body' => $createOfferRequest,
         ];
+        $responses = [
+            '202' => 'ProcessStatus',
+        ];
 
-        return $this->request('POST', 'offers', $options, 'ProcessStatus');
+        return $this->request('POST', $url, $options, $responses);
+    }
+
+    /**
+     * Gets an open order by order id.
+     * @param string orderId
+     * @return Model\Order|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getOrder(string $orderId): ?Model\Order
+    {
+        $url = "orders/${orderId}";
+        $responses = [
+            '200' => 'Order',
+            '404' => null,
+        ];
+
+        return $this->request('GET', $url, [], $responses);
     }
 }
