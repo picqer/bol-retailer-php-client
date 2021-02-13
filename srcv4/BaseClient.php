@@ -143,19 +143,19 @@ class BaseClient
      * @param string $method HTTP Method
      * @param string $url Url
      * @param array $options Request options to apply
-     * @param string $responseModel Name of the response model
-     * @return AbstractModel Model representing response
+     * @param array $responses Name of the response model per http status
+     * @return AbstractModel|null Model representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
      * @throws Exception when something unexpected went wrong.
      */
-    protected function request(string $method, string $url, array $options, string $responseModel): AbstractModel
+    protected function request(string $method, string $url, array $options, array $responses): ?AbstractModel
     {
-        // TODO check if autenticated
+        // TODO check if authenticated
 
         $url = $this->getEndpoint() . '/' . $url;
 
-        $headers = [
+        $options['headers'] = [
             'Accept' => static::API_VERSION_CONTENT_TYPE,
             'Content-Type' => static::API_VERSION_CONTENT_TYPE,
             'Authorization' => sprintf('Bearer %s', $this->token['access_token']),
@@ -166,13 +166,20 @@ class BaseClient
             $options['body'] = json_encode($options['body']);
         }
 
-        // TODO merge headers?
-        $options['headers'] = $headers;
-
         $response = $this->rawRequest($method, $url, $options);
-        $data = $this->jsonDecodeBody($response);
+        $statusCode = $response->getStatusCode();
+
+        if (!array_key_exists($statusCode, $responses)) {
+            throw new ResponseException("No model specified for '{$url}' with status '{$statusCode}'");
+        }
+
+        $responseModel = $responses[$statusCode];
+        if ($responseModel === null) {
+            return null;
+        }
 
         $modelFQN = __NAMESPACE__ . '\Model\\' . $responseModel;
+        $data = $this->jsonDecodeBody($response);
         return $modelFQN::fromData($data);
     }
 
@@ -228,6 +235,8 @@ class BaseClient
                     throw new UnauthorizedException($data['error_description'] ?? 'No description provided');
             }
         } catch (GuzzleException $guzzleException) {
+            // TODO Uncaught GuzzleHttp\Exception\ServerException: Server error:
+            // `GET https://api.bol.com/retailer-demo//orders/B3K8290LP0x` resulted in a `500 Internal Server Error`
             throw new Exception(
                 "Unexpected Guzzle exception: " . $guzzleException->getMessage(),
                 0,
