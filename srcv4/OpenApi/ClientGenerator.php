@@ -32,10 +32,11 @@ class ClientGenerator
         $code[] = 'class Client extends BaseClient';
         $code[] = '{';
         $this->generateMethod('/retailer/orders', 'get', $code);
+        $this->generateMethod('/retailer/offers', 'post', $code);
         $code[] = '}';
         $code[] = '';
 
-        //echo implode("\n", $code);
+        echo implode("\n", $code);
 
         file_put_contents(__DIR__ . '/../Client.php', implode("\n", $code));
     }
@@ -45,25 +46,30 @@ class ClientGenerator
         $methodDefinition = $this->specs['paths'][$path][$httpMethod];
 
         $methodName = $this->kebabCaseToCamelCase($methodDefinition['operationId']);
-        $arguments = $this->getArguments($methodDefinition['parameters']);
+        $arguments = $this->extractArguments($methodDefinition['parameters']);
         $returnType = $this->getReturnType($methodDefinition['responses']);
+
+        $argumentsList = $this->getArgumentsList($arguments);
 
         $code[] = '';
         $code[] = '    /**';
         // TODO break at 120 chars
         $code[] = '     * ' . $methodDefinition['description'];
-        $this->addParamsPhpDoc($methodDefinition['parameters'], $code);
+        $this->addParamsPhpDoc($arguments, $code);
         $code[] = sprintf('     * @return Model\%s', $returnType);
         $code[] = '     * @throws Exception\ConnectException when an error occurred in the HTTP connection.';
         $code[] = '     * @throws Exception\UnauthorizedException when request was unauthorized.';
         $code[] = '     * @throws Exception\Exception when something unexpected went wrong.';
         $code[] = '     */';
-        $code[] = sprintf('    public function %s(%s): Model\%s', $methodName, $arguments, $returnType);
+        $code[] = sprintf('    public function %s(%s): Model\%s', $methodName, $argumentsList, $returnType);
         $code[] = '    {';
-        $this->addRequestParams($methodDefinition['parameters'], 'query', $code);
+        $code[] = '        $options = [';
+        $this->addQueryParams($arguments, $code);
+        $this->addBodyParam($arguments, $code);
+        $code[] = '        ];';
         $code[] = '';
         $code[] = sprintf(
-            '        return $this->request(\'%s\', \'%s\', [ \'query\' => $query ], \'%s\');',
+            '        return $this->request(\'%s\', \'%s\', $options, \'%s\');',
             strtoupper($httpMethod),
             $this->shortPath($path),
             $returnType
@@ -84,16 +90,24 @@ class ClientGenerator
         return substr(__NAMESPACE__, 0, strrpos(__NAMESPACE__, '\\'));
     }
 
-    protected function addParamsPhpDoc(array $parameters, array &$code): void
+    protected function addParamsPhpDoc(array $arguments, array &$code): void
     {
         // TODO break at 120 chars
-        foreach ($parameters as $parameter) {
-            $code[] = sprintf(
-                '     * @param %s %s %s',
-                static::$paramTypeMapping[$parameter['type']],
-                $this->kebabCaseToCamelCase($parameter['name']),
-                $parameter['description']
-            );
+        foreach ($arguments as $argument) {
+            if (empty($argument['description'])) {
+                $code[] = sprintf(
+                    '     * @param %s %s',
+                    $argument['type'],
+                    $argument['name']
+                );
+            } else {
+                $code[] = sprintf(
+                    '     * @param %s %s %s',
+                    $argument['type'],
+                    $argument['name'],
+                    $argument['description']
+                );
+            }
         }
     }
 
@@ -106,42 +120,94 @@ class ClientGenerator
         return implode('', $nameElems);
     }
 
-    protected function getArguments(array $parameters): string
+    protected function extractArguments(array $parameters): array
     {
-        $arguments = [];
+        $argsWithoutDefault = [];
+        $argsWithDefault = [];
 
         foreach ($parameters as $parameter) {
-            $type = static::$paramTypeMapping[$parameter['type']];
+            $argument = [
+                'default' => null,
+                'description' => null,
+                'in' => $parameter['in'],
+                'paramName' => null
+            ];
 
-            $argument = $type . ' $' . $this->kebabCaseToCamelCase($parameter['name']);
-            if (isset($parameter['default'])) {
-                if ($parameter['type'] == 'string') {
-                    $argument = sprintf('%s = \'%s\'', $argument, $parameter['default']);
-                } else {
-                    $argument = sprintf('%s = %s', $argument, $parameter['default']);
+            if ($parameter['in'] == 'body') {
+                $type = $this->getType($parameter['schema']['$ref']);
+                $argument['type'] = 'Model\\' . $type;
+                $argument['name'] = lcfirst($type);
+            } else {
+                $argument['type'] = static::$paramTypeMapping[$parameter['type']];
+                $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
+                $argument['paramName'] = $parameter['name'];
+                if (isset($parameter['default'])) {
+                    if ($parameter['type'] == 'string') {
+                        $argument['default'] = sprintf('\'%s\'', $parameter['default']);
+                    } else {
+                        $argument['default'] = $parameter['default'];
+                    }
+                    $argument['description'] = $parameter['description'];
                 }
             }
-            $arguments[] = $argument;
+
+            if ($argument['default'] !== null) {
+                $argsWithDefault[] = $argument;
+            } else {
+                $argsWithoutDefault[] = $argument;
+            }
         }
 
-        return implode(', ', $arguments);
+        return array_merge($argsWithoutDefault, $argsWithDefault);
     }
 
-    protected function addRequestParams(array $parameters, $in, array &$code): void
+    protected function getArgumentsList(array $arguments): string
     {
-        $code[] = sprintf("        $%s = [", $in);
+        $argumentsList = [];
 
-        foreach ($parameters as $parameter) {
-            if ($parameter['in'] != $in) {
+        foreach ($arguments as $argument) {
+            if ($argument['default'] !== null) {
+                $argumentsList[] = sprintf('%s $%s = %s', $argument['type'], $argument['name'], $argument['default']);
+            } else {
+                $argumentsList[] = sprintf('%s $%s', $argument['type'], $argument['name']);
+            }
+        }
+
+        return implode(', ', $argumentsList);
+    }
+
+    protected function addQueryParams(array $arguments, array &$code): void
+    {
+        $amount = array_reduce($arguments, function ($amount, $argument) {
+            return $argument['in'] == 'query' ? $amount+1 : $amount;
+        });
+
+        if ($amount == 0) {
+            return;
+        }
+
+        $code[] = sprintf('            \'query\' => [', $in);
+
+        foreach ($arguments as $argument) {
+            if ($argument['in'] != 'query') {
                 continue;
             }
-            $code[] = sprintf(
-                '            \'%s\' => $%s,',
-                $parameter['name'],
-                $this->kebabCaseToCamelCase($parameter['name'])
-            );
+            $code[] = sprintf('                \'%s\' => $%s,', $argument['paramName'], $argument['name']);
         }
-        $code[] = '        ];';
+        $code[] = '            ];';
+    }
+
+    protected function addBodyParam(array $arguments, array &$code): void
+    {
+        foreach ($arguments as $argument) {
+            if ($argument['in'] != 'body') {
+                continue;
+            }
+
+            $code[] = sprintf('            \'body\' => $%s', $argument['name']);
+
+            return;
+        }
     }
 
     protected function getReturnType(array $responses): string

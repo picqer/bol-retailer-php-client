@@ -17,11 +17,30 @@ class Client extends BaseClient
      */
     public function getOrders(int $page = 1, string $fulfilmentMethod = 'FBR'): Model\ReducedOrders
     {
-        $query = [
-            'page' => $page,
-            'fulfilment-method' => $fulfilmentMethod,
+        $options = [
+            'query' => [
+                'page' => $page,
+                'fulfilment-method' => $fulfilmentMethod,
+            ];
         ];
 
-        return $this->request('GET', 'orders', [ 'query' => $query ], 'ReducedOrders');
+        return $this->request('GET', 'orders', $options, 'ReducedOrders');
+    }
+
+    /**
+     * Creates a new offer, and adds it to the catalog. After creation, status information can be retrieved to review if the offer is valid and published to the shop.
+     * @param Model\CreateOfferRequest createOfferRequest
+     * @return Model\ProcessStatus
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function postOffer(Model\CreateOfferRequest $createOfferRequest): Model\ProcessStatus
+    {
+        $options = [
+            'body' => $createOfferRequest
+        ];
+
+        return $this->request('POST', 'offers', $options, 'ProcessStatus');
     }
 }
