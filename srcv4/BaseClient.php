@@ -21,7 +21,7 @@ class BaseClient
     protected const API_TOKEN_URI = 'https://login.bol.com/token';
     protected const API_ENDPOINT = 'https://api.bol.com/retailer/';
     protected const API_DEMO_ENDPOINT = 'https://api.bol.com/retailer-demo/';
-    protected const API_VERSION_CONTENT_TYPE = 'application/vnd.retailer.v4+json';
+    protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v4+json';
 
     /**
      * @var bool Whether request will be sent to the demo endpoint.
@@ -144,26 +144,28 @@ class BaseClient
      * @param string $url Url
      * @param array $options Request options to apply
      * @param array $responses Name of the response model per http status
-     * @return AbstractModel|null Model representing response
+     * @return AbstractModel|string|null Model or array representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
      * @throws Exception when something unexpected went wrong.
      */
-    protected function request(string $method, string $url, array $options, array $responses): ?AbstractModel
+    protected function request(string $method, string $url, array $options, array $responses)
     {
         // TODO check if authenticated
 
-        $url = $this->getEndpoint() . '/' . $url;
+        $url = $this->getEndpoint() . $url;
 
         $options['headers'] = [
-            'Accept' => static::API_VERSION_CONTENT_TYPE,
-            'Content-Type' => static::API_VERSION_CONTENT_TYPE,
+            'Accept' => $options['produces'],
             'Authorization' => sprintf('Bearer %s', $this->token['access_token']),
         ];
 
         // encode the body if a model is supplied for it
-        if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
-            $options['body'] = json_encode($options['body']);
+        if (isset($options['body'])) {
+            $options['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
+            if ($options['body'] instanceof AbstractModel) {
+                $options['body'] = json_encode($options['body']);
+            }
         }
 
         $response = $this->rawRequest($method, $url, $options);
@@ -173,12 +175,20 @@ class BaseClient
             throw new ResponseException("No model specified for '{$url}' with status '{$statusCode}'");
         }
 
-        $responseModel = $responses[$statusCode];
-        if ($responseModel === null) {
+        $responseType = $responses[$statusCode];
+
+        // return null if responseType is equal to null (e.g. 404)
+        if ($responseType === null) {
             return null;
         }
 
-        $modelFQN = __NAMESPACE__ . '\Model\\' . $responseModel;
+        // return raw body if response type is string
+        if ($responseType == 'string') {
+            return (string)$response->getBody();
+        }
+
+        // create new instance of model and fill it with the response data
+        $modelFQN = __NAMESPACE__ . '\Model\\' . $responseType;
         $data = $this->jsonDecodeBody($response);
         return $modelFQN::fromData($data);
     }
@@ -244,7 +254,6 @@ class BaseClient
             );
         }
 
-        //TODO Perhaps return the JSON only if API methods are not interested in other HTTP response data
         return $response;
     }
 

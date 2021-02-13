@@ -23,6 +23,7 @@ class Client extends BaseClient
                 'page' => $page,
                 'fulfilment-method' => $fulfilmentMethod,
             ],
+            'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responses = [
             '200' => 'ReducedOrders',
@@ -44,6 +45,7 @@ class Client extends BaseClient
         $url = "offers";
         $options = [
             'body' => $createOfferRequest,
+            'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responses = [
             '202' => 'ProcessStatus',
@@ -63,11 +65,36 @@ class Client extends BaseClient
     public function getOrder(string $orderId): ?Model\Order
     {
         $url = "orders/${orderId}";
+        $options = [
+            'produces' => 'application/vnd.retailer.v4+json',
+        ];
         $responses = [
             '200' => 'Order',
             '404' => null,
         ];
 
-        return $this->request('GET', $url, [], $responses);
+        return $this->request('GET', $url, $options, $responses);
+    }
+
+    /**
+     * Gets a shipping label by shipping label id.
+     * @param string shippingLabelId
+     * @return string|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getShippingLabel(string $shippingLabelId): ?string
+    {
+        $url = "shipping-labels/${shippingLabelId}";
+        $options = [
+            'produces' => 'application/vnd.retailer.v4+pdf',
+        ];
+        $responses = [
+            '200' => 'string',
+            '404' => null,
+        ];
+
+        return $this->request('GET', $url, $options, $responses);
     }
 }
