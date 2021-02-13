@@ -21,10 +21,10 @@ abstract class AbstractModel
                 $model->$field = $data[$field] ?? null;
             } elseif ($definition['array']) {
                 $model->$field = array_map(function ($data) use ($definition) {
-                    return $definition['model']::fromData($data);
+                    return $definition['model']::fromArray($data);
                 }, $data[$field]);
             } else {
-                $model->$field = $definition['model']::fromData($data[$field]);
+                $model->$field = $definition['model']::fromArray($data[$field]);
             }
         }
 
