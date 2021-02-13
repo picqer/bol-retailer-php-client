@@ -6,6 +6,11 @@ abstract class AbstractModel
 {
     protected static $modelDefinition = [];
 
+    /**
+     * Creates an instance of the Model from an associative array with data. Any related models are also created.
+     * @param array $data Associative array with field values
+     * @return AbstractModel
+     */
     public static function fromData(array $data): AbstractModel
     {
         $model = new static;
