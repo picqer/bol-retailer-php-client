@@ -18,13 +18,13 @@ abstract class AbstractModel
         // TODO validate that all fields are there
         foreach (static::$modelDefinition as $field => $definition) {
             if ($definition['model'] == null) {
-                $model->$field = $data[$field];
+                $model->$field = $data[$field] ?? null;
             } elseif ($definition['array']) {
                 $model->$field = array_map(function ($data) use ($definition) {
                     return $definition['model']::fromData($data);
                 }, $data[$field]);
             } else {
-                $model->$field = $definition[$model]::fromData($data[$field]);
+                $model->$field = $definition['model']::fromData($data[$field]);
             }
         }
 
