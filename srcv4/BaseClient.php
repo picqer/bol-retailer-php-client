@@ -177,8 +177,8 @@ class BaseClient
 
         $responseType = $responses[$statusCode];
 
-        // return null if responseType is equal to null (e.g. 404)
-        if ($responseType === null) {
+        // return null if responseType is null (e.g. 404)
+        if ($responseType === 'null') {
             return null;
         }
 
