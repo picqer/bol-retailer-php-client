@@ -152,7 +152,9 @@ class BaseClient
      */
     protected function request(string $method, string $url, array $options, array $responseTypes)
     {
-        // TODO check if authenticated
+        if (!$this->isAuthenticated()) {
+            throw new UnauthorizedException('No or expired token, please authenticate first');
+        }
 
         $url = $this->getEndpoint() . $url;
 
