@@ -26,9 +26,11 @@ class ModelGenerator
 
     public function generateModel($type): void
     {
-        echo $type . "\n";
 
         $modelDefinition = $this->specs['definitions'][$type];
+        $type = $this->getType('#/definitions/' . $type);
+
+        echo $type . "\n";
 
         $code = [];
         $code[] = '<?php';
@@ -141,7 +143,22 @@ class ModelGenerator
     protected function getType(string $ref): string
     {
         //strip #/definitions/
-        return substr($ref, strrpos($ref, '/') + 1);
+        $type = substr($ref, strrpos($ref, '/') + 1);
+
+        // There are some weird types like 'delivery windows for inbound shipments.', uppercase and concat
+        $type = str_replace(['.', ','], '', $type);
+        $words = explode(' ', $type);
+        $words = array_map(function ($word) {
+            return ucfirst($word);
+        }, $words);
+        $type = implode('', $words);
+
+        // Classname 'Return' is not allowed in php <= 7
+        if ($type == 'Return') {
+            $type = 'ReturnObject';
+        }
+
+        return $type;
     }
 
     protected function getModelNamespace(): string
