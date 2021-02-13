@@ -249,7 +249,7 @@ class BaseClient
 
             if ($statusCode == 401) {
                 throw new UnauthorizedException($message);
-            } else {
+            } elseif ($statusCode != 404) {
                 throw new ResponseException($message);
             }
         } catch (GuzzleException $guzzleException) {
