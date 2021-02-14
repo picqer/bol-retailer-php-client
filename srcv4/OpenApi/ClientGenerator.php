@@ -33,15 +33,16 @@ class ClientGenerator
         $code[] = '{';
 //        $this->generateMethod('/retailer/orders', 'get', $code);
 //        $this->generateMethod('/retailer/offers', 'post', $code);
-        $this->generateMethod('/retailer/commission', 'post', $code);
-        $this->generateMethod('/retailer/offers/{offer-id}/price', 'put', $code);
-        $this->generateMethod('/retailer/shipping-labels/{shipping-label-id}', 'get', $code);
+//        $this->generateMethod('/retailer/commission', 'post', $code);
+//        $this->generateMethod('/retailer/offers/{offer-id}/price', 'put', $code);
+//        $this->generateMethod('/retailer/shipping-labels/{shipping-label-id}', 'get', $code);
+//        $this->generateMethod('/retailer/offers/export', 'post', $code);
 
-//        foreach ($this->specs['paths'] as $path => $methodsDef) {
-//            foreach ($methodsDef as $method => $methodDef) {
-//                $this->generateMethod($path, $method, $code);
-//            }
-//        }
+        foreach ($this->specs['paths'] as $path => $methodsDef) {
+            foreach ($methodsDef as $method => $methodDef) {
+                $this->generateMethod($path, $method, $code);
+            }
+        }
         $code[] = '}';
         $code[] = '';
 
@@ -241,6 +242,10 @@ class ClientGenerator
                         $itemsType = $this->getType($propDefinition['items']['$ref']);
                         $argument['doc'] = 'Model\\' . $itemsType . '[]';
                         $argument['php'] = 'array';
+                    } elseif (isset($propDefinition['type'])) {
+                        $wrappingType = static::$paramTypeMapping[$propDefinition['type']];
+                        $argument['doc'] = $wrappingType;
+                        $argument['php'] = $wrappingType;
                     } else {
                         $wrappingType = $this->getType($propDefinition['$ref']);
                         $argument['doc'] = 'Model\\' . $wrappingType;
