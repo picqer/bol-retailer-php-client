@@ -23,7 +23,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'BulkCommissionResponse',
+            '200' => Model\BulkCommissionResponse::class,
             '404' => 'null',
         ];
 
@@ -53,7 +53,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'Commission',
+            '200' => Model\Commission::class,
             '404' => 'null',
         ];
 
@@ -77,7 +77,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -99,7 +99,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ValidationReportResponse',
+            '200' => Model\ValidationReportResponse::class,
             '404' => 'null',
         ];
 
@@ -136,7 +136,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'Inbounds',
+            '200' => Model\Inbounds::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->inbounds;
@@ -159,7 +159,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -186,7 +186,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'DeliveryWindowsForInboundShipments',
+            '200' => Model\DeliveryWindowsForInboundShipments::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->timeSlots;
@@ -207,7 +207,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'TransportersResponse',
+            '200' => Model\TransportersResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->transporters;
@@ -253,7 +253,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'Inbound',
+            '200' => Model\Inbound::class,
             '404' => 'null',
         ];
 
@@ -331,7 +331,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'OfferInsights',
+            '200' => Model\OfferInsights::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->offerInsights;
@@ -360,7 +360,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'PerformanceIndicators',
+            '200' => Model\PerformanceIndicators::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->performanceIndicators;
@@ -387,7 +387,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'SalesForecastResponse',
+            '200' => Model\SalesForecastResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes);
@@ -420,7 +420,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'InventoryResponse',
+            '200' => Model\InventoryResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->inventory;
@@ -518,7 +518,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -541,7 +541,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -587,7 +587,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -632,7 +632,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'RetailerOffer',
+            '200' => Model\RetailerOffer::class,
             '404' => 'null',
         ];
 
@@ -657,7 +657,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -679,7 +679,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('DELETE', $url, $options, $responseTypes);
@@ -703,7 +703,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -727,7 +727,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -754,7 +754,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ReducedOrders',
+            '200' => Model\ReducedOrders::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->orders;
@@ -777,7 +777,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -800,7 +800,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -822,7 +822,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'Order',
+            '200' => Model\Order::class,
             '404' => 'null',
         ];
 
@@ -847,7 +847,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'RetailPriceResponse',
+            '200' => Model\RetailPriceResponse::class,
             '404' => 'null',
         ];
 
@@ -878,7 +878,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ProcessStatusResponse',
+            '200' => Model\ProcessStatusResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->processStatuses;
@@ -901,7 +901,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ProcessStatusResponse',
+            '200' => Model\ProcessStatusResponse::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes)->processStatuses;
@@ -923,7 +923,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ProcessStatus',
+            '200' => Model\ProcessStatus::class,
             '404' => 'null',
         ];
 
@@ -953,7 +953,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ReturnsResponse',
+            '200' => Model\ReturnsResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->returns;
@@ -976,7 +976,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -998,7 +998,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ReturnObject',
+            '200' => Model\ReturnObject::class,
             '404' => 'null',
         ];
 
@@ -1023,7 +1023,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -1052,7 +1052,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'ShipmentResponse',
+            '200' => Model\ShipmentResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->shipments;
@@ -1074,7 +1074,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'Shipment',
+            '200' => Model\Shipment::class,
             '404' => 'null',
         ];
 
@@ -1098,7 +1098,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -1121,7 +1121,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'DeliveryOptionsResponse',
+            '200' => Model\DeliveryOptionsResponse::class,
             '404' => 'null',
         ];
 
@@ -1167,7 +1167,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'SubscriptionsResponse',
+            '200' => Model\SubscriptionsResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->subscriptions;
@@ -1190,7 +1190,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -1211,7 +1211,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'KeySetResponse',
+            '200' => Model\KeySetResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->signatureKeys;
@@ -1232,7 +1232,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
@@ -1254,7 +1254,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '200' => 'SubscriptionResponse',
+            '200' => Model\SubscriptionResponse::class,
             '404' => 'null',
         ];
 
@@ -1279,7 +1279,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
@@ -1301,7 +1301,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('DELETE', $url, $options, $responseTypes);
@@ -1325,7 +1325,7 @@ class Client extends BaseClient
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
-            '202' => 'ProcessStatus',
+            '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);

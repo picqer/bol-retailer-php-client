@@ -151,7 +151,7 @@ class BaseClient
      * @throws ResponseException when no suitable responseType could be applied.
      * @throws Exception when something unexpected went wrong.
      */
-    protected function request(string $method, string $url, array $options, array $responseTypes)
+    public function request(string $method, string $url, array $options, array $responseTypes)
     {
         if (!$this->isAuthenticated()) {
             throw new UnauthorizedException('No or expired token, please authenticate first');
@@ -159,20 +159,21 @@ class BaseClient
 
         $url = $this->getEndpoint() . $url;
 
-        $options['headers'] = [
-            'Accept' => $options['produces'],
+        $httpOptions = [];
+        $httpOptions['headers'] = [
+            'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
             'Authorization' => sprintf('Bearer %s', $this->token['access_token']),
         ];
 
         // encode the body if a model is supplied for it
         if (isset($options['body'])) {
-            $options['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
+            $httpOptions['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
             if ($options['body'] instanceof AbstractModel) {
-                $options['body'] = json_encode($options['body']);
+                $httpOptions['body'] = json_encode($options['body']);
             }
         }
 
-        $response = $this->rawRequest($method, $url, $options);
+        $response = $this->rawRequest($method, $url, $httpOptions);
         $statusCode = $response->getStatusCode();
 
         if (!array_key_exists($statusCode, $responseTypes)) {
@@ -192,9 +193,8 @@ class BaseClient
         }
 
         // create new instance of model and fill it with the response data
-        $modelFQN = __NAMESPACE__ . '\Model\\' . $responseType;
         $data = $this->jsonDecodeBody($response);
-        return $modelFQN::constructFromArray($data);
+        return $responseType::constructFromArray($data);
     }
 
     /**

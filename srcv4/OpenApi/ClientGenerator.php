@@ -354,7 +354,7 @@ class ClientGenerator
                     // There are 2 methods that return a csv, but have no response type defined
                     $type = '\'string\'';
                 } elseif (isset($response['schema']['$ref'])) {
-                    $type = '\'' . $this->getType($response['schema']['$ref']) . '\'';
+                    $type = 'Model\\' . $this->getType($response['schema']['$ref']) . '::class';
                 } else {
                     $type = '\'string\'';
                 }
