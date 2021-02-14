@@ -37,7 +37,6 @@ abstract class AbstractModel
                 } else {
                     $model->$field = $definition['model']::fromArray($data[$field]);
                 }
-
             }
         }
 

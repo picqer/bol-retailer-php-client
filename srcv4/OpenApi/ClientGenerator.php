@@ -367,7 +367,6 @@ class ClientGenerator
             // There are 2 methods that return a csv, but have no response type defined
             return ['doc' => 'string', 'php' => 'string'];
         } elseif (isset($response['schema']['$ref'])) {
-
             //strip #/definitions/
             $ref = $response['schema']['$ref'];
             $apiType = substr($ref, strrpos($ref, '/') + 1);
