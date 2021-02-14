@@ -18,35 +18,41 @@ abstract class AbstractModel
      * @param array $data Associative array with field values
      * @return AbstractModel
      */
-    public static function fromArray(array $data): AbstractModel
+    public static function constructFromArray(array $data): AbstractModel
     {
         $model = new static;
+        $model->fromArray($data);
+        return $model;
+    }
 
-        // TODO validate that all fields are there
-        foreach ($model->getModelDefinition() as $field => $definition) {
+    /**
+     * Fills the fields in this model from an array. Any related models are also created.
+     * @param array $data Associative array with field values
+     */
+    public function fromArray(array $data): void
+    {
+        foreach ($this->getModelDefinition() as $field => $definition) {
             if (! isset($data[$field])) {
                 continue;
             }
 
             if ($definition['model'] == null) {
-                $model->$field = $data[$field];
+                $this->$field = $data[$field];
             } elseif ($definition['array']) {
-                $model->$field = array_map(function ($data) use ($definition) {
+                $this->$field = array_map(function ($data) use ($definition) {
                     if ($data instanceof AbstractModel) {
                         return $data;
                     } else {
-                        return $definition['model']::fromArray($data);
+                        return $definition['model']::constructFromArray($data);
                     }
                 }, $data[$field]);
             } else {
                 if ($data[$field] instanceof AbstractModel) {
-                    $model->$field = $data[$field];
+                    $this->$field = $data[$field];
                 } else {
-                    $model->$field = $definition['model']::fromArray($data[$field]);
+                    $this->$field = $definition['model']::constructFromArray($data[$field]);
                 }
             }
         }
-
-        return $model;
     }
 }

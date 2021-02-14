@@ -330,7 +330,7 @@ class ClientGenerator
 
             if (isset($argument['wrapperPhp'])) {
                 $code[] = sprintf(
-                    '            \'body\' => %s::fromArray([\'%s\' => $%s]),',
+                    '            \'body\' => %s::constructFromArray([\'%s\' => $%s]),',
                     $argument['wrapperPhp'],
                     $argument['property'],
                     $argument['name']

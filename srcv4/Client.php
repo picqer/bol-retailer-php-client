@@ -19,7 +19,7 @@ class Client extends BaseClient
     {
         $url = "commission";
         $options = [
-            'body' => Model\BulkCommissionRequest::fromArray(['commissionQueries' => $commissionQueries]),
+            'body' => Model\BulkCommissionRequest::constructFromArray(['commissionQueries' => $commissionQueries]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
@@ -537,7 +537,7 @@ class Client extends BaseClient
     {
         $url = "offers/export";
         $options = [
-            'body' => Model\CreateOfferExportRequest::fromArray(['format' => $format]),
+            'body' => Model\CreateOfferExportRequest::constructFromArray(['format' => $format]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
@@ -583,7 +583,7 @@ class Client extends BaseClient
     {
         $url = "offers/unpublished";
         $options = [
-            'body' => Model\CreateUnpublishedOfferReportRequest::fromArray(['format' => $format]),
+            'body' => Model\CreateUnpublishedOfferReportRequest::constructFromArray(['format' => $format]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
@@ -699,7 +699,7 @@ class Client extends BaseClient
     {
         $url = "offers/${offerId}/price";
         $options = [
-            'body' => Model\UpdateOfferPriceRequest::fromArray(['pricing' => $pricing]),
+            'body' => Model\UpdateOfferPriceRequest::constructFromArray(['pricing' => $pricing]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
@@ -773,7 +773,7 @@ class Client extends BaseClient
     {
         $url = "orders/cancellation";
         $options = [
-            'body' => Model\ContainerForTheOrderItemsThatHaveToBeCancelled::fromArray(['orderItems' => $orderItems]),
+            'body' => Model\ContainerForTheOrderItemsThatHaveToBeCancelled::constructFromArray(['orderItems' => $orderItems]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
@@ -897,7 +897,7 @@ class Client extends BaseClient
     {
         $url = "process-status";
         $options = [
-            'body' => Model\BulkProcessStatusRequest::fromArray(['processStatusQueries' => $processStatusQueries]),
+            'body' => Model\BulkProcessStatusRequest::constructFromArray(['processStatusQueries' => $processStatusQueries]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
@@ -1117,7 +1117,7 @@ class Client extends BaseClient
     {
         $url = "shipping-labels/delivery-options";
         $options = [
-            'body' => Model\DeliveryOptionsRequest::fromArray(['orderItems' => $orderItems]),
+            'body' => Model\DeliveryOptionsRequest::constructFromArray(['orderItems' => $orderItems]),
             'produces' => 'application/vnd.retailer.v4+json',
         ];
         $responseTypes = [
