@@ -56,7 +56,7 @@ class BaseClientTest extends TestCase
         $this->assertTrue($this->client->isAuthenticated());
     }
 
-    public function testClientThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
+    public function testAuthenticateThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
         $clientException = new GuzzleClientException(
@@ -102,7 +102,7 @@ class BaseClientTest extends TestCase
     /**
      * @dataProvider providerMalformedTokenResponses
      */
-    public function testClientThrowsResponseExceptionWhenTokenIsMalformed($response)
+    public function testAuthenticateThrowsResponseExceptionWhenTokenIsMalformed($response)
     {
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
         $this->http->request('POST', 'https://login.bol.com/token', [
