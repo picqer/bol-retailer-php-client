@@ -1,0 +1,18 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 12 Feb 2021 15:19:33 GMT
+Content-Type: application/vnd.retailer.v4+json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 9
+X-RateLimit-Reset: 1
+X-Request-ID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+X-RID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+Strict-Transport-Security: max-age=86400
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+This is a test string
