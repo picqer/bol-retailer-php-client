@@ -389,7 +389,9 @@ class ClientGenerator
                 $property = array_keys($refDefinition['properties'])[0];
                 if ($refDefinition['properties'][$property]['type'] == 'array') {
                     return [
-                        'doc' => 'Model\\' . $this->getType($refDefinition['properties'][$property]['items']['$ref']) . '[]',
+                        'doc' => 'Model\\' . $this->getType(
+                            $refDefinition['properties'][$property]['items']['$ref']
+                        ) . '[]',
                         'php' => 'array',
                         'property' => $property
                     ];
