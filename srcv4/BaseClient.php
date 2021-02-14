@@ -78,6 +78,15 @@ class BaseClient
     }
 
     /**
+     * Returns the authentication token.
+     * @return array|null Authentication token.
+     */
+    public function getToken(): ?array
+    {
+        return $this->token;
+    }
+
+    /**
      * Authenticates with Bol.com Retailer API Server.
      *
      * @param string $clientId The client ID to use for authentication.
