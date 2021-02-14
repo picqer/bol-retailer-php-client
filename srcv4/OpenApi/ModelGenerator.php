@@ -54,7 +54,16 @@ class ModelGenerator
 
     protected function generateDefinition(array $modelDefinition, array &$code): void
     {
-        $code[] = '    protected static $modelDefinition = [';
+        $code[] = '    /**';
+        $code[] = '     * Returns the definition of the model: an associative array with field names as key and';
+        $code[] = '     * field definition as value. The field definition contains of';
+        $code[] = '     * model: Model class or null if it is a scalar type';
+        $code[] = '     * array: Boolean whether it is an array';
+        $code[] = '     * @return array The model definition';
+        $code[] = '     */';
+        $code[] = '    public function getModelDefinition(): array';
+        $code[] = '    {';
+        $code[] = '        return [';
 
         foreach ($modelDefinition['properties'] as $name => $propDefinition) {
             $model = 'null';
@@ -74,10 +83,11 @@ class ModelGenerator
                 throw new \Exception('Unknown property definition');
             }
 
-            $code[] = sprintf('        \'%s\' => [ \'model\' => %s, \'array\' => %s ],', $name, $model, $array);
+            $code[] = sprintf('            \'%s\' => [ \'model\' => %s, \'array\' => %s ],', $name, $model, $array);
         }
 
-        $code[] = '    ];';
+        $code[] = '        ];';
+        $code[] = '    }';
     }
 
     protected function generateFields(array $modelDefinition, array &$code): void

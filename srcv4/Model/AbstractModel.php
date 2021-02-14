@@ -4,7 +4,14 @@ namespace Picqer\BolRetailerV4\Model;
 
 abstract class AbstractModel
 {
-    protected static $modelDefinition = [];
+    /**
+     * Returns the definition of the model: an associative array with field names as key and
+     * field definition as value. The field definition contains of
+     * model: Model class or null if it is a scalar type
+     * array: Boolean whether it is an array
+     * @return array The model definition
+     */
+    abstract public function getModelDefinition(): array;
 
     /**
      * Creates an instance of the Model from an associative array with data. Any related models are also created.
@@ -16,7 +23,7 @@ abstract class AbstractModel
         $model = new static;
 
         // TODO validate that all fields are there
-        foreach (static::$modelDefinition as $field => $definition) {
+        foreach ($model->getModelDefinition() as $field => $definition) {
             if (! isset($data[$field])) {
                 continue;
             }
