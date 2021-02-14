@@ -17,14 +17,27 @@ abstract class AbstractModel
 
         // TODO validate that all fields are there
         foreach (static::$modelDefinition as $field => $definition) {
+            if (! isset($data[$field])) {
+                continue;
+            }
+
             if ($definition['model'] == null) {
-                $model->$field = $data[$field] ?? null;
+                $model->$field = $data[$field];
             } elseif ($definition['array']) {
                 $model->$field = array_map(function ($data) use ($definition) {
-                    return $definition['model']::fromArray($data);
+                    if ($data instanceof AbstractModel) {
+                        return $data;
+                    } else {
+                        return $definition['model']::fromArray($data);
+                    }
                 }, $data[$field]);
             } else {
-                $model->$field = $definition['model']::fromArray($data[$field]);
+                if ($data[$field] instanceof AbstractModel) {
+                    $model->$field = $data[$field];
+                } else {
+                    $model->$field = $definition['model']::fromArray($data[$field]);
+                }
+
             }
         }
 
