@@ -21,11 +21,6 @@ class ModelGenerator
     public function generateModels(): void
     {
         foreach ($this->specs['definitions'] as $type => $modelDefinition) {
-            // ignore definitions like 'Container for the order items that have to be cancelled.'
-            if (strpos($type, ' ') !== false) {
-                continue;
-            }
-
             $this->generateModel($type);
         }
     }
