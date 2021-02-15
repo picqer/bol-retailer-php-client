@@ -43,7 +43,9 @@
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs src tests",
-        "fix-style": "phpcbf src tests"
+        "fix-style": "phpcbf src tests",
+        "generate-client": "Picqer\\BolRetailerV4\\OpenApi\\ClientGenerator::run",
+        "generate-models": "Picqer\\BolRetailerV4\\OpenApi\\ModelGenerator::run"
     },
     "extra": {
         "branch-alias": {
