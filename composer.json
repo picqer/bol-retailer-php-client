@@ -22,6 +22,7 @@
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^0.11.12",
         "phpunit/phpunit": ">=7.0",
         "squizlabs/php_codesniffer": "^3.0",
@@ -29,18 +30,22 @@
     },
     "autoload": {
         "psr-4": {
-            "Picqer\\BolRetailer\\": "src"
+            "Picqer\\BolRetailer\\": "src",
+            "Picqer\\BolRetailerV4\\": "srcv4"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Picqer\\BolRetailer\\Tests\\": "tests"
+            "Picqer\\BolRetailer\\Tests\\": "tests",
+            "Picqer\\BolRetailerV4\\Tests\\": "testsv4"
         }
     },
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs src tests",
-        "fix-style": "phpcbf src tests"
+        "fix-style": "phpcbf src tests",
+        "generate-client": "Picqer\\BolRetailerV4\\OpenApi\\ClientGenerator::run",
+        "generate-models": "Picqer\\BolRetailerV4\\OpenApi\\ModelGenerator::run"
     },
     "extra": {
         "branch-alias": {
