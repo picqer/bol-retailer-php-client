@@ -21,6 +21,12 @@ class ClientGenerator
         $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
     }
 
+    static public function run()
+    {
+        $generator = new static;
+        $generator->generateClient();
+    }
+
     public function generateClient()
     {
         $code = [];

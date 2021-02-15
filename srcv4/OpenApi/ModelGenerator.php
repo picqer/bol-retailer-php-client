@@ -12,6 +12,12 @@ class ModelGenerator
         $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
     }
 
+    static public function run()
+    {
+        $generator = new static;
+        $generator->generateModel();
+    }
+
     public function generateModels(): void
     {
         foreach ($this->specs['definitions'] as $type => $modelDefinition) {
@@ -30,7 +36,7 @@ class ModelGenerator
         $modelDefinition = $this->specs['definitions'][$type];
         $type = $this->getType('#/definitions/' . $type);
 
-        echo $type . "\n";
+        echo $type . "...";
 
         $code = [];
         $code[] = '<?php';
@@ -50,6 +56,8 @@ class ModelGenerator
         //print_r($modelDefinition);
 
         file_put_contents(__DIR__ . '/../Model/' . $type . '.php', implode("\n", $code));
+
+        echo "ok\n";
     }
 
     protected function generateDefinition(array $modelDefinition, array &$code): void
