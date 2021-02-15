@@ -15,7 +15,7 @@ class ModelGenerator
     static public function run()
     {
         $generator = new static;
-        $generator->generateModel();
+        $generator->generateModels();
     }
 
     public function generateModels(): void
