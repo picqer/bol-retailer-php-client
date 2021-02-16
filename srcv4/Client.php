@@ -12,7 +12,8 @@ class Client extends BaseClient
      * @return Model\Commission[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getCommissions(array $commissionQueries): array
@@ -39,7 +40,8 @@ class Client extends BaseClient
      * @return Model\Commission|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getCommission(string $ean, float $unitPrice, string $condition = 'NEW'): ?Model\Commission
@@ -66,7 +68,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postProductContent(Model\CreateProductContentRequest $createProductContentRequest): Model\ProcessStatus
@@ -89,7 +92,8 @@ class Client extends BaseClient
      * @return Model\ProductContentResponse[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getValidationReport(string $uploadId): array
@@ -118,7 +122,8 @@ class Client extends BaseClient
      * @return Model\ReducedInbound[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInbounds(string $reference, string $bsku, string $creationStartDate, string $creationEndDate, string $state, int $page = 1): array
@@ -148,7 +153,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postInbound(Model\InboundRequest $inboundRequest): Model\ProcessStatus
@@ -172,7 +178,8 @@ class Client extends BaseClient
      * @return Model\TimeSlot[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getDeliveryWindows(string $deliveryDate = 'Today\'s date.', int $itemsToSend = 1): array
@@ -197,7 +204,8 @@ class Client extends BaseClient
      * @return Model\Transporter[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInboundTransporters(): array
@@ -219,7 +227,8 @@ class Client extends BaseClient
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getProductLabels(Model\ProductLabelsRequest $productLabelsRequest): ?string
@@ -243,7 +252,8 @@ class Client extends BaseClient
      * @return Model\Inbound|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInbound(int $inboundId): ?Model\Inbound
@@ -266,7 +276,8 @@ class Client extends BaseClient
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getPackingList(int $inboundId): ?string
@@ -289,7 +300,8 @@ class Client extends BaseClient
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInboundShippingLabel(int $inboundId): ?string
@@ -315,7 +327,8 @@ class Client extends BaseClient
      * @return Model\OfferInsight[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getOfferInsights(string $offerId, string $period, int $numberOfPeriods, array $name): array
@@ -345,7 +358,8 @@ class Client extends BaseClient
      * @return Model\PerformanceIndicator[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getPerformanceIndicator(array $name, string $year, string $week): array
@@ -373,7 +387,8 @@ class Client extends BaseClient
      * @return Model\SalesForecastResponse
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getSalesForecast(string $offerId, int $weeksAhead): Model\SalesForecastResponse
@@ -403,7 +418,8 @@ class Client extends BaseClient
      * @return Model\Inventory[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInventory(array $quantity, string $stock, string $state, string $query, int $page = 1): array
@@ -433,7 +449,8 @@ class Client extends BaseClient
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInvoices(string $periodStartDate, string $periodEndDate): string
@@ -459,7 +476,8 @@ class Client extends BaseClient
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInvoice(int $invoiceId): string
@@ -482,7 +500,8 @@ class Client extends BaseClient
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getInvoiceSpecification(int $invoiceId, int $page): string
@@ -507,7 +526,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postOffer(Model\CreateOfferRequest $createOfferRequest): Model\ProcessStatus
@@ -530,7 +550,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postOfferExport(string $format): Model\ProcessStatus
@@ -553,7 +574,8 @@ class Client extends BaseClient
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getOfferExport(string $reportId): ?string
@@ -576,7 +598,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postUnpublishedOfferReport(string $format): Model\ProcessStatus
@@ -599,7 +622,8 @@ class Client extends BaseClient
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getUnpublishedOfferReport(string $reportId): ?string
@@ -622,7 +646,8 @@ class Client extends BaseClient
      * @return Model\RetailerOffer|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getOffer(string $offerId): ?Model\RetailerOffer
@@ -646,7 +671,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function putOffer(string $offerId, Model\UpdateOfferRequest $updateOfferRequest): Model\ProcessStatus
@@ -669,7 +695,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function deleteOffer(string $offerId): Model\ProcessStatus
@@ -692,7 +719,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function updateOfferPrice(string $offerId, Model\Pricing $pricing): Model\ProcessStatus
@@ -716,7 +744,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function updateOfferStock(string $offerId, Model\UpdateOfferStockRequest $updateOfferStockRequest): Model\ProcessStatus
@@ -740,7 +769,8 @@ class Client extends BaseClient
      * @return Model\ReducedOrder[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getOrders(int $page = 1, string $fulfilmentMethod = 'FBR'): array
@@ -766,7 +796,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function cancelOrderItem(array $orderItems): Model\ProcessStatus
@@ -789,7 +820,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function shipOrderItem(Model\ShipmentRequest $shipmentRequest): Model\ProcessStatus
@@ -812,7 +844,8 @@ class Client extends BaseClient
      * @return Model\Order|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getOrder(string $orderId): ?Model\Order
@@ -837,7 +870,8 @@ class Client extends BaseClient
      * @return Model\RetailPrice[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getRetailPrice(string $ean): array
@@ -863,7 +897,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getProcessStatusEntityId(string $entityId, string $eventType, int $page = 1): array
@@ -890,7 +925,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getProcessStatusBulk(array $processStatusQueries): array
@@ -913,7 +949,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getProcessStatus(int $processStatusId): ?Model\ProcessStatus
@@ -966,7 +1003,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function createReturn(Model\CreateReturnRequest $createReturnRequest): Model\ProcessStatus
@@ -989,7 +1027,8 @@ class Client extends BaseClient
      * @return Model\ReturnObject|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getReturn(int $returnId): ?Model\ReturnObject
@@ -1013,7 +1052,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function handleReturn(int $rmaId, Model\ReturnRequest $returnRequest): Model\ProcessStatus
@@ -1038,7 +1078,8 @@ class Client extends BaseClient
      * @return Model\ReducedShipment[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getShipments(string $orderId, int $page = 1, string $fulfilmentMethod = 'FBR'): array
@@ -1065,7 +1106,8 @@ class Client extends BaseClient
      * @return Model\Shipment|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getShipment(int $shipmentId): ?Model\Shipment
@@ -1088,7 +1130,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postShippingLabel(Model\ShippingLabelRequest $shippingLabelRequest): Model\ProcessStatus
@@ -1111,7 +1154,8 @@ class Client extends BaseClient
      * @return Model\DeliveryOption[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getDeliveryOptions(array $orderItems): array
@@ -1136,7 +1180,8 @@ class Client extends BaseClient
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getShippingLabel(string $shippingLabelId): ?string
@@ -1158,7 +1203,8 @@ class Client extends BaseClient
      * @return Model\SubscriptionResponse[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getPushNotificationSubscriptions(): array
@@ -1180,7 +1226,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postPushNotificationSubscription(Model\CreateSubscriptionRequest $createSubscriptionRequest): Model\ProcessStatus
@@ -1202,7 +1249,8 @@ class Client extends BaseClient
      * @return Model\KeySet[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getSubscriptionKeys(): array
@@ -1223,7 +1271,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function postTestPushNotification(): Model\ProcessStatus
@@ -1245,7 +1294,8 @@ class Client extends BaseClient
      * @return Model\SubscriptionResponse|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getPushNotificationSubscription(int $subscriptionId): ?Model\SubscriptionResponse
@@ -1269,7 +1319,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function putPushNotificationSubscription(int $subscriptionId, Model\UpdateSubscriptionRequest $updateSubscriptionRequest): Model\ProcessStatus
@@ -1292,7 +1343,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function deletePushNotificationSubscription(int $subscriptionId): Model\ProcessStatus
@@ -1315,7 +1367,8 @@ class Client extends BaseClient
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function addTransportInformationByTransportId(int $transportId, Model\ChangeTransportRequest $changeTransportRequest): Model\ProcessStatus
