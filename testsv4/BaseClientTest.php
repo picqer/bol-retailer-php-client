@@ -9,6 +9,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV4\BaseClient;
+use Picqer\BolRetailerV4\Exception\RateLimitException;
 use Picqer\BolRetailerV4\Exception\ResponseException;
 use Picqer\BolRetailerV4\Exception\UnauthorizedException;
 use Picqer\BolRetailerV4\Model\AbstractModel;
@@ -99,6 +100,30 @@ class BaseClientTest extends TestCase
         ])->willThrow($clientException);
 
         $this->expectException(UnauthorizedException::class);
+        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+    }
+
+    public function testAuthenticateThrowsRateLimitExceptionWhenTooManyRequests()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/429-too-many-requests'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'client_credentials'
+            ]
+        ])->willThrow($clientException);
+
+        $this->expectException(RateLimitException::class);
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
