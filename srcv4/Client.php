@@ -13,7 +13,8 @@ class Client extends BaseClient
      * @return Model\ReducedOrder[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when request was unauthorized.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
     public function getOrders(int $page = 1, string $fulfilmentMethod = 'FBR'): array
