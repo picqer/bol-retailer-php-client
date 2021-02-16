@@ -95,6 +95,7 @@ class BaseClient
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws ResponseException when an unexpected response was received.
      * @throws UnauthorizedException when authentication failed.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception when something unexpected went wrong.
      */
     public function authenticate(string $clientId, string $clientSecret): void
@@ -156,8 +157,9 @@ class BaseClient
      * @param array $responseTypes Expected response type per HTTP status code
      * @return AbstractModel|string|null Model or array representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
-     * @throws UnauthorizedException when request was unauthorized.
+     * @throws UnauthorizedException when the request was unauthorized.
      * @throws ResponseException when no suitable responseType could be applied.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception when something unexpected went wrong.
      */
     public function request(string $method, string $url, array $options, array $responseTypes)
@@ -227,6 +229,7 @@ class BaseClient
      *
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when request was unauthorized.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception when something unexpected went wrong.
      */
     protected function rawRequest(string $method, string $url, array $options = []): ResponseInterface

@@ -92,7 +92,8 @@ class ClientGenerator
         $code[] = sprintf('     * @return %s', $returnType['doc']);
         $code[] = '     * @throws Exception\ConnectException when an error occurred in the HTTP connection.';
         $code[] = '     * @throws Exception\ResponseException when an unexpected response was received.';
-        $code[] = '     * @throws Exception\UnauthorizedException when request was unauthorized.';
+        $code[] = '     * @throws Exception\UnauthorizedException when the request was unauthorized.';
+        $code[] = '     * @throws RateLimitException when the throttling limit has been reached for the API user.';
         $code[] = '     * @throws Exception\Exception when something unexpected went wrong.';
         $code[] = '     */';
         $code[] = sprintf('    public function %s(%s): %s', $methodName, $argumentsList, $returnType['php']);
