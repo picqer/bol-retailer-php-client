@@ -7,6 +7,11 @@ class ClientGenerator
 {
     protected $specs;
 
+    protected static $overrideMethodNames = [
+        'postShippingLabel' => 'createShippingLabel',
+        'postInbound' => 'createInbound'
+    ];
+
     protected static $paramTypeMapping = [
         'array' => 'array',
         'string' => 'string',
@@ -70,7 +75,7 @@ class ClientGenerator
             return;
         }
 
-        $methodName = $this->kebabCaseToCamelCase($methodDefinition['operationId']);
+        $methodName = $this->getMethodName($methodDefinition['operationId']);
         $arguments = $this->extractArguments($methodDefinition['parameters'] ?? []);
 
         $nullableReturnType = false;
@@ -163,9 +168,18 @@ class ClientGenerator
         return $type;
     }
 
-    protected function getClientNamespace()
+    protected function getClientNamespace(): string
     {
         return substr(__NAMESPACE__, 0, strrpos(__NAMESPACE__, '\\'));
+    }
+
+    protected function getMethodName(string $operationId): string
+    {
+        $methodName = $this->kebabCaseToCamelCase($operationId);
+        if (isset(static::$overrideMethodNames[$methodName])) {
+            return static::$overrideMethodNames[$methodName];
+        }
+        return $methodName;
     }
 
     protected function addParamsPhpDoc(array $arguments, array &$code): void

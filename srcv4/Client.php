@@ -157,7 +157,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function postInbound(Model\InboundRequest $inboundRequest): Model\ProcessStatus
+    public function createInbound(Model\InboundRequest $inboundRequest): Model\ProcessStatus
     {
         $url = "inbounds";
         $options = [
@@ -1134,7 +1134,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function postShippingLabel(Model\ShippingLabelRequest $shippingLabelRequest): Model\ProcessStatus
+    public function createShippingLabel(Model\ShippingLabelRequest $shippingLabelRequest): Model\ProcessStatus
     {
         $url = "shipping-labels";
         $options = [
