@@ -41,4 +41,35 @@ class ShipmentRequest extends AbstractModel
      * @var TransportInstruction
      */
     public $transport;
+
+    /**
+     * Returns an array with the orderItemIds from orderItems.
+     * @return string[] OrderItemIds from orderItems.
+     */
+    public function getOrderItemIds(): array
+    {
+        return array_map(function ($model) {
+            return $model->orderItemId;
+        }, $this->orderItems);
+    }
+
+    /**
+     * Sets orderItems by an array of orderItemIds.
+     * @param string[] $orderItemIds OrderItemIds for orderItems.
+     */
+    public function setOrderItemIds(array $orderItemIds): void
+    {
+        $this->orderItems = array_map(function ($orderItemId) {
+            return OrderItem::constructFromArray(['orderItemId' => $orderItemId]);
+        }, $orderItemIds);
+    }
+
+    /**
+     * Adds a new OrderItem to orderItems by orderItemId.
+     * @param string $orderItemId OrderItemId for the OrderItem to add.
+     */
+    public function addOrderItemId(string $orderItemId): void
+    {
+        $this->orderItems[] = OrderItem::constructFromArray(['orderItemId' => $orderItemId]);
+    }
 }

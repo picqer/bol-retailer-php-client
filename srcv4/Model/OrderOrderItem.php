@@ -71,4 +71,35 @@ class OrderOrderItem extends AbstractModel
      * @var AdditionalService[]
      */
     public $additionalServices;
+
+    /**
+     * Returns an array with the serviceTypes from additionalServices.
+     * @return string[] ServiceTypes from additionalServices.
+     */
+    public function getAdditionalServicesServiceTypes(): array
+    {
+        return array_map(function ($model) {
+            return $model->serviceType;
+        }, $this->additionalServices);
+    }
+
+    /**
+     * Sets additionalServices by an array of serviceTypes.
+     * @param string[] $serviceTypes ServiceTypes for additionalServices.
+     */
+    public function setAdditionalServicesServiceTypes(array $serviceTypes): void
+    {
+        $this->additionalServices = array_map(function ($serviceType) {
+            return AdditionalService::constructFromArray(['serviceType' => $serviceType]);
+        }, $serviceTypes);
+    }
+
+    /**
+     * Adds a new AdditionalService to additionalServices by serviceType.
+     * @param string $serviceType ServiceType for the AdditionalService to add.
+     */
+    public function addAdditionalServicesServiceType(string $serviceType): void
+    {
+        $this->additionalServices[] = AdditionalService::constructFromArray(['serviceType' => $serviceType]);
+    }
 }

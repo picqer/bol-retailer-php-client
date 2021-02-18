@@ -23,4 +23,35 @@ class BulkProcessStatusRequest extends AbstractModel
      * @var ProcessStatusId[]
      */
     public $processStatusQueries;
+
+    /**
+     * Returns an array with the ids from processStatusQueries.
+     * @return int[] Ids from processStatusQueries.
+     */
+    public function getProcessStatusQueriesIds(): array
+    {
+        return array_map(function ($model) {
+            return $model->id;
+        }, $this->processStatusQueries);
+    }
+
+    /**
+     * Sets processStatusQueries by an array of ids.
+     * @param int[] $ids Ids for processStatusQueries.
+     */
+    public function setProcessStatusQueriesIds(array $ids): void
+    {
+        $this->processStatusQueries = array_map(function ($id) {
+            return ProcessStatusId::constructFromArray(['id' => $id]);
+        }, $ids);
+    }
+
+    /**
+     * Adds a new ProcessStatusId to processStatusQueries by id.
+     * @param int $id Id for the ProcessStatusId to add.
+     */
+    public function addProcessStatusQueriesId(int $id): void
+    {
+        $this->processStatusQueries[] = ProcessStatusId::constructFromArray(['id' => $id]);
+    }
 }

@@ -29,4 +29,35 @@ class Store extends AbstractModel
      * @var CountryCode[]
      */
     public $visible;
+
+    /**
+     * Returns an array with the countryCodes from visible.
+     * @return string[] CountryCodes from visible.
+     */
+    public function getVisibleCountryCodes(): array
+    {
+        return array_map(function ($model) {
+            return $model->countryCode;
+        }, $this->visible);
+    }
+
+    /**
+     * Sets visible by an array of countryCodes.
+     * @param string[] $countryCodes CountryCodes for visible.
+     */
+    public function setVisibleCountryCodes(array $countryCodes): void
+    {
+        $this->visible = array_map(function ($countryCode) {
+            return CountryCode::constructFromArray(['countryCode' => $countryCode]);
+        }, $countryCodes);
+    }
+
+    /**
+     * Adds a new CountryCode to visible by countryCode.
+     * @param string $countryCode CountryCode for the CountryCode to add.
+     */
+    public function addVisibleCountryCode(string $countryCode): void
+    {
+        $this->visible[] = CountryCode::constructFromArray(['countryCode' => $countryCode]);
+    }
 }

@@ -35,4 +35,35 @@ class Fulfilment extends AbstractModel
      * @var PickUpPoint[] Indicates whether this order is shipped to a Pick Up Point.
      */
     public $pickUpPoints;
+
+    /**
+     * Returns an array with the codes from pickUpPoints.
+     * @return string[] Codes from pickUpPoints.
+     */
+    public function getPickUpPointsCodes(): array
+    {
+        return array_map(function ($model) {
+            return $model->code;
+        }, $this->pickUpPoints);
+    }
+
+    /**
+     * Sets pickUpPoints by an array of codes.
+     * @param string[] $codes Codes for pickUpPoints.
+     */
+    public function setPickUpPointsCodes(array $codes): void
+    {
+        $this->pickUpPoints = array_map(function ($code) {
+            return PickUpPoint::constructFromArray(['code' => $code]);
+        }, $codes);
+    }
+
+    /**
+     * Adds a new PickUpPoint to pickUpPoints by code.
+     * @param string $code Code for the PickUpPoint to add.
+     */
+    public function addPickUpPointsCode(string $code): void
+    {
+        $this->pickUpPoints[] = PickUpPoint::constructFromArray(['code' => $code]);
+    }
 }

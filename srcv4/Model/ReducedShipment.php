@@ -62,4 +62,22 @@ class ReducedShipment extends AbstractModel
 
         return \DateTime::createFromFormat(\DateTime::ATOM, $this->shipmentDateTime);
     }
+
+    /**
+     * Returns transportId from transport.
+     * @return int TransportId from transport.
+     */
+    public function getTransportId(): int
+    {
+        return $this->transport->transportId;
+    }
+
+    /**
+     * Sets transport by transportId.
+     * @param int $transportId TransportId for transport.
+     */
+    public function setTransportId(int $transportId): void
+    {
+        $this->transport = ReducedTransport::constructFromArray(['transportId' => $transportId]);
+    }
 }

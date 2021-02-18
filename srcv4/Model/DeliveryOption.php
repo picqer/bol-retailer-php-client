@@ -59,4 +59,22 @@ class DeliveryOption extends AbstractModel
      * @var HandoverDetails
      */
     public $handoverDetails;
+
+    /**
+     * Returns totalPrice from labelPrice.
+     * @return float TotalPrice from labelPrice.
+     */
+    public function getLabelPriceTotalPrice(): float
+    {
+        return $this->labelPrice->totalPrice;
+    }
+
+    /**
+     * Sets labelPrice by totalPrice.
+     * @param float $totalPrice TotalPrice for labelPrice.
+     */
+    public function setLabelPriceTotalPrice(float $totalPrice): void
+    {
+        $this->labelPrice = LabelPrice::constructFromArray(['totalPrice' => $totalPrice]);
+    }
 }
