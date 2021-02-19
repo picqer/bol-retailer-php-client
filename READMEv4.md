@@ -29,6 +29,7 @@ Methods on the Client may throw Exceptions. All Exceptions have the parent class
 - `ConnectionException` is thrown when a problem occurred in the connection (e.g. API server is down or a network issue). You may retry later.
 - `ResponseException` is thrown when the received response could not be handled (e.g. not of proper format or unexpected type). Retrying will not help, investigation is needed.
 - `UnauthorizedException` is thrown when the server responded with 400 Unauthorized (e.g. invalid credentials).
+- `RateLimitException` is thrown when the throttling limit has been reached for the API user
 - `Exception` is thrown when an error occurred in the HTTP library that is not covered by the cases above. We aim to map as much as possible to either `ConnectionException` or `ResponseException`.
 
 ## Generated Models and Client
