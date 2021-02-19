@@ -55,4 +55,32 @@ abstract class AbstractModel
             }
         }
     }
+
+    /**
+     * Returns an associative array with values of this model and related models.
+     * @param bool $omitNullValues Whether to omit fields that have the value null.
+     * @return array Associative array with values of this model and related models
+     */
+    public function toArray($omitNullValues = true): array
+    {
+        $data = [];
+
+        foreach ($this->getModelDefinition() as $field => $definition) {
+            if ($omitNullValues && $this->$field === null) {
+                continue;
+            }
+
+            if ($definition['model'] == null) {
+                $data[$field] = $this->$field;
+            } elseif ($definition['array']) {
+                $data[$field] = array_map(function ($model) use ($omitNullValues) {
+                    return $model->toArray($omitNullValues);
+                }, $this->$field);
+            } else {
+                $data[$field] = $this->$field->toArray($omitNullValues);
+            }
+        }
+
+        return $data;
+    }
 }

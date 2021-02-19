@@ -141,4 +141,137 @@ class AbstractModelTest extends TestCase
         $this->assertEquals('bar', $stub->relations[0]->foo);
         $this->assertEquals('bar2', $stub->relations[1]->foo);
     }
+
+    public function testNonNullScalarFieldIsPresentInArray()
+    {
+        $stub = new class () extends AbstractModel {
+            public $foo;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+
+        $stub->foo = 'bar';
+
+        $this->assertEquals(['foo' => 'bar'], $stub->toArray());
+    }
+
+    public function testNullFieldIsOmittedFromArray()
+    {
+        $stub = new class () extends AbstractModel {
+            public $foo;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+
+        $this->assertEquals([], $stub->toArray());
+    }
+
+    public function testNullFieldIsPresentInArray()
+    {
+        $stub = new class () extends AbstractModel {
+            public $foo;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+
+        $this->assertEquals(['foo' => null], $stub->toArray(false));
+    }
+
+    public function testModelFieldIsPresentInArray()
+    {
+        $relationStub = new class () extends AbstractModel {
+            public $foo;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+
+        $relationStubClass = get_class($relationStub);
+
+        $stub = new class ($relationStubClass) extends AbstractModel {
+            private $relationStubClass;
+
+            public $relation;
+
+            public function __construct($relationStubClass = null)
+            {
+                $this->relationStubClass = $relationStubClass;
+            }
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'relation' => [ 'model' => $this->relationStubClass, 'array' => false ]
+                ];
+            }
+        };
+
+        $relationStub->foo = 'bar';
+        $stub->relation = $relationStub;
+
+        $this->assertEquals(['relation' => ['foo' => 'bar']], $stub->toArray());
+    }
+
+    public function testModelArrayFieldIsPresentInArray()
+    {
+        $relationStub = new class () extends AbstractModel {
+            public $foo;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+
+        $relationStubClass = get_class($relationStub);
+
+        $stub = new class ($relationStubClass) extends AbstractModel {
+            private $relationStubClass;
+
+            public $relations;
+
+            public function __construct($relationStubClass = null)
+            {
+                $this->relationStubClass = $relationStubClass;
+            }
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'relations' => [ 'model' => $this->relationStubClass, 'array' => true ]
+                ];
+            }
+        };
+
+        $rel1 = new $relationStubClass();
+        $rel1->foo = 'bar1';
+
+        $rel2= new $relationStubClass();
+        $rel2->foo = 'bar2';
+
+        $stub->relations = [$rel1, $rel2];
+
+        $this->assertEquals(['relations' => [['foo' => 'bar1'], ['foo'=> 'bar2']]], $stub->toArray());
+    }
 }
