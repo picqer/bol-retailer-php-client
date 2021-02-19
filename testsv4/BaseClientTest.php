@@ -255,6 +255,47 @@ class BaseClientTest extends TestCase
         ]);
     }
 
+    public function testRequestJsonEncodesBodyModelWithoutNullValuesIntoBody()
+    {
+        $stub = new class () extends AbstractModel {
+            public $foo;
+            public $foo2;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ],
+                    'foo2' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+        $modelClass = get_class($stub);
+
+        $this->authenticate();
+
+        $model = new $modelClass();
+        $model->foo = 'bar';
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
+        $this->httpProphecy
+            ->request('GET', 'https://api.bol.com/retailer/foobar', [
+                'headers' => [
+                    'Accept' => 'application/vnd.retailer.v4+json',
+                    'Authorization' => 'Bearer ' . $this->client->getToken()['access_token'],
+                    'Content-Type' => 'application/vnd.retailer.v4+json'
+                ],
+                'body' => json_encode(['foo' => 'bar'])
+            ])
+            ->willReturn($response)
+            ->shouldBeCalled();
+
+        $this->client->request('GET', 'foobar', [
+            'body' => $model,
+        ], [
+            '200' => 'string'
+        ]);
+    }
+
     public function testRequestConstructsEndpoint()
     {
         $this->authenticate();
