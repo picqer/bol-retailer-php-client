@@ -1,0 +1,8 @@
+HTTP/1.1 500 Internal Server Error
+Server: nginx
+Date: Tue, 23 Feb 2021 13:43:37 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+Internal Server Error

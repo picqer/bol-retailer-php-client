@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use Picqer\BolRetailerV4\Exception\RateLimitException;
+use Picqer\BolRetailerV4\Exception\ServerException;
 use Picqer\BolRetailerV4\Model\AbstractModel;
 use Picqer\BolRetailerV4\Exception\AuthenticationException;
 use Picqer\BolRetailerV4\Exception\ConnectException;
@@ -261,6 +262,8 @@ class BaseClient
                 throw new UnauthorizedException($message);
             } if ($statusCode == 429) {
                 throw new RateLimitException($message);
+            } elseif (in_array($statusCode, [500, 502, 503, 504, 507])) {
+                throw new ServerException($message);
             } elseif ($statusCode != 404) {
                 throw new ResponseException($message);
             }
