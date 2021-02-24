@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Picqer\\BolRetailerV4\\": "srcv4"
+            "Picqer\\BolRetailerV4\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Picqer\\BolRetailerV4\\Tests\\": "testsv4"
+            "Picqer\\BolRetailerV4\\Tests\\": "tests"
         }
     },
     "scripts": {
