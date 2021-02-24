@@ -22,5 +22,5 @@ class Inbounds extends AbstractModel
     /**
      * @var ReducedInbound[] An inbound shipment.
      */
-    public $inbounds;
+    public $inbounds = [];
 }

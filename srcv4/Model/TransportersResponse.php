@@ -22,5 +22,5 @@ class TransportersResponse extends AbstractModel
     /**
      * @var Transporter[]
      */
-    public $transporters;
+    public $transporters = [];
 }

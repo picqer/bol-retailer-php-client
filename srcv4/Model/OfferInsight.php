@@ -41,10 +41,10 @@ class OfferInsight extends AbstractModel
     /**
      * @var Country[]
      */
-    public $countries;
+    public $countries = [];
 
     /**
      * @var Periods[]
      */
-    public $periods;
+    public $periods = [];
 }

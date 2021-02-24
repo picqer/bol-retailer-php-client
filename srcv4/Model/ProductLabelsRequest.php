@@ -28,5 +28,5 @@ class ProductLabelsRequest extends AbstractModel
     /**
      * @var ProductLabel[]
      */
-    public $productLabels;
+    public $productLabels = [];
 }

@@ -22,5 +22,5 @@ class ReturnsResponse extends AbstractModel
     /**
      * @var ReducedReturn[]
      */
-    public $returns;
+    public $returns = [];
 }

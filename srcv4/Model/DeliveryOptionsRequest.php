@@ -22,7 +22,7 @@ class DeliveryOptionsRequest extends AbstractModel
     /**
      * @var OrderItem[] Order items for which the delivery options are requested.
      */
-    public $orderItems;
+    public $orderItems = [];
 
     /**
      * Returns an array with the orderItemIds from orderItems.

@@ -64,5 +64,5 @@ class ReducedReturnItem extends AbstractModel
     /**
      * @var ReturnProcessingResult[]
      */
-    public $processingResults;
+    public $processingResults = [];
 }

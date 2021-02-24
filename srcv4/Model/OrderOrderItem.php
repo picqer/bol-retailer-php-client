@@ -70,7 +70,7 @@ class OrderOrderItem extends AbstractModel
     /**
      * @var AdditionalService[]
      */
-    public $additionalServices;
+    public $additionalServices = [];
 
     /**
      * Returns an array with the serviceTypes from additionalServices.

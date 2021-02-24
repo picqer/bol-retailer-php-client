@@ -22,5 +22,5 @@ class BulkCommissionResponse extends AbstractModel
     /**
      * @var Commission[]
      */
-    public $commissions;
+    public $commissions = [];
 }

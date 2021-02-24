@@ -34,7 +34,7 @@ class ReducedOrder extends AbstractModel
     /**
      * @var ReducedOrderItem[]
      */
-    public $orderItems;
+    public $orderItems = [];
 
     public function getOrderPlacedDateTime(): ?\DateTime
     {

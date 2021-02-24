@@ -22,5 +22,5 @@ class ValidationReportResponse extends AbstractModel
     /**
      * @var ProductContentResponse[]
      */
-    public $productContents;
+    public $productContents = [];
 }

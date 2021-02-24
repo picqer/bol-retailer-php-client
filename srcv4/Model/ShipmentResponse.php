@@ -22,5 +22,5 @@ class ShipmentResponse extends AbstractModel
     /**
      * @var ReducedShipment[]
      */
-    public $shipments;
+    public $shipments = [];
 }

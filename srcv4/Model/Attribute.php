@@ -28,5 +28,5 @@ class Attribute extends AbstractModel
     /**
      * @var AttributeValue[] A list of attribute values.
      */
-    public $values;
+    public $values = [];
 }

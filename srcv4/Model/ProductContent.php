@@ -28,5 +28,5 @@ class ProductContent extends AbstractModel
     /**
      * @var Attribute[] A list of attributes.
      */
-    public $attributes;
+    public $attributes = [];
 }

@@ -64,5 +64,5 @@ class ProcessStatus extends AbstractModel
     /**
      * @var Link[] Lists available actions applicable to this endpoint.
      */
-    public $links;
+    public $links = [];
 }

@@ -22,5 +22,5 @@ class InventoryResponse extends AbstractModel
     /**
      * @var Inventory[]
      */
-    public $inventory;
+    public $inventory = [];
 }

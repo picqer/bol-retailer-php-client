@@ -22,5 +22,5 @@ class Pricing extends AbstractModel
     /**
      * @var BundlePrice[] A set of prices (containing a quantity and selling price) that apply to this offer.
      */
-    public $bundlePrices;
+    public $bundlePrices = [];
 }

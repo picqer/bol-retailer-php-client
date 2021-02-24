@@ -84,12 +84,12 @@ class Inbound extends AbstractModel
     /**
      * @var Product[] List of products.
      */
-    public $products;
+    public $products = [];
 
     /**
      * @var StateTransition[] List of state transitions.
      */
-    public $stateTransitions;
+    public $stateTransitions = [];
 
     /**
      * @var Transporter Transporter for the inbound shipment.

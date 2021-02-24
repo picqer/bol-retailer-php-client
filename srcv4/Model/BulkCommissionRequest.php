@@ -22,5 +22,5 @@ class BulkCommissionRequest extends AbstractModel
     /**
      * @var BulkCommissionQuery[]
      */
-    public $commissionQueries;
+    public $commissionQueries = [];
 }

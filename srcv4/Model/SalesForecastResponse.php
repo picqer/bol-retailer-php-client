@@ -41,10 +41,10 @@ class SalesForecastResponse extends AbstractModel
     /**
      * @var Countries[]
      */
-    public $countries;
+    public $countries = [];
 
     /**
      * @var Period[]
      */
-    public $periods;
+    public $periods = [];
 }

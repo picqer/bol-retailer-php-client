@@ -28,5 +28,5 @@ class RejectedAttributeResponse extends AbstractModel
     /**
      * @var RejectionError[]
      */
-    public $rejectionErrors;
+    public $rejectionErrors = [];
 }

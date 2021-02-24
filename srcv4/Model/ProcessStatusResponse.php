@@ -22,5 +22,5 @@ class ProcessStatusResponse extends AbstractModel
     /**
      * @var ProcessStatus[]
      */
-    public $processStatuses;
+    public $processStatuses = [];
 }

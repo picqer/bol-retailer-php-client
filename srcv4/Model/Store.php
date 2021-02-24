@@ -28,7 +28,7 @@ class Store extends AbstractModel
     /**
      * @var CountryCode[]
      */
-    public $visible;
+    public $visible = [];
 
     /**
      * Returns an array with the countryCodes from visible.

@@ -22,5 +22,5 @@ class PerformanceIndicators extends AbstractModel
     /**
      * @var PerformanceIndicator[]
      */
-    public $performanceIndicators;
+    public $performanceIndicators = [];
 }

@@ -64,5 +64,5 @@ class Commission extends AbstractModel
     /**
      * @var Reduction[]
      */
-    public $reductions;
+    public $reductions = [];
 }

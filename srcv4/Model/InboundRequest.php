@@ -46,5 +46,5 @@ class InboundRequest extends AbstractModel
     /**
      * @var InboundProductRequest[] List of products.
      */
-    public $products;
+    public $products = [];
 }

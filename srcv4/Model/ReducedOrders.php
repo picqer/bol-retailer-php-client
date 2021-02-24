@@ -22,5 +22,5 @@ class ReducedOrders extends AbstractModel
     /**
      * @var ReducedOrder[]
      */
-    public $orders;
+    public $orders = [];
 }

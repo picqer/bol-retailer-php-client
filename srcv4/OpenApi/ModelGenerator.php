@@ -115,13 +115,11 @@ class ModelGenerator
 
 
         foreach ($modelDefinition['properties'] as $name => $propDefinition) {
-            $isObjectArray = false;
 
             if (isset($propDefinition['type'])) {
                 $propType = static::$propTypeMapping[$propDefinition['type']];
                 if ($propType == 'array' && isset($propDefinition['items']['$ref'])) {
                     $propType = $this->getType($propDefinition['items']['$ref']) . '[]';
-                    $isObjectArray = true;
                 }
             } elseif (isset($propDefinition['$ref'])) {
                 $propType = $this->getType($propDefinition['$ref']);
@@ -140,7 +138,12 @@ class ModelGenerator
             }
 
             $code[] = '     */';
-            $code[] = sprintf('    public $%s;', $name);
+
+            if (isset($propDefinition['type']) && $propDefinition['type'] == 'array') {
+                $code[] = sprintf('    public $%s = [];', $name);
+            } else {
+                $code[] = sprintf('    public $%s;', $name);
+            }
         }
     }
 

@@ -22,5 +22,5 @@ class DeliveryWindowsForInboundShipments extends AbstractModel
     /**
      * @var TimeSlot[] An available timeslot to be reserved for inbound shipments.
      */
-    public $timeSlots;
+    public $timeSlots = [];
 }

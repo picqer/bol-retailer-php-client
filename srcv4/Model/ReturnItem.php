@@ -83,7 +83,7 @@ class ReturnItem extends AbstractModel
     /**
      * @var ReturnProcessingResult[]
      */
-    public $processingResults;
+    public $processingResults = [];
 
     /**
      * @var CustomerDetails

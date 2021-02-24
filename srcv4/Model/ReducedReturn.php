@@ -40,7 +40,7 @@ class ReducedReturn extends AbstractModel
     /**
      * @var ReducedReturnItem[]
      */
-    public $returnItems;
+    public $returnItems = [];
 
     public function getRegistrationDateTime(): ?\DateTime
     {

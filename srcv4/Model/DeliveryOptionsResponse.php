@@ -22,5 +22,5 @@ class DeliveryOptionsResponse extends AbstractModel
     /**
      * @var DeliveryOption[]
      */
-    public $deliveryOptions;
+    public $deliveryOptions = [];
 }

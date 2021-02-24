@@ -22,5 +22,5 @@ class OfferInsights extends AbstractModel
     /**
      * @var OfferInsight[]
      */
-    public $offerInsights;
+    public $offerInsights = [];
 }

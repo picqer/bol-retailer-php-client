@@ -40,7 +40,7 @@ class ReturnObject extends AbstractModel
     /**
      * @var ReturnItem[]
      */
-    public $returnItems;
+    public $returnItems = [];
 
     public function getRegistrationDateTime(): ?\DateTime
     {

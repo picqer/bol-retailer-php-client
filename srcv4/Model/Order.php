@@ -52,7 +52,7 @@ class Order extends AbstractModel
     /**
      * @var OrderOrderItem[]
      */
-    public $orderItems;
+    public $orderItems = [];
 
     public function getOrderPlacedDateTime(): ?\DateTime
     {

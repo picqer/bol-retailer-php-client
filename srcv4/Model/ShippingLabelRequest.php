@@ -23,7 +23,7 @@ class ShippingLabelRequest extends AbstractModel
     /**
      * @var OrderItem[] Order items for which the delivery options are requested.
      */
-    public $orderItems;
+    public $orderItems = [];
 
     /**
      * @var string Shipping label offer id for which you request a shipping label.

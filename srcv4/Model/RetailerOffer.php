@@ -82,5 +82,5 @@ class RetailerOffer extends AbstractModel
     /**
      * @var NotPublishableReason[]
      */
-    public $notPublishableReasons;
+    public $notPublishableReasons = [];
 }

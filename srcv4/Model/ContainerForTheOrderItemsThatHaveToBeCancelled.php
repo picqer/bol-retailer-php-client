@@ -22,5 +22,5 @@ class ContainerForTheOrderItemsThatHaveToBeCancelled extends AbstractModel
     /**
      * @var OrderItemCancellation[] List of order items to cancel. Order item id's must belong to the same order.
      */
-    public $orderItems;
+    public $orderItems = [];
 }

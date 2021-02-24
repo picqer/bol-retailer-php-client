@@ -47,7 +47,7 @@ class ReducedShipment extends AbstractModel
     /**
      * @var ReducedShipmentItem[]
      */
-    public $shipmentItems;
+    public $shipmentItems = [];
 
     /**
      * @var ReducedTransport

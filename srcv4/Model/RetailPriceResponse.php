@@ -22,5 +22,5 @@ class RetailPriceResponse extends AbstractModel
     /**
      * @var RetailPrice[]
      */
-    public $retailPrices;
+    public $retailPrices = [];
 }

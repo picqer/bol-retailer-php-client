@@ -22,5 +22,5 @@ class KeySetResponse extends AbstractModel
     /**
      * @var KeySet[]
      */
-    public $signatureKeys;
+    public $signatureKeys = [];
 }

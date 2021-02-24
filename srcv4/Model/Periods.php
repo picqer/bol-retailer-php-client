@@ -34,5 +34,5 @@ class Periods extends AbstractModel
     /**
      * @var Country[]
      */
-    public $countries;
+    public $countries = [];
 }

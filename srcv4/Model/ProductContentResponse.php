@@ -31,7 +31,7 @@ class ProductContentResponse extends AbstractModel
     /**
      * @var RejectedAttributeResponse[]
      */
-    public $rejectedAttributes;
+    public $rejectedAttributes = [];
 
     /**
      * @var string The end status of the rejected attribute.

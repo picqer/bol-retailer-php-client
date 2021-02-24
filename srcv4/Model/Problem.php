@@ -58,5 +58,5 @@ class Problem extends AbstractModel
     /**
      * @var Violation[]
      */
-    public $violations;
+    public $violations = [];
 }

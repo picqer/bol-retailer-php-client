@@ -22,5 +22,5 @@ class SubscriptionsResponse extends AbstractModel
     /**
      * @var SubscriptionResponse[]
      */
-    public $subscriptions;
+    public $subscriptions = [];
 }

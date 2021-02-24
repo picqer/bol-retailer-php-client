@@ -22,7 +22,7 @@ class BulkProcessStatusRequest extends AbstractModel
     /**
      * @var ProcessStatusId[]
      */
-    public $processStatusQueries;
+    public $processStatusQueries = [];
 
     /**
      * Returns an array with the ids from processStatusQueries.

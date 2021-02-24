@@ -34,7 +34,7 @@ class Fulfilment extends AbstractModel
     /**
      * @var PickUpPoint[] Indicates whether this order is shipped to a Pick Up Point.
      */
-    public $pickUpPoints;
+    public $pickUpPoints = [];
 
     /**
      * Returns an array with the codes from pickUpPoints.

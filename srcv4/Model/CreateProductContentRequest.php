@@ -28,5 +28,5 @@ class CreateProductContentRequest extends AbstractModel
     /**
      * @var ProductContent[] A list of supplied products and their attributes. Attributes that are required for publishing products online will be mentioned in the data model.
      */
-    public $productContents;
+    public $productContents = [];
 }
