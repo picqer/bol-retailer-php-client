@@ -5,7 +5,7 @@ namespace Picqer\BolRetailerV4\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
-use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV4\BaseClient;
@@ -33,7 +33,7 @@ class BaseClientTest extends TestCase
 
     public function setup(): void
     {
-        $this->httpProphecy = $this->prophesize(ClientInterface::class);
+        $this->httpProphecy = $this->prophesize(HttpClient::class);
         $this->client = new BaseClient();
         $this->client->setHttp($this->httpProphecy->reveal());
 

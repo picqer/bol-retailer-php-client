@@ -3,7 +3,6 @@
 namespace Picqer\BolRetailerV4;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\ClientInterface as HttpInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
@@ -30,7 +29,7 @@ class BaseClient
      */
     protected $isDemoMode = false;
 
-    /** @var HttpInterface|null */
+    /** @var HttpClient|null */
     protected $http = null;
 
     /** @var array|null */
@@ -45,11 +44,11 @@ class BaseClient
     }
 
     /**
-     * Set the HTTP client used for API calls.
+     * Set the Guzzle HTTP client used for API calls.
      *
-     * @param HttpInterface $http
+     * @param HttpClient $http
      */
-    public function setHttp(HttpInterface $http): void
+    public function setHttp(HttpClient $http): void
     {
         $this->http = $http;
     }
