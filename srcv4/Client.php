@@ -34,8 +34,8 @@ class Client extends BaseClient
 
     /**
      * Commissions can be filtered by condition, which defaults to NEW. If price is provided, the exact commission amount will also be calculated.
-     * @param string $ean
-     * @param float $unitPrice
+     * @param string $ean The EAN number associated with this product.
+     * @param float $unitPrice The price of the product with a period as a decimal separator. The price should always have two decimals precision.
      * @param string $condition The condition of the offer.
      * @return Model\Commission|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -88,7 +88,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a validation report of the product content upload based on the upload id.
-     * @param string $uploadId
+     * @param string $uploadId The identifier of the product content upload.
      * @return Model\ProductContentResponse[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -113,11 +113,11 @@ class Client extends BaseClient
 
     /**
      * A paginated list of all inbound shipments.
-     * @param string $reference
-     * @param string $bsku
-     * @param string $creationStartDate
-     * @param string $creationEndDate
-     * @param string $state
+     * @param string $reference A user defined reference to identify the inbound shipment.
+     * @param string $bsku The BSKU number associated with this product.
+     * @param string $creationStartDate The creation start date and time to find the inbound shipment in ISO 8601 format.
+     * @param string $creationEndDate The end date of the range to find the inbound shipment, in ISO 8601 format.
+     * @param string $state The current state of the inbound shipment.
      * @param int $page The requested page number with a page size of 50 items.
      * @return Model\ReducedInbound[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -248,7 +248,7 @@ class Client extends BaseClient
 
     /**
      * Get inbound details by inbound id.
-     * @param int $inboundId
+     * @param int $inboundId A unique identifier for an inbound shipment.
      * @return Model\Inbound|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -272,7 +272,7 @@ class Client extends BaseClient
 
     /**
      * Get packing list by inbound id.
-     * @param int $inboundId
+     * @param int $inboundId A unique identifier for an inbound shipment.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -296,7 +296,7 @@ class Client extends BaseClient
 
     /**
      * Get inbound shipping label by inbound id.
-     * @param int $inboundId
+     * @param int $inboundId A unique identifier for an inbound shipment.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -320,10 +320,10 @@ class Client extends BaseClient
 
     /**
      * Gets offer insights.
-     * @param string $offerId
-     * @param string $period
-     * @param int $numberOfPeriods
-     * @param array $name
+     * @param string $offerId Unique identifier for an offer.
+     * @param string $period The time unit in which the offer insights are grouped.
+     * @param int $numberOfPeriods The number of periods for which the offer insights are requested back in time.
+     * @param array $name The name of the requested offer insight.
      * @return Model\OfferInsight[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -352,9 +352,9 @@ class Client extends BaseClient
 
     /**
      * Gets the measurements for your performance indicators per week.
-     * @param array $name
-     * @param string $year
-     * @param string $week
+     * @param array $name The type of the performance indicator
+     * @param string $year Year number in the ISO-8601 standard.
+     * @param string $week Week number in the ISO-8601 standard. If you would like to get the relative scores from the current week, please provide the current week number here. Be advised that measurements can change heavily over the course of the week.
      * @return Model\PerformanceIndicator[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -382,8 +382,8 @@ class Client extends BaseClient
 
     /**
      * Gets sales forecast.
-     * @param string $offerId
-     * @param int $weeksAhead
+     * @param string $offerId Unique identifier for an offer.
+     * @param int $weeksAhead The number of weeks into the future, starting from today.
      * @return Model\SalesForecastResponse
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -410,10 +410,10 @@ class Client extends BaseClient
 
     /**
      * The inventory endpoint is a specific LVB/FBB endpoint. It provides a paginated list containing your fulfilment by bol.com inventory. This endpoint does not provide information about your own stock.
-     * @param array $quantity
-     * @param string $stock
-     * @param string $state
-     * @param string $query
+     * @param array $quantity Filter inventory by providing a range of quantity (min-range)-(max-range).
+     * @param string $stock Filter inventory by stock level.
+     * @param string $state Filter inventory by stock type.
+     * @param string $query Filter inventory by EAN or product title.
      * @param int $page The requested page number with a page size of 50 items.
      * @return Model\Inventory[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -444,8 +444,8 @@ class Client extends BaseClient
 
     /**
      * Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past, the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls. The available media types differ per invoice and are listed per invoice within the response. Note: the media types listed in the response must be given in our standard API format.
-     * @param string $periodStartDate
-     * @param string $periodEndDate
+     * @param string $periodStartDate Period start date in ISO 8601 standard.
+     * @param string $periodEndDate Period end date in ISO 8601 standard.
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -472,7 +472,7 @@ class Client extends BaseClient
 
     /**
      * Gets an invoice by invoice id. The available media types differ per invoice and are listed within the response from the ‘GET all invoices’ call. Note: the media types listed in the response must be given in our standard API format.
-     * @param int $invoiceId
+     * @param int $invoiceId The id of the invoice
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -495,8 +495,8 @@ class Client extends BaseClient
 
     /**
      * Gets an invoice specification for an invoice with a paginated list of its transactions. The available media types differ per invoice specification and are listed within the response from the ‘GET all invoices’ call. Note, the media types listed in the response must be given in our standard API format.
-     * @param int $invoiceId
-     * @param int $page
+     * @param int $invoiceId The id of the invoice.
+     * @param int $page The page to get. Each page contains a maximum of 25.000 lines.
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -570,7 +570,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve an offer export file containing all offers.
-     * @param string $reportId
+     * @param string $reportId Unique identifier for an offer export report.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -618,7 +618,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve an unpublished offer report containing all unpublished offers and reasons.
-     * @param string $reportId
+     * @param string $reportId Unique identifier for unpublished offer report.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -642,7 +642,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve an offer by using the offer id provided to you when creating or listing your offers.
-     * @param string $offerId
+     * @param string $offerId Unique identifier for an offer.
      * @return Model\RetailerOffer|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -666,7 +666,7 @@ class Client extends BaseClient
 
     /**
      * Use this endpoint to send an offer update. This endpoint returns a process status.
-     * @param string $offerId
+     * @param string $offerId Unique identifier for an offer.
      * @param Model\UpdateOfferRequest $updateOfferRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -691,7 +691,7 @@ class Client extends BaseClient
 
     /**
      * Delete an offer by id.
-     * @param string $offerId
+     * @param string $offerId Unique identifier for an offer.
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -714,7 +714,7 @@ class Client extends BaseClient
 
     /**
      * Update price(s) for offer by id.
-     * @param string $offerId
+     * @param string $offerId Unique identifier for an offer.
      * @param Model\Pricing $pricing
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -739,7 +739,7 @@ class Client extends BaseClient
 
     /**
      * Update stock for offer by id.
-     * @param string $offerId
+     * @param string $offerId Unique identifier for an offer.
      * @param Model\UpdateOfferStockRequest $updateOfferStockRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -840,7 +840,7 @@ class Client extends BaseClient
 
     /**
      * Gets an open order by order id.
-     * @param string $orderId
+     * @param string $orderId The id of the open order to get.
      * @return Model\Order|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -866,7 +866,7 @@ class Client extends BaseClient
      * Currently this endpoint only supports the allowable retail price and can support the following use cases:<br /><br />
                     1) EANs that have been unpublished due to price related reasons can be checked against this endpoint.<br />
                     2) Requesting the allowable retail price for EANs that are not yet in your assortment can help inform price setting.
-     * @param string $ean
+     * @param string $ean The EAN number associated with this product.
      * @return Model\RetailPrice[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -891,8 +891,8 @@ class Client extends BaseClient
 
     /**
      * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests in descending order. You need to supply an entity id and event type. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.
-     * @param string $entityId
-     * @param string $eventType
+     * @param string $entityId The entity id is not unique so you need to provide an event type. The entity id can either be order item id, transport id, return number or inbound reference.
+     * @param string $eventType The event type can only be used in combination with the entity id.
      * @param int $page The requested page number with a page size of 50 items.
      * @return Model\ProcessStatus[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -945,7 +945,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a specific process-status, which shows information regarding a previously executed PUT/POST/DELETE request. All PUT/POST/DELETE requests on the other endpoints will supply a process-status-id in the related response. You can use this id to retrieve a status by using the endpoint below. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these statuses.
-     * @param int $processStatusId
+     * @param int $processStatusId The id of the process status being requested. This id is supplied in every response to a PUT/POST/DELETE request on the other endpoints.
      * @return Model\ProcessStatus|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -969,7 +969,7 @@ class Client extends BaseClient
 
     /**
      * Get a paginated list of multi-item returns, which are sorted by date in descending order.
-     * @param bool $handled
+     * @param bool $handled The status of the returns you wish to see, shows either handled or unhandled returns.
      * @param int $page The page to get with a page size of 50.
      * @param string $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
      * @return Model\ReducedReturn[]
@@ -1023,7 +1023,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a return based on the return id.
-     * @param int $returnId
+     * @param int $returnId Unique identifier for a return.
      * @return Model\ReturnObject|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1047,8 +1047,8 @@ class Client extends BaseClient
 
     /**
      * Allows the user to handle a return. This can be to either handle an open return, or change the handlingResult of an already handled return. The latter is only possible in limited scenarios, please check the returns documentation for a complete list.
-     * @param int $rmaId
-     * @param Model\ReturnRequest $returnRequest
+     * @param int $rmaId The RMA (Return Merchandise Authorization) id that identifies this particular return.
+     * @param Model\ReturnRequest $returnRequest The handling result requested by the retailer.
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1072,7 +1072,7 @@ class Client extends BaseClient
 
     /**
      * A paginated list to retrieve all your shipments up to 3 months old. The shipments will be sorted by date in descending order.
-     * @param string $orderId
+     * @param string $orderId The id of the order. Only valid without fulfilment-method. The default fulfilment-method is ignored.
      * @param int $page The page to get with a page size of 50.
      * @param string $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
      * @return Model\ReducedShipment[]
@@ -1102,7 +1102,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a single shipment by its corresponding id.
-     * @param int $shipmentId
+     * @param int $shipmentId The id of the shipment.
      * @return Model\Shipment|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1176,7 +1176,7 @@ class Client extends BaseClient
 
     /**
      * Gets a shipping label by shipping label id.
-     * @param string $shippingLabelId
+     * @param string $shippingLabelId The shipping label id.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1290,7 +1290,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a configured and active push notification subscription with the provided id.
-     * @param int $subscriptionId
+     * @param int $subscriptionId A unique identifier for the subscription
      * @return Model\SubscriptionResponse|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1314,7 +1314,7 @@ class Client extends BaseClient
 
     /**
      * Update an existing push notification subscription with the supplied id. The configured URL has to support https scheme.
-     * @param int $subscriptionId
+     * @param int $subscriptionId A unique identifier for the subscription
      * @param Model\UpdateSubscriptionRequest $updateSubscriptionRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1339,7 +1339,7 @@ class Client extends BaseClient
 
     /**
      * Delete a push notification subscription with the provided id.
-     * @param int $subscriptionId
+     * @param int $subscriptionId A unique identifier for the subscription
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1362,8 +1362,8 @@ class Client extends BaseClient
 
     /**
      * Add information to an existing transport. The transport id is part of the shipment. You can retrieve the transport id through the GET shipment list request.
-     * @param int $transportId
-     * @param Model\ChangeTransportRequest $changeTransportRequest
+     * @param int $transportId The transport id.
+     * @param Model\ChangeTransportRequest $changeTransportRequest The change transport requested by the user.
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.

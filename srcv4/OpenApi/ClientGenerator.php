@@ -242,7 +242,7 @@ class ClientGenerator
         foreach ($parameters as $parameter) {
             $argument = [
                 'default' => null,
-                'description' => null,
+                'description' => $parameter['description'] ?? null,
                 'in' => $parameter['in'],
                 'paramName' => null
             ];
@@ -292,7 +292,6 @@ class ClientGenerator
                     } else {
                         $argument['default'] = $parameter['default'];
                     }
-                    $argument['description'] = $parameter['description'];
                 }
             }
 
