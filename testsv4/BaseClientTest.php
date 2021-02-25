@@ -220,6 +220,20 @@ class BaseClientTest extends TestCase
         $this->assertEquals("This is a test string\n", $response);
     }
 
+    public function testRequestReturnsNullAt404()
+    {
+        $this->authenticate();
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+
+        $response = $this->client->request('GET', 'foobar', [], [
+            '404' => 'null'
+        ]);
+
+        $this->assertNull($response);
+    }
+
     public function testRequestThrowsResponseExceptionAtUnknownResponseType()
     {
         $this->authenticate();
