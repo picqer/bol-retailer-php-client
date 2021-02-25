@@ -74,3 +74,4 @@ composer run-script generate-models
     "orders": [ ]
   }
   ``` 
+- Operation 'Get all invoices' is specified to have a string as response, while there is clearly some data model returned in JSON or XML.
