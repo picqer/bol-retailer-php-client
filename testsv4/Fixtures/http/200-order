@@ -1,0 +1,90 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 12 Feb 2021 15:19:33 GMT
+Content-Type: application/vnd.retailer.v4+json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 9
+X-RateLimit-Reset: 1
+X-Request-ID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+X-RID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+Strict-Transport-Security: max-age=86400
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{
+  "orderId" : "1042823870",
+  "pickUpPoint" : false,
+  "orderPlacedDateTime" : "2019-04-30T16:47:32+02:00",
+  "shipmentDetails" : {
+    "salutation" : "MALE",
+    "firstName" : "Hans",
+    "surname" : "de Grote",
+    "streetName" : "Skywalkerstraat",
+    "houseNumber" : "199",
+    "zipCode" : "1234AB",
+    "city" : "PLATOONDORP",
+    "countryCode" : "NL",
+    "email" : "27zoytzc3crf2r6bctxfa3m2mrjbci@verkopen.test2.bol.com",
+    "language" : "nl"
+  },
+  "billingDetails" : {
+    "salutation" : "MALE",
+    "firstName" : "Pieter",
+    "surname" : "Post",
+    "streetName" : "Skywalkerstraat",
+    "houseNumber" : "21",
+    "houseNumberExtension" : "X",
+    "extraAddressInformation" : "Extra informatie",
+    "zipCode" : "1234AB",
+    "city" : "PLATOONDORP",
+    "countryCode" : "NL",
+    "email" : "2yldzdi2wjcf5ir4sycq7lufqpytxy@verkopen.test2.bol.com",
+    "company" : "Pieter Post",
+    "vatNumber" : "NL123456789B01",
+    "kvkNumber" : "99887766",
+    "orderReference" : "Mijn order ref"
+  },
+  "orderItems" : [ {
+    "orderItemId" : "6107771545",
+    "cancellationRequest" : false,
+    "fulfilment" : {
+      "method" : "FBB",
+      "latestDeliveryDate" : "2018-04-22",
+      "expiryDate" : "2018-04-25"
+    },
+    "offer" : {
+      "offerId" : "8f1183e3-de98-c92f-e053-3590612a63b7",
+      "reference" : "MijnOffer0021"
+    },
+    "product" : {
+      "ean" : "8785056370398",
+      "title" : "Star Wars Prequel Trilogy"
+    },
+    "quantity" : 1,
+    "unitPrice" : 19.99,
+    "commission" : 2.21
+  }, {
+    "orderItemId" : "6107771546",
+    "cancellationRequest" : false,
+    "fulfilment" : {
+      "method" : "FBB",
+      "latestDeliveryDate" : "2018-01-16",
+      "expiryDate" : "2018-01-16"
+    },
+    "offer" : {
+      "offerId" : "8f6485e3-de66-c08f-e053-8602590a63b4",
+      "reference" : "MijnOffer1121"
+    },
+    "product" : {
+      "ean" : "8717418510749",
+      "title" : "Star Wars - The happy family 2"
+    },
+    "quantity" : 1,
+    "unitPrice" : 32.98,
+    "commission" : 6.38
+  } ]
+}

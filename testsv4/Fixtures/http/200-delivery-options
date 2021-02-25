@@ -1,0 +1,80 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 12 Feb 2021 15:19:33 GMT
+Content-Type: application/vnd.retailer.v4+json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 9
+X-RateLimit-Reset: 1
+X-Request-ID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+X-RID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+Strict-Transport-Security: max-age=86400
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{
+  "deliveryOptions" : [ {
+    "shippingLabelOfferId" : "c29afac7-9700-4818-b654-97d1d334999c",
+    "validUntilDate" : "2020-10-12",
+    "transporterCode" : "TNT_BRIEF",
+    "labelType" : "MAILBOX_LIGHT",
+    "labelPrice" : {
+      "totalPrice" : 2.88
+    },
+    "packageRestrictions" : {
+      "maxWeight" : "2 kg",
+      "maxDimensions" : "38 x 26,5 x 3,2 cm"
+    }
+  }, {
+    "shippingLabelOfferId" : "7d3205e2-7ac1-40ca-a52f-952066b57353",
+    "validUntilDate" : "2020-10-12",
+    "transporterCode" : "TNT",
+    "labelType" : "MAILBOX",
+    "labelPrice" : {
+      "totalPrice" : 3.9
+    },
+    "packageRestrictions" : {
+      "maxWeight" : "2 kg",
+      "maxDimensions" : "38 x 26,5 x 3,2 cm"
+    }
+  }, {
+    "shippingLabelOfferId" : "da28efa7-243c-444e-b74f-be21bc2dfa71",
+    "validUntilDate" : "2020-10-12",
+    "transporterCode" : "DPD-NL",
+    "labelType" : "PARCEL",
+    "labelPrice" : {
+      "totalPrice" : 4.79
+    },
+    "packageRestrictions" : {
+      "maxWeight" : "20 kg",
+      "maxDimensions" : "100 x 50 x 50 cm"
+    }
+  }, {
+    "shippingLabelOfferId" : "06636e98-e26a-4747-8ad2-786fa8a514c6",
+    "validUntilDate" : "2020-10-12",
+    "transporterCode" : "DHLFORYOU",
+    "labelType" : "PARCEL",
+    "labelPrice" : {
+      "totalPrice" : 4.69
+    },
+    "packageRestrictions" : {
+      "maxWeight" : "20 kg",
+      "maxDimensions" : "80 x 50 x 35 cm"
+    }
+  }, {
+    "shippingLabelOfferId" : "aea9abd0-9e20-424d-954a-d01585b23559",
+    "validUntilDate" : "2020-10-12",
+    "transporterCode" : "TNT",
+    "labelType" : "PARCEL",
+    "labelPrice" : {
+      "totalPrice" : 6.65
+    },
+    "packageRestrictions" : {
+      "maxWeight" : "10 kg",
+      "maxDimensions" : "100 x 50 x 50 cm"
+    }
+  } ]
+}
