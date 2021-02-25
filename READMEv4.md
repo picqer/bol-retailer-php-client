@@ -64,3 +64,13 @@ composer run-script generate-models
 - Some type definitions in de specifications are sentences, for example 'Delivery windows for inbound shipments.'. These are converted to CamelCase and dots are removed.
 - Some operations in the specifications have no response type specified, while there is a response. Currently, this is only the case for operations that return CSV.
 - There a type 'Return' defined in the specifications. As this is a reserved keyword in PHP, it can't be used as class name for the model (in PHP <= 7), so for now it's replaced with 'ReturnObject'.
+- If an array field in a response is empty, the field is (sometimes?) omitted from the response. E.g. the raw JSON response for getOrders is
+  ```
+  { }
+  ```
+  where you might expect 
+  ```
+  {
+    "orders": [ ]
+  }
+  ``` 
