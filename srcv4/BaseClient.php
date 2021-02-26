@@ -46,11 +46,21 @@ class BaseClient
     /**
      * Set the Guzzle HTTP client used for API calls.
      *
-     * @param HttpClient $http
+     * @param HttpClient $http The Guzzle HTTP client used for API calls.
      */
     public function setHttp(HttpClient $http): void
     {
         $this->http = $http;
+    }
+
+    /**
+     * Returns the Guzzle HTTP client used for API calls.
+     *
+     * @return HttpClient The Guzzle HTTP client used for API calls.
+     */
+    public function getHttp(): HttpClient
+    {
+        return $this->http;
     }
 
     /**
