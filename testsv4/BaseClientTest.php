@@ -249,15 +249,14 @@ class BaseClientTest extends TestCase
     {
         $this->authenticate();
 
+        $actualArgs = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpProphecy
-            ->request('GET', 'https://api.bol.com/retailer/foobar', [
-                'headers' => [
-                    'Accept' => 'application/vnd.retailer.v4+pdf',
-                    'Authorization' => 'Bearer ' . $this->client->getToken()['access_token']
-                ]
-            ])
-            ->willReturn($response)
+            ->request(Argument::cetera())
+            ->will(function ($args) use ($response, &$actualArgs) {
+                $actualArgs = $args[2];
+                return $response;
+            })
             ->shouldBeCalled();
 
         $this->client->request('GET', 'foobar', [
@@ -265,6 +264,10 @@ class BaseClientTest extends TestCase
         ], [
             '200' => 'string'
         ]);
+
+        $this->assertArrayHasKey('headers', $actualArgs);
+        $this->assertArrayHasKey('Accept', $actualArgs['headers']);
+        $this->assertEquals('application/vnd.retailer.v4+pdf', $actualArgs['headers']['Accept']);
     }
 
     public function testRequestJsonEncodesBodyModelIntoBody()
@@ -274,17 +277,14 @@ class BaseClientTest extends TestCase
         $model = new $this->modelClass();
         $model->foo = 'bar';
 
+        $actualArgs = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpProphecy
-            ->request('GET', 'https://api.bol.com/retailer/foobar', [
-                'headers' => [
-                    'Accept' => 'application/vnd.retailer.v4+json',
-                    'Authorization' => 'Bearer ' . $this->client->getToken()['access_token'],
-                    'Content-Type' => 'application/vnd.retailer.v4+json'
-                ],
-                'body' => json_encode($model)
-            ])
-            ->willReturn($response)
+            ->request(Argument::cetera())
+            ->will(function ($args) use ($response, &$actualArgs) {
+                $actualArgs = $args[2];
+                return $response;
+            })
             ->shouldBeCalled();
 
         $this->client->request('GET', 'foobar', [
@@ -292,6 +292,9 @@ class BaseClientTest extends TestCase
         ], [
             '200' => 'string'
         ]);
+
+        $this->assertArrayHasKey('body', $actualArgs);
+        $this->assertEquals(json_encode(['foo' => 'bar']), $actualArgs['body']);
     }
 
     public function testRequestJsonEncodesBodyModelWithoutNullValuesIntoBody()
@@ -315,17 +318,14 @@ class BaseClientTest extends TestCase
         $model = new $modelClass();
         $model->foo = 'bar';
 
+        $actualArgs = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpProphecy
-            ->request('GET', 'https://api.bol.com/retailer/foobar', [
-                'headers' => [
-                    'Accept' => 'application/vnd.retailer.v4+json',
-                    'Authorization' => 'Bearer ' . $this->client->getToken()['access_token'],
-                    'Content-Type' => 'application/vnd.retailer.v4+json'
-                ],
-                'body' => json_encode(['foo' => 'bar'])
-            ])
-            ->willReturn($response)
+            ->request(Argument::cetera())
+            ->will(function ($args) use ($response, &$actualArgs) {
+                $actualArgs = $args[2];
+                return $response;
+            })
             ->shouldBeCalled();
 
         $this->client->request('GET', 'foobar', [
@@ -333,6 +333,9 @@ class BaseClientTest extends TestCase
         ], [
             '200' => 'string'
         ]);
+
+        $this->assertArrayHasKey('body', $actualArgs);
+        $this->assertEquals(json_encode(['foo' => 'bar']), $actualArgs['body']);
     }
 
     public function testRequestConstructsEndpoint()
@@ -362,9 +365,6 @@ class BaseClientTest extends TestCase
     public function testQueryParameterIsSentInRequest()
     {
         $this->authenticate();
-
-        $model = new $this->modelClass();
-        $model->foo = 'bar';
 
         $actualArgs = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
