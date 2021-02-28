@@ -359,4 +359,33 @@ class BaseClientTest extends TestCase
         $this->client->request('GET', 'foobar', [], []);
     }
 
+    public function testQueryParameterIsSentInRequest()
+    {
+        $this->authenticate();
+
+        $model = new $this->modelClass();
+        $model->foo = 'bar';
+
+        $actualArgs = null;
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
+        $this->httpProphecy
+            ->request(Argument::cetera())
+            ->will(function ($args) use ($response, &$actualArgs) {
+                $actualArgs = $args[2];
+                return $response;
+            })
+            ->shouldBeCalled();
+
+        $this->client->request('GET', 'foobar', [
+            'query' => [
+                'foo' => 'bar'
+            ],
+        ], [
+            '200' => 'string'
+        ]);
+
+        $this->assertArrayHasKey('query', $actualArgs);
+        $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
+    }
+
 }

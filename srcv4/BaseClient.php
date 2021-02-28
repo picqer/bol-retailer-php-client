@@ -192,6 +192,11 @@ class BaseClient
             $httpOptions['body'] = json_encode($options['body']->toArray(true));
         }
 
+        // pass thu query parameters
+        if (isset($options['query'])) {
+            $httpOptions['query'] = $options['query'];
+        }
+
         $response = $this->rawRequest($method, $url, $httpOptions);
         $statusCode = $response->getStatusCode();
 
