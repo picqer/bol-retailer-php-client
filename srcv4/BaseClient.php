@@ -192,7 +192,7 @@ class BaseClient
             $httpOptions['body'] = json_encode($options['body']->toArray(true));
         }
 
-        // pass thu query parameters
+        // pass through query parameters
         if (isset($options['query'])) {
             $httpOptions['query'] = $options['query'];
         }
