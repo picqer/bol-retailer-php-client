@@ -36,7 +36,7 @@ class Client extends BaseClient
      * Commissions can be filtered by condition, which defaults to NEW. If price is provided, the exact commission amount will also be calculated.
      * @param string $ean The EAN number associated with this product.
      * @param float $unitPrice The price of the product with a period as a decimal separator. The price should always have two decimals precision.
-     * @param string $condition The condition of the offer.
+     * @param string|null $condition The condition of the offer.
      * @return Model\Commission|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -44,7 +44,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCommission(string $ean, float $unitPrice, string $condition = 'NEW'): ?Model\Commission
+    public function getCommission(string $ean, float $unitPrice, ?string $condition = 'NEW'): ?Model\Commission
     {
         $url = "commission/${ean}";
         $options = [
@@ -113,12 +113,12 @@ class Client extends BaseClient
 
     /**
      * A paginated list of all inbound shipments.
-     * @param string $reference A user defined reference to identify the inbound shipment.
-     * @param string $bsku The BSKU number associated with this product.
-     * @param string $creationStartDate The creation start date and time to find the inbound shipment in ISO 8601 format.
-     * @param string $creationEndDate The end date of the range to find the inbound shipment, in ISO 8601 format.
-     * @param string $state The current state of the inbound shipment.
-     * @param int $page The requested page number with a page size of 50 items.
+     * @param string|null $reference A user defined reference to identify the inbound shipment.
+     * @param string|null $bsku The BSKU number associated with this product.
+     * @param string|null $creationStartDate The creation start date and time to find the inbound shipment in ISO 8601 format.
+     * @param string|null $creationEndDate The end date of the range to find the inbound shipment, in ISO 8601 format.
+     * @param string|null $state The current state of the inbound shipment.
+     * @param int|null $page The requested page number with a page size of 50 items.
      * @return Model\ReducedInbound[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -126,7 +126,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInbounds(string $reference, string $bsku, string $creationStartDate, string $creationEndDate, string $state, int $page = 1): array
+    public function getInbounds(?string $reference = null, ?string $bsku = null, ?string $creationStartDate = null, ?string $creationEndDate = null, ?string $state = null, ?int $page = 1): array
     {
         $url = "inbounds";
         $options = [
@@ -173,8 +173,8 @@ class Client extends BaseClient
 
     /**
      * Retrieve a list of available delivery windows when creating a new inbound shipment.
-     * @param string $deliveryDate The expected delivery date for the inbound in ISO 8601 format.
-     * @param int $itemsToSend The number of items that will be sent in the inbound.
+     * @param string|null $deliveryDate The expected delivery date for the inbound in ISO 8601 format.
+     * @param int|null $itemsToSend The number of items that will be sent in the inbound.
      * @return Model\TimeSlot[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -182,7 +182,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getDeliveryWindows(string $deliveryDate = 'Today\'s date.', int $itemsToSend = 1): array
+    public function getDeliveryWindows(?string $deliveryDate = 'Today\'s date.', ?int $itemsToSend = 1): array
     {
         $url = "inbounds/delivery-windows";
         $options = [
@@ -410,11 +410,11 @@ class Client extends BaseClient
 
     /**
      * The inventory endpoint is a specific LVB/FBB endpoint. It provides a paginated list containing your fulfilment by bol.com inventory. This endpoint does not provide information about your own stock.
+     * @param int|null $page The requested page number with a page size of 50 items.
      * @param array $quantity Filter inventory by providing a range of quantity (min-range)-(max-range).
-     * @param string $stock Filter inventory by stock level.
-     * @param string $state Filter inventory by stock type.
-     * @param string $query Filter inventory by EAN or product title.
-     * @param int $page The requested page number with a page size of 50 items.
+     * @param string|null $stock Filter inventory by stock level.
+     * @param string|null $state Filter inventory by stock type.
+     * @param string|null $query Filter inventory by EAN or product title.
      * @return Model\Inventory[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -422,16 +422,16 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInventory(array $quantity, string $stock, string $state, string $query, int $page = 1): array
+    public function getInventory(?int $page = 1, array $quantity = [], ?string $stock = null, ?string $state = null, ?string $query = null): array
     {
         $url = "inventory";
         $options = [
             'query' => [
+                'page' => $page,
                 'quantity' => $quantity,
                 'stock' => $stock,
                 'state' => $state,
                 'query' => $query,
-                'page' => $page,
             ],
             'produces' => 'application/vnd.retailer.v4+json',
         ];
@@ -444,8 +444,8 @@ class Client extends BaseClient
 
     /**
      * Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past, the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls. The available media types differ per invoice and are listed per invoice within the response. Note: the media types listed in the response must be given in our standard API format.
-     * @param string $periodStartDate Period start date in ISO 8601 standard.
-     * @param string $periodEndDate Period end date in ISO 8601 standard.
+     * @param string|null $periodStartDate Period start date in ISO 8601 standard.
+     * @param string|null $periodEndDate Period end date in ISO 8601 standard.
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -453,7 +453,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoices(string $periodStartDate, string $periodEndDate): string
+    public function getInvoices(?string $periodStartDate = null, ?string $periodEndDate = null): string
     {
         $url = "invoices";
         $options = [
@@ -496,7 +496,7 @@ class Client extends BaseClient
     /**
      * Gets an invoice specification for an invoice with a paginated list of its transactions. The available media types differ per invoice specification and are listed within the response from the ‘GET all invoices’ call. Note, the media types listed in the response must be given in our standard API format.
      * @param int $invoiceId The id of the invoice.
-     * @param int $page The page to get. Each page contains a maximum of 25.000 lines.
+     * @param int|null $page The page to get. Each page contains a maximum of 25.000 lines.
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -504,7 +504,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoiceSpecification(int $invoiceId, int $page): string
+    public function getInvoiceSpecification(int $invoiceId, ?int $page = null): string
     {
         $url = "invoices/${invoiceId}/specification";
         $options = [
@@ -764,8 +764,8 @@ class Client extends BaseClient
 
     /**
      * Gets a paginated list of all open orders sorted by date in descending order.
-     * @param int $page The requested page number with a page size of 50 items.
-     * @param string $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @param int|null $page The requested page number with a page size of 50 items.
+     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
      * @return Model\ReducedOrder[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -773,7 +773,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOrders(int $page = 1, string $fulfilmentMethod = 'FBR'): array
+    public function getOrders(?int $page = 1, ?string $fulfilmentMethod = 'FBR'): array
     {
         $url = "orders";
         $options = [
@@ -893,7 +893,7 @@ class Client extends BaseClient
      * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests in descending order. You need to supply an entity id and event type. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.
      * @param string $entityId The entity id is not unique so you need to provide an event type. The entity id can either be order item id, transport id, return number or inbound reference.
      * @param string $eventType The event type can only be used in combination with the entity id.
-     * @param int $page The requested page number with a page size of 50 items.
+     * @param int|null $page The requested page number with a page size of 50 items.
      * @return Model\ProcessStatus[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -901,7 +901,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProcessStatusEntityId(string $entityId, string $eventType, int $page = 1): array
+    public function getProcessStatusEntityId(string $entityId, string $eventType, ?int $page = 1): array
     {
         $url = "process-status";
         $options = [
@@ -969,9 +969,9 @@ class Client extends BaseClient
 
     /**
      * Get a paginated list of multi-item returns, which are sorted by date in descending order.
-     * @param bool $handled The status of the returns you wish to see, shows either handled or unhandled returns.
-     * @param int $page The page to get with a page size of 50.
-     * @param string $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @param int|null $page The page to get with a page size of 50.
+     * @param bool|null $handled The status of the returns you wish to see, shows either handled or unhandled returns.
+     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
      * @return Model\ReducedReturn[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -979,13 +979,13 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getReturns(bool $handled, int $page = 1, string $fulfilmentMethod = 'FBR'): array
+    public function getReturns(?int $page = 1, ?bool $handled = null, ?string $fulfilmentMethod = 'FBR'): array
     {
         $url = "returns";
         $options = [
             'query' => [
-                'handled' => $handled,
                 'page' => $page,
+                'handled' => $handled,
                 'fulfilment-method' => $fulfilmentMethod,
             ],
             'produces' => 'application/vnd.retailer.v4+json',
@@ -1072,9 +1072,9 @@ class Client extends BaseClient
 
     /**
      * A paginated list to retrieve all your shipments up to 3 months old. The shipments will be sorted by date in descending order.
-     * @param string $orderId The id of the order. Only valid without fulfilment-method. The default fulfilment-method is ignored.
-     * @param int $page The page to get with a page size of 50.
-     * @param string $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @param int|null $page The page to get with a page size of 50.
+     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @param string|null $orderId The id of the order. Only valid without fulfilment-method. The default fulfilment-method is ignored.
      * @return Model\ReducedShipment[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1082,14 +1082,14 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getShipments(string $orderId, int $page = 1, string $fulfilmentMethod = 'FBR'): array
+    public function getShipments(?int $page = 1, ?string $fulfilmentMethod = 'FBR', ?string $orderId = null): array
     {
         $url = "shipments";
         $options = [
             'query' => [
-                'order-id' => $orderId,
                 'page' => $page,
                 'fulfilment-method' => $fulfilmentMethod,
+                'order-id' => $orderId,
             ],
             'produces' => 'application/vnd.retailer.v4+json',
         ];

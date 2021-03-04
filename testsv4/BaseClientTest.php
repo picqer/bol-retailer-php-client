@@ -388,4 +388,31 @@ class BaseClientTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
     }
 
+    public function testQueryParameterWithValueNullIsNotSentInRequest()
+    {
+        $this->authenticate();
+
+        $actualArgs = null;
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
+        $this->httpProphecy
+            ->request(Argument::cetera())
+            ->will(function ($args) use ($response, &$actualArgs) {
+                $actualArgs = $args[2];
+                return $response;
+            })
+            ->shouldBeCalled();
+
+        $this->client->request('GET', 'foobar', [
+            'query' => [
+                'page' => null,
+                'foo' => 'bar',
+            ],
+        ], [
+            '200' => 'string'
+        ]);
+
+        $this->assertArrayHasKey('query', $actualArgs);
+        $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
+    }
+
 }

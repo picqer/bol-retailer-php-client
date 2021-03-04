@@ -189,13 +189,13 @@ class ClientGenerator
             if (empty($argument['description'])) {
                 $code[] = sprintf(
                     '     * @param %s $%s',
-                    $argument['doc'] ?? $argument['php'],
+                    $argument['doc'],
                     $argument['name']
                 );
             } else {
                 $code[] = sprintf(
                     '     * @param %s $%s %s',
-                    $argument['doc'] ?? $argument['php'],
+                    $argument['doc'],
                     $argument['name'],
                     $argument['description']
                 );
@@ -244,7 +244,8 @@ class ClientGenerator
                 'default' => null,
                 'description' => $parameter['description'] ?? null,
                 'in' => $parameter['in'],
-                'paramName' => null
+                'paramName' => null,
+                'required' => $parameter['required']
             ];
 
             if ($parameter['in'] == 'body') {
@@ -279,10 +280,12 @@ class ClientGenerator
 
                 if (! isset($argument['property'])) {
                     $argument['php'] = 'Model\\' . $type;
+                    $argument['doc'] = $argument['php'];
                     $argument['name'] = lcfirst($type);
                 }
             } else {
                 $argument['php'] = static::$paramTypeMapping[$parameter['type']];
+                $argument['doc'] = $argument['php'];
                 $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
                 $argument['paramName'] = $parameter['name'];
                 if (isset($parameter['default'])) {
@@ -293,6 +296,21 @@ class ClientGenerator
                         $argument['default'] = $parameter['default'];
                     }
                 }
+            }
+
+
+            // body arguments are always required, even though specs claim not
+            if (! $argument['required'] && $argument['in'] != 'body') {
+                if ($argument['php'] == 'array') {
+                    $argument['default'] = '[]';
+                } else {
+                    $argument['php'] = '?' . $argument['php'];
+                    $argument['doc'] = $argument['doc'] . '|null';
+                    if ($argument['default'] === null) {
+                        $argument['default'] = 'null';
+                    }
+                }
+
             }
 
             if ($argument['default'] !== null) {

@@ -192,9 +192,11 @@ class BaseClient
             $httpOptions['body'] = json_encode($options['body']->toArray(true));
         }
 
-        // pass through query parameters
+        // pass through query parameters without null values
         if (isset($options['query'])) {
-            $httpOptions['query'] = $options['query'];
+            $httpOptions['query'] = array_filter($options['query'], function ($value) {
+                return $value !== null;
+            });
         }
 
         $response = $this->rawRequest($method, $url, $httpOptions);
