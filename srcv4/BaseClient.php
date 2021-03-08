@@ -275,13 +275,13 @@ class BaseClient
                 $statusCode . ' ' . $response->getReasonPhrase();
 
             if ($statusCode == 401) {
-                throw new UnauthorizedException($message);
+                throw new UnauthorizedException($message, $statusCode);
             } if ($statusCode == 429) {
-                throw new RateLimitException($message);
+                throw new RateLimitException($message, $statusCode);
             } elseif (in_array($statusCode, [500, 502, 503, 504, 507])) {
-                throw new ServerException($message);
+                throw new ServerException($message, $statusCode);
             } elseif ($statusCode != 404) {
-                throw new ResponseException($message);
+                throw new ResponseException($message, $statusCode);
             }
         } catch (GuzzleException $guzzleException) {
             throw new Exception(

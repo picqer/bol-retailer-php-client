@@ -101,6 +101,8 @@ class BaseClientTest extends TestCase
         ])->willThrow($clientException);
 
         $this->expectException(UnauthorizedException::class);
+        $this->expectExceptionCode(401);
+        $this->expectExceptionMessage("Bad client credentials");
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
@@ -125,6 +127,8 @@ class BaseClientTest extends TestCase
         ])->willThrow($clientException);
 
         $this->expectException(RateLimitException::class);
+        $this->expectExceptionCode(429);
+        $this->expectExceptionMessage("Too many requests, retry in 4 seconds.");
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
@@ -149,6 +153,7 @@ class BaseClientTest extends TestCase
         ])->willThrow($clientException);
 
         $this->expectException(ServerException::class);
+        $this->expectExceptionCode(500);
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
@@ -414,5 +419,6 @@ class BaseClientTest extends TestCase
         $this->assertArrayHasKey('query', $actualArgs);
         $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
     }
+
 
 }
