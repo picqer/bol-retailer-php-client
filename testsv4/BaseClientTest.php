@@ -132,6 +132,32 @@ class BaseClientTest extends TestCase
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
+    public function testAuthenticateThrowsResponseExceptionAtForbidden()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/403-forbidden-account_is_not_active'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'client_credentials'
+            ]
+        ])->willThrow($clientException);
+
+        $this->expectException(ResponseException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage("Account is not active, access denied. Please contact partnerservice if this is unexpected.");
+        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+    }
+
     public function testAuthenticateThrowsServerExceptionAtInternalServerError()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/500-internal-server-error'));
