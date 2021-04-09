@@ -75,7 +75,7 @@ abstract class AbstractModel
             } elseif ($definition['array']) {
                 $data[$field] = array_map(function ($model) use ($omitNullValues) {
                     return $model->toArray($omitNullValues);
-                }, $this->$field);
+                }, array_values($this->$field));
             } else {
                 $data[$field] = $this->$field->toArray($omitNullValues);
             }
