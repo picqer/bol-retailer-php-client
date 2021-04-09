@@ -292,4 +292,51 @@ class AbstractModelTest extends TestCase
 
         $this->assertEquals(['relations' => [['foo' => 'bar1'], ['foo'=> 'bar2']]], $stub->toArray());
     }
+
+    public function testArrayIndicesAreSanitized()
+    {
+        $relationStub = new class () extends AbstractModel {
+            public $foo;
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'foo' => [ 'model' => null, 'array' => false ]
+                ];
+            }
+        };
+
+        $relationStubClass = get_class($relationStub);
+
+        $stub = new class ($relationStubClass) extends AbstractModel {
+            private $relationStubClass;
+
+            public $relations;
+
+            public function __construct($relationStubClass = null)
+            {
+                $this->relationStubClass = $relationStubClass;
+            }
+
+            public function getModelDefinition(): array
+            {
+                return [
+                    'relations' => [ 'model' => $this->relationStubClass, 'array' => true ]
+                ];
+            }
+        };
+
+        $rel1 = new $relationStubClass();
+        $rel1->foo = 'bar1';
+
+        $rel2= new $relationStubClass();
+        $rel2->foo = 'bar2';
+
+        $stub->relations = [
+            'a' => $rel1,
+            '2' => $rel2
+        ];
+
+        $this->assertEquals(['relations' => [['foo' => 'bar1'], ['foo'=> 'bar2']]], $stub->toArray());
+    }
 }
