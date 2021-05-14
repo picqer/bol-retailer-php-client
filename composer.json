@@ -19,7 +19,7 @@
     "require": {
         "php": "~7.1|^8.0",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3|^7.0"
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.0",
