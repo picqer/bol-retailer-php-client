@@ -2,10 +2,7 @@
 
 namespace Picqer\BolRetailer;
 
-use GuzzleHttp\Exception\ClientException;
-use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Exception\OrderNotFoundException;
-use Picqer\BolRetailer\Exception\RateLimitException;
+use Picqer\BolRetailer\Exception\UnknownResponseException;
 use Picqer\BolRetailer\Model;
 
 class Order extends Model\Order
@@ -19,15 +16,15 @@ class Order extends Model\Order
      */
     public static function get(string $id): ?Order
     {
-        try {
-            $response = Client::request('GET', "orders/${id}");
-        } catch (ClientException $e) {
-            static::handleException($e);
+        $response = Client::request('GET', "orders/${id}");
+
+        $orderData = json_decode((string)$response->getBody(), true);
+
+        if (empty($orderData)) {
+            throw new UnknownResponseException();
         }
 
-        self::throwExceptionIfNotSuccessfull($response);
-
-        return new Order(json_decode((string)$response->getBody(), true));
+        return new Order($orderData);
     }
 
     /**
@@ -42,15 +39,11 @@ class Order extends Model\Order
     {
         $query = ['page' => $page, 'fulfilment-method' => $method];
 
-        try {
-            $response = Client::request('GET', 'orders', ['query' => $query]);
-            $response = json_decode((string)$response->getBody(), true);
-        } catch (ClientException $e) {
-            static::handleException($e);
-        }
+        $response = Client::request('GET', 'orders', ['query' => $query]);
+        $ordersData = json_decode((string)$response->getBody(), true);
 
         /** @var array<array-key, mixed> */
-        $orders = $response['orders'] ?? [];
+        $orders = $ordersData['orders'] ?? [];
 
         return array_map(function (array $data) {
             return new Model\ReducedOrder($data);
@@ -69,56 +62,8 @@ class Order extends Model\Order
     {
         $data = ['reasonCode' => $reasonCode];
 
-        try {
-            $response = Client::request('PUT', "orders/${orderItemId}/cancellation", ['body' => json_encode($data)]);
-        } catch (ClientException $e) {
-            static::handleException($e);
-        }
+        $response = Client::request('PUT', "orders/${orderItemId}/cancellation", ['body' => json_encode($data)]);
 
         return new ProcessStatus(json_decode((string)$response->getBody(), true));
-    }
-
-    private static function handleException(ClientException $e): void
-    {
-        $response = $e->getResponse();
-
-        if ($response && $response->getStatusCode() === 404) {
-            throw new OrderNotFoundException(
-                json_decode((string)$response->getBody(), true),
-                404,
-                $e
-            );
-        } elseif ($response && $response->getStatusCode() === 429) {
-            throw new RateLimitException(
-                json_decode((string)$response->getBody(), true),
-                429,
-                $e
-            );
-        } elseif ($response) {
-            throw new HttpException(
-                json_decode((string)$response->getBody(), true),
-                $response->getStatusCode(),
-                $e
-            );
-        }
-
-        throw $e;
-    }
-
-    private static function throwExceptionIfNotSuccessfull($response)
-    {
-        if ($response->getStatusCode() === 404) {
-            throw new OrderNotFoundException(
-                json_decode((string)$response->getBody(), true),
-                404
-            );
-        }
-
-        if ($response->getStatusCode() === 429) {
-            throw new RateLimitException(
-                json_decode((string)$response->getBody(), true),
-                429
-            );
-        }
     }
 }

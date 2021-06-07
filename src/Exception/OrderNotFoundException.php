@@ -2,6 +2,6 @@
 
 namespace Picqer\BolRetailer\Exception;
 
-class OrderNotFoundException extends HttpException
+class OrderNotFoundException extends ItemNotFoundException
 {
 }
