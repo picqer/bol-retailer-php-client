@@ -3,7 +3,6 @@
 
 namespace Picqer\BolRetailer\Tests;
 
-
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Request;

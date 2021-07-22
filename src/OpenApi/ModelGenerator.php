@@ -21,7 +21,7 @@ class ModelGenerator
         $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
     }
 
-    static public function run()
+    public static function run()
     {
         $generator = new static;
         $generator->generateModels();
@@ -115,7 +115,6 @@ class ModelGenerator
 
 
         foreach ($modelDefinition['properties'] as $name => $propDefinition) {
-
             if (isset($propDefinition['type'])) {
                 $propType = static::$propTypeMapping[$propDefinition['type']];
                 if ($propType == 'array' && isset($propDefinition['items']['$ref'])) {
@@ -245,7 +244,6 @@ class ModelGenerator
                 $code[] = '    }';
             }
         }
-
     }
 
 

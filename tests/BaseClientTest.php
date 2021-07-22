@@ -444,6 +444,4 @@ class BaseClientTest extends TestCase
         $this->assertArrayHasKey('query', $actualArgs);
         $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
     }
-
-
 }
