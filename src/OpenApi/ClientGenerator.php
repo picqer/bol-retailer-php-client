@@ -91,8 +91,7 @@ class ClientGenerator
 
         $code[] = '';
         $code[] = '    /**';
-        // TODO break at 120 chars
-        $code[] = '     * ' . $methodDefinition['description'];
+        $code[] = $this->wrapComment($methodDefinition['description'], '     * ');
         $this->addParamsPhpDoc($arguments, $code);
         $code[] = sprintf('     * @return %s', $returnType['doc']);
         $code[] = '     * @throws Exception\ConnectException when an error occurred in the HTTP connection.';
@@ -193,12 +192,12 @@ class ClientGenerator
                     $argument['name']
                 );
             } else {
-                $code[] = sprintf(
-                    '     * @param %s $%s %s',
+                $code[] = $this->wrapComment(sprintf(
+                    '@param %s $%s %s',
                     $argument['doc'],
                     $argument['name'],
                     $argument['description']
-                );
+                ), '     * ');
             }
         }
     }
@@ -445,5 +444,11 @@ class ClientGenerator
             }
             return ['doc' => 'string', 'php' => 'string', ''];
         }
+    }
+
+    protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string
+    {
+        $wordWrapped = wordwrap(strip_tags($comment), $maxLength - strlen($linePrefix));
+        return $linePrefix . str_replace("\n", "\n{$linePrefix}", $wordWrapped);
     }
 }

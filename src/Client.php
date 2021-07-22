@@ -33,9 +33,11 @@ class Client extends BaseClient
     }
 
     /**
-     * Commissions can be filtered by condition, which defaults to NEW. If price is provided, the exact commission amount will also be calculated.
+     * Commissions can be filtered by condition, which defaults to NEW. If price is provided, the exact commission
+     * amount will also be calculated.
      * @param string $ean The EAN number associated with this product.
-     * @param float $unitPrice The price of the product with a period as a decimal separator. The price should always have two decimals precision.
+     * @param float $unitPrice The price of the product with a period as a decimal separator. The price should always
+     * have two decimals precision.
      * @param string|null $condition The condition of the offer.
      * @return Model\Commission|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -115,7 +117,8 @@ class Client extends BaseClient
      * A paginated list of all inbound shipments.
      * @param string|null $reference A user defined reference to identify the inbound shipment.
      * @param string|null $bsku The BSKU number associated with this product.
-     * @param string|null $creationStartDate The creation start date and time to find the inbound shipment in ISO 8601 format.
+     * @param string|null $creationStartDate The creation start date and time to find the inbound shipment in ISO 8601
+     * format.
      * @param string|null $creationEndDate The end date of the range to find the inbound shipment, in ISO 8601 format.
      * @param string|null $state The current state of the inbound shipment.
      * @param int|null $page The requested page number with a page size of 50 items.
@@ -354,7 +357,9 @@ class Client extends BaseClient
      * Gets the measurements for your performance indicators per week.
      * @param array $name The type of the performance indicator
      * @param string $year Year number in the ISO-8601 standard.
-     * @param string $week Week number in the ISO-8601 standard. If you would like to get the relative scores from the current week, please provide the current week number here. Be advised that measurements can change heavily over the course of the week.
+     * @param string $week Week number in the ISO-8601 standard. If you would like to get the relative scores from the
+     * current week, please provide the current week number here. Be advised that measurements can change heavily over
+     * the course of the week.
      * @return Model\PerformanceIndicator[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -409,7 +414,8 @@ class Client extends BaseClient
     }
 
     /**
-     * The inventory endpoint is a specific LVB/FBB endpoint. It provides a paginated list containing your fulfilment by bol.com inventory. This endpoint does not provide information about your own stock.
+     * The inventory endpoint is a specific LVB/FBB endpoint. It provides a paginated list containing your fulfilment by
+     * bol.com inventory. This endpoint does not provide information about your own stock.
      * @param int|null $page The requested page number with a page size of 50 items.
      * @param array $quantity Filter inventory by providing a range of quantity (min-range)-(max-range).
      * @param string|null $stock Filter inventory by stock level.
@@ -443,7 +449,12 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past, the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls. The available media types differ per invoice and are listed per invoice within the response. Note: the media types listed in the response must be given in our standard API format.
+     * Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and
+     * period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past,
+     * the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in
+     * different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’
+     * calls. The available media types differ per invoice and are listed per invoice within the response. Note: the
+     * media types listed in the response must be given in our standard API format.
      * @param string|null $periodStartDate Period start date in ISO 8601 standard.
      * @param string|null $periodEndDate Period end date in ISO 8601 standard.
      * @return string
@@ -471,7 +482,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets an invoice by invoice id. The available media types differ per invoice and are listed within the response from the ‘GET all invoices’ call. Note: the media types listed in the response must be given in our standard API format.
+     * Gets an invoice by invoice id. The available media types differ per invoice and are listed within the response
+     * from the ‘GET all invoices’ call. Note: the media types listed in the response must be given in our standard
+     * API format.
      * @param int $invoiceId The id of the invoice
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -494,7 +507,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets an invoice specification for an invoice with a paginated list of its transactions. The available media types differ per invoice specification and are listed within the response from the ‘GET all invoices’ call. Note, the media types listed in the response must be given in our standard API format.
+     * Gets an invoice specification for an invoice with a paginated list of its transactions. The available media types
+     * differ per invoice specification and are listed within the response from the ‘GET all invoices’ call. Note,
+     * the media types listed in the response must be given in our standard API format.
      * @param int $invoiceId The id of the invoice.
      * @param int|null $page The page to get. Each page contains a maximum of 25.000 lines.
      * @return string
@@ -521,7 +536,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Creates a new offer, and adds it to the catalog. After creation, status information can be retrieved to review if the offer is valid and published to the shop.
+     * Creates a new offer, and adds it to the catalog. After creation, status information can be retrieved to review if
+     * the offer is valid and published to the shop.
      * @param Model\CreateOfferRequest $createOfferRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -765,7 +781,8 @@ class Client extends BaseClient
     /**
      * Gets a paginated list of all open orders sorted by date in descending order.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
+     * bol.com (FBB).
      * @return Model\ReducedOrder[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -791,7 +808,8 @@ class Client extends BaseClient
     }
 
     /**
-     * This endpoint can be used to either confirm a cancellation request by the customer or to cancel an order item you yourself are unable to fulfil.
+     * This endpoint can be used to either confirm a cancellation request by the customer or to cancel an order item you
+     * yourself are unable to fulfil.
      * @param Model\OrderItemCancellation[] $orderItems
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -815,7 +833,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Ship a single order item within a customer order by providing shipping information. In case you purchased a shipping label you can add the shippingLabelId to this message; in that case the transport element must be left empty. If you ship the item(s) using your own transporter method you must omit the shippingLabelId entirely.
+     * Ship a single order item within a customer order by providing shipping information. In case you purchased a
+     * shipping label you can add the shippingLabelId to this message; in that case the transport element must be left
+     * empty. If you ship the item(s) using your own transporter method you must omit the shippingLabelId entirely.
      * @param Model\ShipmentRequest $shipmentRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -863,9 +883,11 @@ class Client extends BaseClient
     }
 
     /**
-     * Currently this endpoint only supports the allowable retail price and can support the following use cases:<br /><br />
-                    1) EANs that have been unpublished due to price related reasons can be checked against this endpoint.<br />
-                    2) Requesting the allowable retail price for EANs that are not yet in your assortment can help inform price setting.
+     * Currently this endpoint only supports the allowable retail price and can support the following use cases:
+     *                     1) EANs that have been unpublished due to price related reasons can be checked against this
+     * endpoint.
+     *                     2) Requesting the allowable retail price for EANs that are not yet in your assortment can
+     * help inform price setting.
      * @param string $ean The EAN number associated with this product.
      * @return Model\RetailPrice[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -890,8 +912,13 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests in descending order. You need to supply an entity id and event type. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.
-     * @param string $entityId The entity id is not unique so you need to provide an event type. The entity id can either be order item id, transport id, return number or inbound reference.
+     * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE
+     * requests in descending order. You need to supply an entity id and event type. Please note: process status
+     * instances are only retained for a limited period of time after completion. Outside of this period, deleted
+     * process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for
+     * these statuses.
+     * @param string $entityId The entity id is not unique so you need to provide an event type. The entity id can
+     * either be order item id, transport id, return number or inbound reference.
      * @param string $eventType The event type can only be used in combination with the entity id.
      * @param int|null $page The requested page number with a page size of 50 items.
      * @return Model\ProcessStatus[]
@@ -920,7 +947,11 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests. No more than 1000 process status id's can be sent in a single request.Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.
+     * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE
+     * requests. No more than 1000 process status id's can be sent in a single request.Please note: process status
+     * instances are only retained for a limited period of time after completion. Outside of this period, deleted
+     * process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for
+     * these statuses.
      * @param Model\ProcessStatusId[] $processStatusQueries
      * @return Model\ProcessStatus[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -944,8 +975,14 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a specific process-status, which shows information regarding a previously executed PUT/POST/DELETE request. All PUT/POST/DELETE requests on the other endpoints will supply a process-status-id in the related response. You can use this id to retrieve a status by using the endpoint below. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these statuses.
-     * @param int $processStatusId The id of the process status being requested. This id is supplied in every response to a PUT/POST/DELETE request on the other endpoints.
+     * Retrieve a specific process-status, which shows information regarding a previously executed PUT/POST/DELETE
+     * request. All PUT/POST/DELETE requests on the other endpoints will supply a process-status-id in the related
+     * response. You can use this id to retrieve a status by using the endpoint below. Please note: process status
+     * instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be
+     * returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these
+     * statuses.
+     * @param int $processStatusId The id of the process status being requested. This id is supplied in every response
+     * to a PUT/POST/DELETE request on the other endpoints.
      * @return Model\ProcessStatus|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -971,7 +1008,8 @@ class Client extends BaseClient
      * Get a paginated list of multi-item returns, which are sorted by date in descending order.
      * @param int|null $page The page to get with a page size of 50.
      * @param bool|null $handled The status of the returns you wish to see, shows either handled or unhandled returns.
-     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
+     * bol.com (FBB).
      * @return Model\ReducedReturn[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -998,7 +1036,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Create a return, and automatically handle it with the provided handling result. When successfully created, the resulting return id is provided in the process status.
+     * Create a return, and automatically handle it with the provided handling result. When successfully created, the
+     * resulting return id is provided in the process status.
      * @param Model\CreateReturnRequest $createReturnRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1046,7 +1085,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Allows the user to handle a return. This can be to either handle an open return, or change the handlingResult of an already handled return. The latter is only possible in limited scenarios, please check the returns documentation for a complete list.
+     * Allows the user to handle a return. This can be to either handle an open return, or change the handlingResult of
+     * an already handled return. The latter is only possible in limited scenarios, please check the returns
+     * documentation for a complete list.
      * @param int $rmaId The RMA (Return Merchandise Authorization) id that identifies this particular return.
      * @param Model\ReturnRequest $returnRequest The handling result requested by the retailer.
      * @return Model\ProcessStatus
@@ -1071,10 +1112,13 @@ class Client extends BaseClient
     }
 
     /**
-     * A paginated list to retrieve all your shipments up to 3 months old. The shipments will be sorted by date in descending order.
+     * A paginated list to retrieve all your shipments up to 3 months old. The shipments will be sorted by date in
+     * descending order.
      * @param int|null $page The page to get with a page size of 50.
-     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
-     * @param string|null $orderId The id of the order. Only valid without fulfilment-method. The default fulfilment-method is ignored.
+     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
+     * bol.com (FBB).
+     * @param string|null $orderId The id of the order. Only valid without fulfilment-method. The default
+     * fulfilment-method is ignored.
      * @return Model\ReducedShipment[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1149,7 +1193,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieves all available delivery options based on the supplied configuration of order items that has to be shipped.
+     * Retrieves all available delivery options based on the supplied configuration of order items that has to be
+     * shipped.
      * @param Model\OrderItem[] $orderItems
      * @return Model\DeliveryOption[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1221,7 +1266,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Create a push notification subscription for one (or more) of the available resources. The configured URL has to support https scheme.
+     * Create a push notification subscription for one (or more) of the available resources. The configured URL has to
+     * support https scheme.
      * @param Model\CreateSubscriptionRequest $createSubscriptionRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1245,7 +1291,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a list of public keys that should be used to validate the signature header for push notifications received from bol.com
+     * Retrieve a list of public keys that should be used to validate the signature header for push notifications
+     * received from bol.com
      * @return Model\KeySet[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1313,7 +1360,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Update an existing push notification subscription with the supplied id. The configured URL has to support https scheme.
+     * Update an existing push notification subscription with the supplied id. The configured URL has to support https
+     * scheme.
      * @param int $subscriptionId A unique identifier for the subscription
      * @param Model\UpdateSubscriptionRequest $updateSubscriptionRequest
      * @return Model\ProcessStatus
@@ -1361,7 +1409,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Add information to an existing transport. The transport id is part of the shipment. You can retrieve the transport id through the GET shipment list request.
+     * Add information to an existing transport. The transport id is part of the shipment. You can retrieve the
+     * transport id through the GET shipment list request.
      * @param int $transportId The transport id.
      * @param Model\ChangeTransportRequest $changeTransportRequest The change transport requested by the user.
      * @return Model\ProcessStatus
