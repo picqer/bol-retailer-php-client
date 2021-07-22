@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV4\Tests\Exception;
+namespace Picqer\BolRetailer\Tests\Exception;
 
 
 use PHPUnit\Framework\TestCase;

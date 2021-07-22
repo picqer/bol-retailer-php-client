@@ -34,7 +34,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Picqer\\BolRetailerV4\\Tests\\": "testsv4"
+            "Picqer\\BolRetailer\\Tests\\": "tests"
         }
     },
     "scripts": {

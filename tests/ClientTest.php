@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV4\Tests;
+namespace Picqer\BolRetailer\Tests;
 
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;

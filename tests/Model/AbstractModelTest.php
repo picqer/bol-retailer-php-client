@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV4\Tests\Model;
+namespace Picqer\BolRetailer\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV4\Model\AbstractModel;
