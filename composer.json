@@ -29,7 +29,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Picqer\\BolRetailerV4\\": "src"
+            "Picqer\\BolRetailer\\": "src"
         }
     },
     "autoload-dev": {
@@ -41,8 +41,8 @@
         "test": "phpunit",
         "check-style": "phpcs src tests",
         "fix-style": "phpcbf src tests",
-        "generate-client": "Picqer\\BolRetailerV4\\OpenApi\\ClientGenerator::run",
-        "generate-models": "Picqer\\BolRetailerV4\\OpenApi\\ModelGenerator::run"
+        "generate-client": "Picqer\\BolRetailer\\OpenApi\\ClientGenerator::run",
+        "generate-models": "Picqer\\BolRetailer\\OpenApi\\ModelGenerator::run"
     },
     "extra": {
         "branch-alias": {

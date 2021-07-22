@@ -11,7 +11,7 @@ composer require picqer/bol-retailer-php-client
 ## Usage
 Create an instance of the client and authenticate
 ```php
-$client = new \Picqer\BolRetailerV4\Client();
+$client = new \Picqer\BolRetailer\Client();
 $client->authenticate('your-client-id', 'your-client-secret');
 ```
 
@@ -25,7 +25,7 @@ foreach ($reducedOrders as $reducedOrder) {
 ```
 
 ## Exceptions
-Methods on the Client may throw Exceptions. All Exceptions have the parent class `Picqer\BolRetailerV4\Exception\Exception`:
+Methods on the Client may throw Exceptions. All Exceptions have the parent class `Picqer\BolRetailer\Exception\Exception`:
 - `ConnectException` is thrown when a problem occurred in the connection (e.g. API server is down or a network issue). You may retry later.
 - `ServerException` (extends `ConnectException`) is thrown when a problem occurred on the Server (e.g. 500 Internal Server Error). You may retry later.
 - `ResponseException` is thrown when the received response could not be handled (e.g. not of proper format or unexpected type). Retrying will not help, investigation is needed.
@@ -47,7 +47,7 @@ The specifications define types for each request and response (if it needs to se
 
 To generate the Client, the following composer script may be used:
 ```
-# Generates Picqer\BolRetailerV4\Client
+# Generates Picqer\BolRetailer\Client
 composer run-script generate-client
 ```
 
@@ -56,7 +56,7 @@ The class names for models are equal to the keys of the array 'definitions' in t
 
 To generate the Models, the following composer script may be used:
 ```
-# Generates all Picqer\BolRetailerV4\Model\* models
+# Generates all Picqer\BolRetailer\Model\* models
 composer run-script generate-models
 ```
 

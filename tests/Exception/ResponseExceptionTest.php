@@ -5,7 +5,7 @@ namespace Picqer\BolRetailer\Tests\Exception;
 
 
 use PHPUnit\Framework\TestCase;
-use Picqer\BolRetailerV4\Exception\ResponseException;
+use Picqer\BolRetailer\Exception\ResponseException;
 
 class ResponseExceptionTest extends TestCase
 {
