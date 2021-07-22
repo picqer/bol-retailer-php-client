@@ -10,10 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="V3">
-            <directory>tests</directory>
-        </testsuite>
-        <testsuite name="V4">
+        <testsuite name="all">
             <directory>testsv4</directory>
         </testsuite>
     </testsuites>
