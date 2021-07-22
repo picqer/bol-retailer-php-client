@@ -33,7 +33,8 @@ class OrderOrderItem extends AbstractModel
     public $orderItemId;
 
     /**
-     * @var bool Indicates whether the order was cancelled on request of the customer before the retailer has shipped it.
+     * @var bool Indicates whether the order was cancelled on request of the customer before the retailer has shipped
+     * it.
      */
     public $cancellationRequest;
 

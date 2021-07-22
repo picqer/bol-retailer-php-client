@@ -22,12 +22,14 @@ class Fulfilment extends AbstractModel
     }
 
     /**
-     * @var string Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.
+     * @var string Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com
+     * (FBB). Defaults to FBR.
      */
     public $method;
 
     /**
-     * @var string The delivery promise that applies to this offer. This value will only be used in combination with fulfilmentMethod 'FBR'.
+     * @var string The delivery promise that applies to this offer. This value will only be used in combination with
+     * fulfilmentMethod 'FBR'.
      */
     public $deliveryCode;
 

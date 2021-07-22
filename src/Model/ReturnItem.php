@@ -51,7 +51,8 @@ class ReturnItem extends AbstractModel
     public $title;
 
     /**
-     * @var int The quantity that is expected to be returned by the customer. Note: this can be greater than 1 in case the customer ordered a quantity greater than 1 of the same product in the same customer order.
+     * @var int The quantity that is expected to be returned by the customer. Note: this can be greater than 1 in case
+     * the customer ordered a quantity greater than 1 of the same product in the same customer order.
      */
     public $expectedQuantity;
 

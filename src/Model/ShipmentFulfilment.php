@@ -22,7 +22,8 @@ class ShipmentFulfilment extends AbstractModel
     }
 
     /**
-     * @var string Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.
+     * @var string Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com
+     * (FBB). Defaults to FBR.
      */
     public $method;
 
@@ -32,7 +33,8 @@ class ShipmentFulfilment extends AbstractModel
     public $distributionParty;
 
     /**
-     * @var string The ultimate delivery date at which this order must be delivered at the customer's shipping address. This field is empty in case the exactDeliveryDate is filled.
+     * @var string The ultimate delivery date at which this order must be delivered at the customer's shipping address.
+     * This field is empty in case the exactDeliveryDate is filled.
      */
     public $latestDeliveryDate;
 }

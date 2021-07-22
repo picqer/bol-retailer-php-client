@@ -449,6 +449,6 @@ class ClientGenerator
     protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string
     {
         $wordWrapped = wordwrap(strip_tags($comment), $maxLength - strlen($linePrefix));
-        return $linePrefix . str_replace("\n", "\n{$linePrefix}", $wordWrapped);
+        return $linePrefix . trim(str_replace("\n", "\n{$linePrefix}", $wordWrapped));
     }
 }

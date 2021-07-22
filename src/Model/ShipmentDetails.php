@@ -99,7 +99,8 @@ class ShipmentDetails extends AbstractModel
     public $company;
 
     /**
-     * @var string The delivery phone number of the customer. Filled in case the order requires an appointment for delivering the goods.
+     * @var string The delivery phone number of the customer. Filled in case the order requires an appointment for
+     * delivering the goods.
      */
     public $deliveryPhoneNumber;
 

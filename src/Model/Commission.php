@@ -52,7 +52,8 @@ class Commission extends AbstractModel
     public $percentage;
 
     /**
-     * @var float The total commission for selling this product at bol.com. The price includes VAT for Dutch sellers, and excludes VAT for Belgium sellers.
+     * @var float The total commission for selling this product at bol.com. The price includes VAT for Dutch sellers,
+     * and excludes VAT for Belgium sellers.
      */
     public $totalCost;
 

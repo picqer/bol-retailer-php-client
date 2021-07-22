@@ -32,7 +32,8 @@ class Condition extends AbstractModel
     public $category;
 
     /**
-     * @var string The description of the condition of the product. Only allowed if name is not NEW and may not contain e-mail addresses.
+     * @var string The description of the condition of the product. Only allowed if name is not NEW and may not contain
+     * e-mail addresses.
      */
     public $comment;
 }

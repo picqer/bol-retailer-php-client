@@ -29,12 +29,14 @@ class Score extends AbstractModel
     public $conforms;
 
     /**
-     * @var int The top part of the fraction (above the line). This usually is the smaller number compared to the denominator.
+     * @var int The top part of the fraction (above the line). This usually is the smaller number compared to the
+     * denominator.
      */
     public $numerator;
 
     /**
-     * @var int The lower part of the fraction (below the line). This usually is the larger number compared to the the numerator.
+     * @var int The lower part of the fraction (below the line). This usually is the larger number compared to the the
+     * numerator.
      */
     public $denominator;
 

@@ -65,7 +65,8 @@ class ReducedInbound extends AbstractModel
     public $announcedQuantity;
 
     /**
-     * @var int Number of lines that were scanned in our warehouse. This value does not provide the unique number of received bsku's.
+     * @var int Number of lines that were scanned in our warehouse. This value does not provide the unique number of
+     * received bsku's.
      */
     public $receivedBSKUs;
 

@@ -34,7 +34,8 @@ class OfferInsight extends AbstractModel
     public $type;
 
     /**
-     * @var float Total number of customer visits on the product page when the offer had the buy box over the requested period (excluding the current day).
+     * @var float Total number of customer visits on the product page when the offer had the buy box over the requested
+     * period (excluding the current day).
      */
     public $total;
 

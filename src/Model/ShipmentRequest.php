@@ -28,7 +28,8 @@ class ShipmentRequest extends AbstractModel
     public $orderItems = [];
 
     /**
-     * @var string A user-defined reference that you can provide to add to the shipment. Can be used for own administration purposes.
+     * @var string A user-defined reference that you can provide to add to the shipment. Can be used for own
+     * administration purposes.
      */
     public $shipmentReference;
 

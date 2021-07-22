@@ -99,7 +99,8 @@ class BillingDetails extends AbstractModel
     public $vatNumber;
 
     /**
-     * @var string The Kamer van Koophandel (kvk) number for organizations situated in the Netherlands or ondernemingsnummer for organizations situated in Belgium.
+     * @var string The Kamer van Koophandel (kvk) number for organizations situated in the Netherlands or
+     * ondernemingsnummer for organizations situated in Belgium.
      */
     public $kvkNumber;
 

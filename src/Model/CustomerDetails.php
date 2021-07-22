@@ -94,7 +94,8 @@ class CustomerDetails extends AbstractModel
     public $email;
 
     /**
-     * @var string The delivery phone number of the customer. Filled in case the order requires an appointment for delivering the goods.
+     * @var string The delivery phone number of the customer. Filled in case the order requires an appointment for
+     * delivering the goods.
      */
     public $deliveryPhoneNumber;
 

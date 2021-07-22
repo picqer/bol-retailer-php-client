@@ -23,7 +23,8 @@ class UpdateOfferRequest extends AbstractModel
     }
 
     /**
-     * @var string A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 20 characters.
+     * @var string A user-defined reference that helps you identify this particular offer when receiving data from us.
+     * This element can optionally be left empty and has a maximum amount of 20 characters.
      */
     public $reference;
 
@@ -33,7 +34,8 @@ class UpdateOfferRequest extends AbstractModel
     public $onHoldByRetailer;
 
     /**
-     * @var string In case the item is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored.
+     * @var string In case the item is not known to bol.com you can use this field to identify this particular product.
+     * Note: in case the product is known to bol.com, the unknown product title will not be stored.
      */
     public $unknownProductTitle;
 

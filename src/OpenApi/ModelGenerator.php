@@ -131,7 +131,7 @@ class ModelGenerator
             $code[] = '    /**';
 
             if (isset($propDefinition['description'])) {
-                $code[] = sprintf('     * @var %s %s', $propType, $propDefinition['description']);
+                $code[] = $this->wrapComment(sprintf('@var %s %s', $propType, $propDefinition['description']), '     * ');
             } else {
                 $code[] = sprintf('     * @var %s', $propType);
             }
@@ -311,5 +311,11 @@ class ModelGenerator
         }
 
         return $fields;
+    }
+
+    protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string
+    {
+        $wordWrapped = wordwrap(strip_tags($comment), $maxLength - strlen($linePrefix));
+        return $linePrefix . trim(str_replace("\n", "\n{$linePrefix}", $wordWrapped));
     }
 }

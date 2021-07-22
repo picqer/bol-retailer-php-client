@@ -41,7 +41,8 @@ class Problem extends AbstractModel
     public $status;
 
     /**
-     * @var string Detailed error message describing in additional detail what caused the service to return this problem.
+     * @var string Detailed error message describing in additional detail what caused the service to return this
+     * problem.
      */
     public $detail;
 

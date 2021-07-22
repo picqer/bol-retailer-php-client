@@ -22,12 +22,16 @@ class HandoverDetails extends AbstractModel
     }
 
     /**
-     * @var bool Indicates if you can use this label without receiving a strike if you handover before the latestHandoverDateTime. If this field is 'false' you can still buy and use this label but it will have negative consequences on your performance score because the order will be delivered too early or too late.
+     * @var bool Indicates if you can use this label without receiving a strike if you handover before the
+     * latestHandoverDateTime. If this field is 'false' you can still buy and use this label but it will have negative
+     * consequences on your performance score because the order will be delivered too early or too late.
      */
     public $meetsCustomerExpectation;
 
     /**
-     * @var string The date and time at which the parcel must ultimately be at the transporter to make sure your parcel is delivered on time. If you handover after this date you will receive a strike because you order will be delivered too late.
+     * @var string The date and time at which the parcel must ultimately be at the transporter to make sure your parcel
+     * is delivered on time. If you handover after this date you will receive a strike because you order will be
+     * delivered too late.
      */
     public $latestHandoverDateTime;
 

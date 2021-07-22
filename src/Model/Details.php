@@ -27,7 +27,8 @@ class Details extends AbstractModel
     public $period;
 
     /**
-     * @var Score The score for this measurement. In case there are no scores for an indicator, this element is omitted from the response.
+     * @var Score The score for this measurement. In case there are no scores for an indicator, this element is omitted
+     * from the response.
      */
     public $score;
 

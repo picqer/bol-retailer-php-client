@@ -32,7 +32,8 @@ class ProcessStatus extends AbstractModel
     public $id;
 
     /**
-     * @var string The id of the object being processed. E.g. in case of a shipment process id, you will receive the id of the order item being processed.
+     * @var string The id of the object being processed. E.g. in case of a shipment process id, you will receive the id
+     * of the order item being processed.
      */
     public $entityId;
 
