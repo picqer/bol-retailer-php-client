@@ -19,7 +19,7 @@
     "require": {
         "php": "~7.1|^8.0",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3|^7.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12",
@@ -40,11 +40,13 @@
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs src tests",
-        "fix-style": "phpcbf src tests"
+        "fix-style": "phpcbf src tests",
+        "generate-client": "Picqer\\BolRetailer\\OpenApi\\ClientGenerator::run",
+        "generate-models": "Picqer\\BolRetailer\\OpenApi\\ModelGenerator::run"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "4.0-dev"
         }
     },
     "config": {

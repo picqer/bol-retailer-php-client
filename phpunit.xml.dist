@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="picqer Test Suite">
+        <testsuite name="all">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

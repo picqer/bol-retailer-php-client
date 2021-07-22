@@ -1,0 +1,11 @@
+HTTP/1.1 429 Too Many Requests
+Content-Type: application/vnd.retailer.v4+json
+X-RateLimit-Limit: 10
+X-RateLimit-Reset: 1539261914
+X-RateLimit-Remaining: 0
+
+{
+  "title": "Too Many Requests",
+  "status": 429,
+  "detail": "Too many requests, retry in 4 seconds."
+}

@@ -1,104 +1,142 @@
 <?php
+
+
 namespace Picqer\BolRetailer\Tests;
 
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7;
-use GuzzleHttp\ClientInterface;
-use Picqer\BolRetailer\Exception\AuthenticationException;
-use Picqer\BolRetailer\Exception\HttpException;
-use Prophecy\Argument;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\ClientException as GuzzleClientException;
+use GuzzleHttp\Psr7\Message;
+use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailer\Client;
+use GuzzleHttp\Client as HttpClient;
+use Picqer\BolRetailer\Model\AbstractModel;
+use Picqer\BolRetailer\Model\OrderItem;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
-class ClientTest extends \PHPUnit\Framework\TestCase
+class ClientTest extends TestCase
 {
-    private $http;
+
+    /** @var Client */
     private $client;
+
+    /** @var ObjectProphecy */
+    private $httpProphecy;
 
     public function setup(): void
     {
-        $this->http = $this->prophesize(ClientInterface::class);
+        $this->httpProphecy = $this->prophesize(HttpClient::class);
+        $this->client = new Client();
+        $this->client->setHttp($this->httpProphecy->reveal());
 
-        Client::setHttp($this->http->reveal());
+        $this->authenticate();
     }
 
-    public function tearDown(): void
+    protected function authenticate()
     {
-        Client::setUserAgent('');
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'client_credentials'
+            ]
+        ])->willReturn($response);
+
+        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
-    public function testAuthenticateWithCredentials()
+    public function testMethodReturnsModel()
     {
-        $response = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-order'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
 
-        $this->http
-            ->request('POST', 'https://login.bol.com/token', [
-                'headers' => [ 'Accept' => 'application/json' ],
-                'form_params' => [
-                    'client_id' => 'secret_id',
-                    'client_secret' => 'somesupersecretvaluethatshouldnotbeshared',
-                    'grant_type' => 'client_credentials'
-                ]
-            ])->willReturn($response);
-
-        Client::setCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
-        $this->assertTrue(Client::isAuthenticated());
-
-        Client::clearCredentials();
-        $this->assertFalse(Client::isAuthenticated());
+        $order = $this->client->getOrder('test');
+        $this->assertInstanceOf(AbstractModel::class, $order);
     }
 
-    /**
-     * @group exceptions
-     */
-    public function testThrowExceptionForInvalidCredentials()
+    public function testMethodUnwrapsMonoFieldResponse()
     {
-        $this->expectException(AuthenticationException::class);
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-reduced-orders'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
 
-        $request   = $this->prophesize(RequestInterface::class);
-        $response  = Psr7\parse_response(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
-        $exception = new RequestException('', $request->reveal(), $response);
-
-        $this->http
-            ->request('POST', 'https://login.bol.com/token', Argument::any())
-            ->willThrow($exception);
-
-        Client::setCredentials('foo', 'bar');
+        $reducedOrders = $this->client->getOrders();
+        $this->assertIsArray($reducedOrders);
     }
 
-    public function testPerformHttpRequest()
+    public function testMethodUnwrapsMonoFieldResponse404ToEmptyArray()
     {
-        $response = $this->prophesize(ResponseInterface::class)->reveal();
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
 
-        $this->http
-            ->request('GET', 'status', [])
-            ->willReturn($response);
+        $this->httpProphecy->request(Argument::cetera())->willThrow($clientException);
 
-        $this->assertEquals($response, Client::request('GET', 'status'));
+        $deliveryOptions = $this->client->getDeliveryOptions([]);
+
+        $this->assertEquals([], $deliveryOptions);
     }
 
-    public function testPerformHttpRequestWithOptions()
+    public function testMethodWrapsScalarArgumentToMonoFieldRequest()
     {
-        $response = $this->prophesize(ResponseInterface::class)->reveal();
+        $body = null;
+        $this->httpProphecy->request('POST', Argument::any(), Argument::any())
+            ->will(function ($args) use (&$body) {
+                $options = $args[2];
+                $body = $options['body'] ?? '';
+                return Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/202-offers-export'));
+            });
 
-        $this->http
-            ->request('GET', 'status', [ 'query' => [ 'foo' => 'bar' ]])
-            ->willReturn($response);
+        $expectedBody = json_encode([
+            'format' => 'CSV'
+        ]);
 
-        $this->assertEquals($response, Client::request('GET', 'status', [ 'query' => [ 'foo' => 'bar' ]]));
+        $this->client->postOfferExport('CSV');
+
+        $this->assertEquals($expectedBody, $body);
     }
 
-    public function testPerformHttpRequestWithUserAgent()
+    public function testMethodWrapsArrayArgumentToMonoFieldRequest()
     {
-        $response = $this->prophesize(ResponseInterface::class)->reveal();
+        $body = null;
+        $this->httpProphecy->request('POST', Argument::any(), Argument::any())
+            ->will(function ($args) use (&$body) {
+                $options = $args[2];
+                $body = $options['body'] ?? '';
+                return Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-delivery-options'));
+            });
 
-        $this->http
-            ->request('GET', 'status', [ 'headers' => [ 'User-Agent' => 'foo' ]])
-            ->willReturn($response);
+        $orderItems = array_map(function ($id) {
+            $orderItem = new OrderItem();
+            $orderItem->orderItemId = $id;
+            return $orderItem;
+        }, ['1', '2', '3']);
 
-        Client::setUserAgent('foo');
+        $expectedBody = json_encode([
+            'orderItems' => array_map(function ($id) {
+                return ['orderItemId' => $id];
+            }, ['1', '2', '3'])
+        ]);
 
-        $this->assertEquals($response, Client::request('GET', 'status'));
+        $this->client->getDeliveryOptions($orderItems);
+
+        $this->assertEquals($expectedBody, $body);
+    }
+
+    public function testMethodWithMissingFieldDueToEmptyArrayReturnsEmptyArray()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-reduced-orders-empty'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+
+        $reducedOrders = $this->client->getOrders();
+        $this->assertEquals([], $reducedOrders);
     }
 }

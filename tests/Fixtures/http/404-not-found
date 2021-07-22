@@ -1,20 +1,14 @@
 HTTP/1.1 404 Not Found
-Content-Type: application/vnd.retailer.v3+json
+Content-Type: application/vnd.retailer.v4+json
 X-RateLimit-Limit: 10
 X-RateLimit-Reset: 1539261914
 X-RateLimit-Remaining: 2
 
 {
-  "type": "http://api.bol.com/problems",
-  "title": "Error validating request body. Consult the bol.com API documentation for more information.",
-  "status": "40X",
-  "detail": "Bad request",
-  "host": "Instance-001",
-  "instance": "https://api.bol.com//retailer/resource",
-  "violations": [
-    {
-      "name": "exampleValue",
-      "reason": "Request contains invalid value(s): 'INVALID', allowed values: ALLOWED_VALUE1, ALLOWED_VALUE2."
-    }
-  ]
+    "type": "https:\/\/api.bol.com\/problems",
+    "title": "Not Found",
+    "status": 404,
+    "detail": "Some record is not found.",
+    "host": "Instance-112",
+    "instance": "https:\/\/api.bol.com\/retailer\/records\/42"
 }

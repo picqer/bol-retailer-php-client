@@ -1,0 +1,56 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 12 Feb 2021 15:19:33 GMT
+Content-Type: application/vnd.retailer.v4+json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 9
+X-RateLimit-Reset: 1
+X-Request-ID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+X-RID: 6bb44b08-4ca6-4f95-8773-41c1cdc29591
+Strict-Transport-Security: max-age=86400
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{
+  "orders" : [ {
+    "orderId" : "1043946570",
+    "orderPlacedDateTime" : "2019-04-29T18:18:21+02:00",
+    "orderItems" : [ {
+      "orderItemId" : "6042823871",
+      "ean" : "8717418510749",
+      "quantity" : 3
+    } ]
+  }, {
+    "orderId" : "1042831430",
+    "orderPlacedDateTime" : "2019-04-20T12:58:39+02:00",
+    "orderItems" : [ {
+      "orderItemId" : "6107331382",
+      "ean" : "8712626055143",
+      "quantity" : 1
+    }, {
+      "orderItemId" : "6107331383",
+      "ean" : "8804269223123",
+      "quantity" : 1
+    } ]
+  }, {
+    "orderId" : "A4K8290LP0",
+    "orderPlacedDateTime" : "2019-12-06T13:04:34+01:00",
+    "orderItems" : [ {
+      "orderItemId" : "2070906705",
+      "ean" : "8718846038683",
+      "quantity" : 1
+    } ]
+  }, {
+    "orderId" : "B3K8290LP0",
+    "orderPlacedDateTime" : "2020-01-01T13:04:34+01:00",
+    "orderItems" : [ {
+      "orderItemId" : "2070906706",
+      "ean" : "8718846038683",
+      "quantity" : 1
+    } ]
+  } ]
+}
