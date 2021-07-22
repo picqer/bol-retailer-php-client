@@ -18,7 +18,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class ClientTest extends TestCase
 {
-    use ProphecyTrait;
 
     /** @var Client */
     private $client;

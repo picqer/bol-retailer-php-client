@@ -20,7 +20,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class BaseClientTest extends TestCase
 {
-    use ProphecyTrait;
 
     /** @var BaseClient */
     private $client;
