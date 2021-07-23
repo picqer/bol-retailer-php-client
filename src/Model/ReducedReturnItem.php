@@ -19,15 +19,14 @@ class ReducedReturnItem extends AbstractModel
             'orderId' => [ 'model' => null, 'array' => false ],
             'ean' => [ 'model' => null, 'array' => false ],
             'expectedQuantity' => [ 'model' => null, 'array' => false ],
-            'returnReason' => [ 'model' => null, 'array' => false ],
-            'returnReasonComments' => [ 'model' => null, 'array' => false ],
+            'returnReason' => [ 'model' => ReturnReason::class, 'array' => false ],
             'handled' => [ 'model' => null, 'array' => false ],
             'processingResults' => [ 'model' => ReturnProcessingResult::class, 'array' => true ],
         ];
     }
 
     /**
-     * @var int The RMA (Return Merchandise Authorization) id that identifies this particular return.
+     * @var string The RMA (Return Merchandise Authorization) id that identifies this particular return.
      */
     public $rmaId;
 
@@ -48,14 +47,9 @@ class ReducedReturnItem extends AbstractModel
     public $expectedQuantity;
 
     /**
-     * @var string The reason why the customer returned this product.
+     * @var ReturnReason
      */
     public $returnReason;
-
-    /**
-     * @var string Additional details from the customer as to why this item was returned.
-     */
-    public $returnReasonComments;
 
     /**
      * @var bool Indicates if this return item has been handled (by the retailer).

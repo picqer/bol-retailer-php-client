@@ -23,7 +23,7 @@ class ReducedReturn extends AbstractModel
     }
 
     /**
-     * @var int Unique identifier for a return.
+     * @var string Unique identifier for a return.
      */
     public $returnId;
 

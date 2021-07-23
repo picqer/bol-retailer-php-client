@@ -15,12 +15,12 @@ class ProcessStatusId extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'id' => [ 'model' => null, 'array' => false ],
+            'processStatusId' => [ 'model' => null, 'array' => false ],
         ];
     }
 
     /**
-     * @var int The process status id.
+     * @var string The process status id.
      */
-    public $id;
+    public $processStatusId;
 }

@@ -21,6 +21,8 @@ class OrderOrderItem extends AbstractModel
             'offer' => [ 'model' => OrderOffer::class, 'array' => false ],
             'product' => [ 'model' => OrderProduct::class, 'array' => false ],
             'quantity' => [ 'model' => null, 'array' => false ],
+            'quantityShipped' => [ 'model' => null, 'array' => false ],
+            'quantityCancelled' => [ 'model' => null, 'array' => false ],
             'unitPrice' => [ 'model' => null, 'array' => false ],
             'commission' => [ 'model' => null, 'array' => false ],
             'additionalServices' => [ 'model' => AdditionalService::class, 'array' => true ],
@@ -57,6 +59,16 @@ class OrderOrderItem extends AbstractModel
      * @var int Amount of ordered products for this order item id.
      */
     public $quantity;
+
+    /**
+     * @var int Amount of shipped products for this order item id.
+     */
+    public $quantityShipped;
+
+    /**
+     * @var int Amount of cancelled products for this order item id.
+     */
+    public $quantityCancelled;
 
     /**
      * @var float The selling price to the customer of a single unit including VAT.

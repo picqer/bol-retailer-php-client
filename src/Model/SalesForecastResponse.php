@@ -19,7 +19,7 @@ class SalesForecastResponse extends AbstractModel
             'type' => [ 'model' => null, 'array' => false ],
             'total' => [ 'model' => Total::class, 'array' => false ],
             'countries' => [ 'model' => Countries::class, 'array' => true ],
-            'periods' => [ 'model' => Period::class, 'array' => true ],
+            'periods' => [ 'model' => SalesForecastPeriod::class, 'array' => true ],
         ];
     }
 
@@ -44,7 +44,7 @@ class SalesForecastResponse extends AbstractModel
     public $countries = [];
 
     /**
-     * @var Period[]
+     * @var SalesForecastPeriod[]
      */
     public $periods = [];
 }

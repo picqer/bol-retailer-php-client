@@ -22,7 +22,7 @@ class Countries extends AbstractModel
     }
 
     /**
-     * @var string Countries in which this offer is currently on sale in the webshop, in ISO-3166-1 format
+     * @var string Countries in which this offer is currently on sale in the webshop, in ISO-3166-1 format.
      */
     public $countryCode;
 

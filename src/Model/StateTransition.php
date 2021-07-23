@@ -21,12 +21,13 @@ class StateTransition extends AbstractModel
     }
 
     /**
-     * @var string The state that was transitioned into.
+     * @var string Indicates the state of this replenishment order.
      */
     public $state;
 
     /**
-     * @var string The transition date and time in ISO 8601 format.
+     * @var string The date and time in ISO 8601 format that indicates when this states was updated for this
+     * replenishment.
      */
     public $stateDateTime;
 

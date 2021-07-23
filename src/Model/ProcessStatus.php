@@ -15,7 +15,7 @@ class ProcessStatus extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'id' => [ 'model' => null, 'array' => false ],
+            'processStatusId' => [ 'model' => null, 'array' => false ],
             'entityId' => [ 'model' => null, 'array' => false ],
             'eventType' => [ 'model' => null, 'array' => false ],
             'description' => [ 'model' => null, 'array' => false ],
@@ -27,9 +27,9 @@ class ProcessStatus extends AbstractModel
     }
 
     /**
-     * @var int The process status id.
+     * @var string The process status id.
      */
-    public $id;
+    public $processStatusId;
 
     /**
      * @var string The id of the object being processed. E.g. in case of a shipment process id, you will receive the id

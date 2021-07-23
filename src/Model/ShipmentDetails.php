@@ -15,7 +15,7 @@ class ShipmentDetails extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'pickUpPointName' => [ 'model' => null, 'array' => false ],
+            'pickupPointName' => [ 'model' => null, 'array' => false ],
             'salutation' => [ 'model' => null, 'array' => false ],
             'firstName' => [ 'model' => null, 'array' => false ],
             'surname' => [ 'model' => null, 'array' => false ],
@@ -36,7 +36,7 @@ class ShipmentDetails extends AbstractModel
     /**
      * @var string The name of Pick Up Point location this order needs to be shipped to.
      */
-    public $pickUpPointName;
+    public $pickupPointName;
 
     /**
      * @var string The salutation of the customer.

@@ -21,7 +21,6 @@ class CustomerDetails extends AbstractModel
             'streetName' => [ 'model' => null, 'array' => false ],
             'houseNumber' => [ 'model' => null, 'array' => false ],
             'houseNumberExtended' => [ 'model' => null, 'array' => false ],
-            'addressSupplement' => [ 'model' => null, 'array' => false ],
             'extraAddressInformation' => [ 'model' => null, 'array' => false ],
             'zipCode' => [ 'model' => null, 'array' => false ],
             'city' => [ 'model' => null, 'array' => false ],
@@ -62,11 +61,6 @@ class CustomerDetails extends AbstractModel
      * @var string The extension on the house number.
      */
     public $houseNumberExtended;
-
-    /**
-     * @var string
-     */
-    public $addressSupplement;
 
     /**
      * @var string Additional information related to the address that helps in delivering the package.

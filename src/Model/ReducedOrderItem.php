@@ -18,6 +18,8 @@ class ReducedOrderItem extends AbstractModel
             'orderItemId' => [ 'model' => null, 'array' => false ],
             'ean' => [ 'model' => null, 'array' => false ],
             'quantity' => [ 'model' => null, 'array' => false ],
+            'quantityShipped' => [ 'model' => null, 'array' => false ],
+            'quantityCancelled' => [ 'model' => null, 'array' => false ],
         ];
     }
 
@@ -35,4 +37,14 @@ class ReducedOrderItem extends AbstractModel
      * @var int Amount of ordered products for this order item id.
      */
     public $quantity;
+
+    /**
+     * @var int Amount of shipped products for this order item id.
+     */
+    public $quantityShipped;
+
+    /**
+     * @var int Amount of cancelled products for this order item id.
+     */
+    public $quantityCancelled;
 }

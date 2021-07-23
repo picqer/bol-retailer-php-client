@@ -41,7 +41,8 @@ class DeliveryOption extends AbstractModel
     public $transporterCode;
 
     /**
-     * @var string The type of the label, representing the way an item is being transported.
+     * @var string The type of the label, representing the way an item is being transported. MAILBOX is a mailbox
+     * package with delivery scan. MAILBOX_LIGHT is a mailbox package without delivery scan. PARCEL is a normal package.
      */
     public $labelType;
 

@@ -16,7 +16,7 @@ class Order extends AbstractModel
     {
         return [
             'orderId' => [ 'model' => null, 'array' => false ],
-            'pickUpPoint' => [ 'model' => null, 'array' => false ],
+            'pickupPoint' => [ 'model' => null, 'array' => false ],
             'orderPlacedDateTime' => [ 'model' => null, 'array' => false ],
             'shipmentDetails' => [ 'model' => ShipmentDetails::class, 'array' => false ],
             'billingDetails' => [ 'model' => BillingDetails::class, 'array' => false ],
@@ -32,7 +32,7 @@ class Order extends AbstractModel
     /**
      * @var bool Indicates whether this order is shipped to a Pick Up Point.
      */
-    public $pickUpPoint;
+    public $pickupPoint;
 
     /**
      * @var string The date and time in ISO 8601 format when the order was placed.

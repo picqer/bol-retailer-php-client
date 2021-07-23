@@ -25,33 +25,33 @@ class BulkProcessStatusRequest extends AbstractModel
     public $processStatusQueries = [];
 
     /**
-     * Returns an array with the ids from processStatusQueries.
-     * @return int[] Ids from processStatusQueries.
+     * Returns an array with the processStatusIds from processStatusQueries.
+     * @return string[] ProcessStatusIds from processStatusQueries.
      */
-    public function getProcessStatusQueriesIds(): array
+    public function getProcessStatusQueriesProcessStatusIds(): array
     {
         return array_map(function ($model) {
-            return $model->id;
+            return $model->processStatusId;
         }, $this->processStatusQueries);
     }
 
     /**
-     * Sets processStatusQueries by an array of ids.
-     * @param int[] $ids Ids for processStatusQueries.
+     * Sets processStatusQueries by an array of processStatusIds.
+     * @param string[] $processStatusIds ProcessStatusIds for processStatusQueries.
      */
-    public function setProcessStatusQueriesIds(array $ids): void
+    public function setProcessStatusQueriesProcessStatusIds(array $processStatusIds): void
     {
-        $this->processStatusQueries = array_map(function ($id) {
-            return ProcessStatusId::constructFromArray(['id' => $id]);
-        }, $ids);
+        $this->processStatusQueries = array_map(function ($processStatusId) {
+            return ProcessStatusId::constructFromArray(['processStatusId' => $processStatusId]);
+        }, $processStatusIds);
     }
 
     /**
-     * Adds a new ProcessStatusId to processStatusQueries by id.
-     * @param int $id Id for the ProcessStatusId to add.
+     * Adds a new ProcessStatusId to processStatusQueries by processStatusId.
+     * @param string $processStatusId ProcessStatusId for the ProcessStatusId to add.
      */
-    public function addProcessStatusQueriesId(int $id): void
+    public function addProcessStatusQueriesProcessStatusId(string $processStatusId): void
     {
-        $this->processStatusQueries[] = ProcessStatusId::constructFromArray(['id' => $id]);
+        $this->processStatusQueries[] = ProcessStatusId::constructFromArray(['processStatusId' => $processStatusId]);
     }
 }

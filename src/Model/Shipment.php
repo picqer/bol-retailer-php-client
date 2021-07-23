@@ -18,7 +18,7 @@ class Shipment extends AbstractModel
             'shipmentId' => [ 'model' => null, 'array' => false ],
             'shipmentDateTime' => [ 'model' => null, 'array' => false ],
             'shipmentReference' => [ 'model' => null, 'array' => false ],
-            'pickUpPoint' => [ 'model' => null, 'array' => false ],
+            'pickupPoint' => [ 'model' => null, 'array' => false ],
             'order' => [ 'model' => ShipmentOrder::class, 'array' => false ],
             'shipmentDetails' => [ 'model' => ShipmentDetails::class, 'array' => false ],
             'billingDetails' => [ 'model' => BillingDetails::class, 'array' => false ],
@@ -45,7 +45,7 @@ class Shipment extends AbstractModel
     /**
      * @var bool Indicates whether this order is shipped to a Pick Up Point.
      */
-    public $pickUpPoint;
+    public $pickupPoint;
 
     /**
      * @var ShipmentOrder

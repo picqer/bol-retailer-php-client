@@ -15,14 +15,14 @@ class Periods extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'period' => [ 'model' => Period::class, 'array' => false ],
+            'period' => [ 'model' => OfferInsightsPeriod::class, 'array' => false ],
             'total' => [ 'model' => null, 'array' => false ],
-            'countries' => [ 'model' => Country::class, 'array' => true ],
+            'countries' => [ 'model' => OfferInsightsCountry::class, 'array' => true ],
         ];
     }
 
     /**
-     * @var Period
+     * @var OfferInsightsPeriod
      */
     public $period;
 
@@ -33,7 +33,7 @@ class Periods extends AbstractModel
     public $total;
 
     /**
-     * @var Country[]
+     * @var OfferInsightsCountry[]
      */
     public $countries = [];
 }

@@ -7,7 +7,7 @@ class Client extends BaseClient
 {
 
     /**
-     * Gets all commissions and possible reductions by EAN, condition and optionally price.
+     * Gets all commissions and possible reductions by EAN, price, and optionally condition.
      * @param Model\BulkCommissionQuery[] $commissionQueries
      * @return Model\Commission[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -21,7 +21,7 @@ class Client extends BaseClient
         $url = "commission";
         $options = [
             'body' => Model\BulkCommissionRequest::constructFromArray(['commissionQueries' => $commissionQueries]),
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\BulkCommissionResponse::class,
@@ -33,8 +33,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Commissions can be filtered by condition, which defaults to NEW. If price is provided, the exact commission
-     * amount will also be calculated.
+     * Commissions can be filtered by condition, which defaults to NEW. We will calculate the commission amount from the
+     * EAN and price.
      * @param string $ean The EAN number associated with this product.
      * @param float $unitPrice The price of the product with a period as a decimal separator. The price should always
      * have two decimals precision.
@@ -54,7 +54,7 @@ class Client extends BaseClient
                 'unit-price' => $unitPrice,
                 'condition' => $condition,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\Commission::class,
@@ -79,7 +79,7 @@ class Client extends BaseClient
         $url = "content/product";
         $options = [
             'body' => $createProductContentRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -102,7 +102,7 @@ class Client extends BaseClient
     {
         $url = "content/validation-report/${uploadId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ValidationReportResponse::class,
@@ -114,215 +114,7 @@ class Client extends BaseClient
     }
 
     /**
-     * A paginated list of all inbound shipments.
-     * @param string|null $reference A user defined reference to identify the inbound shipment.
-     * @param string|null $bsku The BSKU number associated with this product.
-     * @param string|null $creationStartDate The creation start date and time to find the inbound shipment in ISO 8601
-     * format.
-     * @param string|null $creationEndDate The end date of the range to find the inbound shipment, in ISO 8601 format.
-     * @param string|null $state The current state of the inbound shipment.
-     * @param int|null $page The requested page number with a page size of 50 items.
-     * @return Model\ReducedInbound[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getInbounds(?string $reference = null, ?string $bsku = null, ?string $creationStartDate = null, ?string $creationEndDate = null, ?string $state = null, ?int $page = 1): array
-    {
-        $url = "inbounds";
-        $options = [
-            'query' => [
-                'reference' => $reference,
-                'bsku' => $bsku,
-                'creation-start-date' => $creationStartDate,
-                'creation-end-date' => $creationEndDate,
-                'state' => $state,
-                'page' => $page,
-            ],
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\Inbounds::class,
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes)->inbounds;
-    }
-
-    /**
-     * Create a new inbound shipment.
-     * @param Model\InboundRequest $inboundRequest
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function createInbound(Model\InboundRequest $inboundRequest): Model\ProcessStatus
-    {
-        $url = "inbounds";
-        $options = [
-            'body' => $inboundRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('POST', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Retrieve a list of available delivery windows when creating a new inbound shipment.
-     * @param string|null $deliveryDate The expected delivery date for the inbound in ISO 8601 format.
-     * @param int|null $itemsToSend The number of items that will be sent in the inbound.
-     * @return Model\TimeSlot[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getDeliveryWindows(?string $deliveryDate = 'Today\'s date.', ?int $itemsToSend = 1): array
-    {
-        $url = "inbounds/delivery-windows";
-        $options = [
-            'query' => [
-                'delivery-date' => $deliveryDate,
-                'items-to-send' => $itemsToSend,
-            ],
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\DeliveryWindowsForInboundShipments::class,
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes)->timeSlots;
-    }
-
-    /**
-     * Get all available transporters that carry out transports for inbound shipments.
-     * @return Model\Transporter[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getInboundTransporters(): array
-    {
-        $url = "inbounds/inbound-transporters";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\TransportersResponse::class,
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes)->transporters;
-    }
-
-    /**
-     * Get inbound product labels by EAN.
-     * @param Model\ProductLabelsRequest $productLabelsRequest
-     * @return string|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getProductLabels(Model\ProductLabelsRequest $productLabelsRequest): ?string
-    {
-        $url = "inbounds/productlabels";
-        $options = [
-            'body' => $productLabelsRequest,
-            'produces' => 'application/vnd.retailer.v4+pdf',
-        ];
-        $responseTypes = [
-            '200' => 'string',
-            '404' => 'null',
-        ];
-
-        return $this->request('POST', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Get inbound details by inbound id.
-     * @param int $inboundId A unique identifier for an inbound shipment.
-     * @return Model\Inbound|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getInbound(int $inboundId): ?Model\Inbound
-    {
-        $url = "inbounds/${inboundId}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\Inbound::class,
-            '404' => 'null',
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Get packing list by inbound id.
-     * @param int $inboundId A unique identifier for an inbound shipment.
-     * @return string|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getPackingList(int $inboundId): ?string
-    {
-        $url = "inbounds/${inboundId}/packinglist";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+pdf',
-        ];
-        $responseTypes = [
-            '200' => 'string',
-            '404' => 'null',
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Get inbound shipping label by inbound id.
-     * @param int $inboundId A unique identifier for an inbound shipment.
-     * @return string|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getInboundShippingLabel(int $inboundId): ?string
-    {
-        $url = "inbounds/${inboundId}/shippinglabel";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+pdf',
-        ];
-        $responseTypes = [
-            '200' => 'string',
-            '404' => 'null',
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Gets offer insights.
+     * Get the product visits and the buy box percentage for an offer during a given period.
      * @param string $offerId Unique identifier for an offer.
      * @param string $period The time unit in which the offer insights are grouped.
      * @param int $numberOfPeriods The number of periods for which the offer insights are requested back in time.
@@ -344,7 +136,7 @@ class Client extends BaseClient
                 'number-of-periods' => $numberOfPeriods,
                 'name' => $name,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\OfferInsights::class,
@@ -376,7 +168,7 @@ class Client extends BaseClient
                 'year' => $year,
                 'week' => $week,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\PerformanceIndicators::class,
@@ -386,7 +178,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets sales forecast.
+     * Get sales forecast to estimate the sales expectations on the total bol.com platform for the requested number of
+     * weeks ahead.
      * @param string $offerId Unique identifier for an offer.
      * @param int $weeksAhead The number of weeks into the future, starting from today.
      * @return Model\SalesForecastResponse
@@ -404,7 +197,7 @@ class Client extends BaseClient
                 'offer-id' => $offerId,
                 'weeks-ahead' => $weeksAhead,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\SalesForecastResponse::class,
@@ -414,10 +207,45 @@ class Client extends BaseClient
     }
 
     /**
+     * Retrieves the search volume for a specified search term and period. The search volume allows you to see what
+     * bol.com customers are searching for. Based on the search volume per search term you can optimize your product
+     * content, or spot opportunities to extend your assortment, or analyzing trends for inventory management.
+     * @param string $searchTerm The search term for which you want to request the search volume.
+     * @param string $period The time unit in which the offer insights are grouped.
+     * @param int $numberOfPeriods The number of periods for which the offer insights are requested back in time.
+     * @param bool|null $relatedSearchTerms Indicates whether or not you want to retrieve the related search terms.
+     * @return Model\SearchTerms
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getSearchTerms(string $searchTerm, string $period, int $numberOfPeriods, ?bool $relatedSearchTerms = false): Model\SearchTerms
+    {
+        $url = "insights/search-terms";
+        $options = [
+            'query' => [
+                'search-term' => $searchTerm,
+                'period' => $period,
+                'number-of-periods' => $numberOfPeriods,
+                'related-search-terms' => $relatedSearchTerms,
+            ],
+            'produces' => 'application/vnd.retailer.v5+json',
+        ];
+        $responseTypes = [
+            '200' => Model\SearchTerms::class,
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
+    }
+
+    /**
      * The inventory endpoint is a specific LVB/FBB endpoint. It provides a paginated list containing your fulfilment by
      * bol.com inventory. This endpoint does not provide information about your own stock.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @param array $quantity Filter inventory by providing a range of quantity (min-range)-(max-range).
+     * @param array $quantity Filter inventory by providing a range of quantity (min-range)-(max-range). Note that if no
+     * state query is submitted in the same request, then the quantity will be filtered on regularStock by default.
      * @param string|null $stock Filter inventory by stock level.
      * @param string|null $state Filter inventory by stock type.
      * @param string|null $query Filter inventory by EAN or product title.
@@ -439,7 +267,7 @@ class Client extends BaseClient
                 'state' => $state,
                 'query' => $query,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\InventoryResponse::class,
@@ -472,7 +300,7 @@ class Client extends BaseClient
                 'period-start-date' => $periodStartDate,
                 'period-end-date' => $periodEndDate,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -485,7 +313,7 @@ class Client extends BaseClient
      * Gets an invoice by invoice id. The available media types differ per invoice and are listed within the response
      * from the ‘GET all invoices’ call. Note: the media types listed in the response must be given in our standard
      * API format.
-     * @param int $invoiceId The id of the invoice
+     * @param string $invoiceId The id of the invoice
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -493,11 +321,11 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoice(int $invoiceId): string
+    public function getInvoice(string $invoiceId): string
     {
         $url = "invoices/${invoiceId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -510,8 +338,8 @@ class Client extends BaseClient
      * Gets an invoice specification for an invoice with a paginated list of its transactions. The available media types
      * differ per invoice specification and are listed within the response from the ‘GET all invoices’ call. Note,
      * the media types listed in the response must be given in our standard API format.
-     * @param int $invoiceId The id of the invoice.
-     * @param int|null $page The page to get. Each page contains a maximum of 25.000 lines.
+     * @param string $invoiceId The id of the invoice.
+     * @param int|null $page The page to get, defaults to page 1. Each page contains a maximum of 25,000 lines.
      * @return string
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -519,14 +347,14 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoiceSpecification(int $invoiceId, ?int $page = null): string
+    public function getInvoiceSpecification(string $invoiceId, ?int $page = null): string
     {
         $url = "invoices/${invoiceId}/specification";
         $options = [
             'query' => [
                 'page' => $page,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -551,7 +379,7 @@ class Client extends BaseClient
         $url = "offers";
         $options = [
             'body' => $createOfferRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -575,7 +403,7 @@ class Client extends BaseClient
         $url = "offers/export";
         $options = [
             'body' => Model\CreateOfferExportRequest::constructFromArray(['format' => $format]),
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -598,55 +426,7 @@ class Client extends BaseClient
     {
         $url = "offers/export/${reportId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+csv',
-        ];
-        $responseTypes = [
-            '200' => 'string',
-            '404' => 'null',
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Request an unpublished offer report containing all unpublished offers and reasons.
-     * @param string $format
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function postUnpublishedOfferReport(string $format): Model\ProcessStatus
-    {
-        $url = "offers/unpublished";
-        $options = [
-            'body' => Model\CreateUnpublishedOfferReportRequest::constructFromArray(['format' => $format]),
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('POST', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Retrieve an unpublished offer report containing all unpublished offers and reasons.
-     * @param string $reportId Unique identifier for unpublished offer report.
-     * @return string|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getUnpublishedOfferReport(string $reportId): ?string
-    {
-        $url = "offers/unpublished/${reportId}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+csv',
+            'produces' => 'application/vnd.retailer.v5+csv',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -670,7 +450,7 @@ class Client extends BaseClient
     {
         $url = "offers/${offerId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\RetailerOffer::class,
@@ -696,7 +476,7 @@ class Client extends BaseClient
         $url = "offers/${offerId}";
         $options = [
             'body' => $updateOfferRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -719,7 +499,7 @@ class Client extends BaseClient
     {
         $url = "offers/${offerId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -744,7 +524,7 @@ class Client extends BaseClient
         $url = "offers/${offerId}/price";
         $options = [
             'body' => Model\UpdateOfferPriceRequest::constructFromArray(['pricing' => $pricing]),
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -769,7 +549,7 @@ class Client extends BaseClient
         $url = "offers/${offerId}/stock";
         $options = [
             'body' => $updateOfferStockRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -779,10 +559,13 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets a paginated list of all open orders sorted by date in descending order.
+     * Gets a paginated list of all orders sorted by date in descending order. To create a pick list you can set state
+     * to open.
      * @param int|null $page The requested page number with a page size of 50 items.
      * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
      * bol.com (FBB).
+     * @param string|null $status Determines whether you want to retrieve orders including or excluding shipped and/or
+     * cancelled items.
      * @return Model\ReducedOrder[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -790,15 +573,16 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOrders(?int $page = 1, ?string $fulfilmentMethod = 'FBR'): array
+    public function getOrders(?int $page = 1, ?string $fulfilmentMethod = 'FBR', ?string $status = 'OPEN'): array
     {
         $url = "orders";
         $options = [
             'query' => [
                 'page' => $page,
                 'fulfilment-method' => $fulfilmentMethod,
+                'status' => $status,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ReducedOrders::class,
@@ -823,7 +607,7 @@ class Client extends BaseClient
         $url = "orders/cancellation";
         $options = [
             'body' => Model\ContainerForTheOrderItemsThatHaveToBeCancelled::constructFromArray(['orderItems' => $orderItems]),
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -833,9 +617,10 @@ class Client extends BaseClient
     }
 
     /**
-     * Ship a single order item within a customer order by providing shipping information. In case you purchased a
-     * shipping label you can add the shippingLabelId to this message; in that case the transport element must be left
-     * empty. If you ship the item(s) using your own transporter method you must omit the shippingLabelId entirely.
+     * Ship a single order item within a customer order by providing shipping information. If you purchased a shipping
+     * label you should add the shippingLabelId to this message and leave the transport element empty. If you will ship
+     * the item(s) using your own transporter method you must omit the shippingLabelId entirely and fill in the
+     * transport element with the fields from GET shipping labels.
      * @param Model\ShipmentRequest $shipmentRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -849,7 +634,7 @@ class Client extends BaseClient
         $url = "orders/shipment";
         $options = [
             'body' => $shipmentRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -859,8 +644,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets an open order by order id.
-     * @param string $orderId The id of the open order to get.
+     * Gets an order by order id. The order can be partially shipped or cancelled, and the message contains the quantity
+     * shipped or cancelled items. The unitPrice takes account of volume discounts.
+     * @param string $orderId The id of the order to get.
      * @return Model\Order|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -872,7 +658,7 @@ class Client extends BaseClient
     {
         $url = "orders/${orderId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\Order::class,
@@ -883,37 +669,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Currently this endpoint only supports the allowable retail price and can support the following use cases:
-     *                     1) EANs that have been unpublished due to price related reasons can be checked against this
-     * endpoint.
-     *                     2) Requesting the allowable retail price for EANs that are not yet in your assortment can
-     * help inform price setting.
-     * @param string $ean The EAN number associated with this product.
-     * @return Model\RetailPrice[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getRetailPrice(string $ean): array
-    {
-        $url = "pricing/retail-prices/${ean}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\RetailPriceResponse::class,
-            '404' => 'null',
-        ];
-
-        $result = $this->request('GET', $url, $options, $responseTypes);
-        return $result === null ? [] : $result->retailPrices;
-    }
-
-    /**
      * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE
-     * requests in descending order. You need to supply an entity id and event type. Please note: process status
+     * requests in descending order. You need to supply an entity id and event type.Please note: process status
      * instances are only retained for a limited period of time after completion. Outside of this period, deleted
      * process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for
      * these statuses.
@@ -937,7 +694,7 @@ class Client extends BaseClient
                 'event-type' => $eventType,
                 'page' => $page,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ProcessStatusResponse::class,
@@ -965,7 +722,7 @@ class Client extends BaseClient
         $url = "process-status";
         $options = [
             'body' => Model\BulkProcessStatusRequest::constructFromArray(['processStatusQueries' => $processStatusQueries]),
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ProcessStatusResponse::class,
@@ -981,8 +738,8 @@ class Client extends BaseClient
      * instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be
      * returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these
      * statuses.
-     * @param int $processStatusId The id of the process status being requested. This id is supplied in every response
-     * to a PUT/POST/DELETE request on the other endpoints.
+     * @param string $processStatusId The id of the process status being requested. This id is supplied in every
+     * response to a PUT/POST/DELETE request on the other endpoints.
      * @return Model\ProcessStatus|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -990,11 +747,11 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProcessStatus(int $processStatusId): ?Model\ProcessStatus
+    public function getProcessStatus(string $processStatusId): ?Model\ProcessStatus
     {
         $url = "process-status/${processStatusId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ProcessStatus::class,
@@ -1005,7 +762,218 @@ class Client extends BaseClient
     }
 
     /**
-     * Get a paginated list of multi-item returns, which are sorted by date in descending order.
+     * Gets a list of replenishments.
+     * @param string|null $reference Custom user defined reference to identify the replenishment.
+     * @param string|null $ean The EAN number associated with this product.
+     * @param string|null $startDate The creation start date to find the replenishment. In ISO 8601 format.
+     * @param string|null $endDate The end date of the range to find the replenishment. In ISO 8601 format.
+     * @param array $state The current state(s) of the replenishment.
+     * @param int|null $page The requested page number with a page size of 50 items.
+     * @return Model\ReducedReplenishment[]
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getReplenishments(?string $reference = null, ?string $ean = null, ?string $startDate = null, ?string $endDate = null, array $state = [], ?int $page = 1): array
+    {
+        $url = "replenishments";
+        $options = [
+            'query' => [
+                'reference' => $reference,
+                'ean' => $ean,
+                'start-date' => $startDate,
+                'end-date' => $endDate,
+                'state' => $state,
+                'page' => $page,
+            ],
+            'produces' => 'application/vnd.retailer.v5+json',
+        ];
+        $responseTypes = [
+            '200' => Model\ReplenishmentsResponse::class,
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes)->replenishments;
+    }
+
+    /**
+     * Create a replenishment.
+     * @param Model\CreateReplenishmentRequest $createReplenishmentRequest
+     * @return Model\ProcessStatus
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function postReplenishment(Model\CreateReplenishmentRequest $createReplenishmentRequest): Model\ProcessStatus
+    {
+        $url = "replenishments";
+        $options = [
+            'body' => $createReplenishmentRequest,
+            'produces' => 'application/vnd.retailer.v5+json',
+        ];
+        $responseTypes = [
+            '202' => Model\ProcessStatus::class,
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Retrieve pickup time slots.
+     * @param Model\PickupTimeSlotsRequest $pickupTimeSlotsRequest
+     * @return Model\PickupTimeSlot[]
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function postPickupTimeSlots(Model\PickupTimeSlotsRequest $pickupTimeSlotsRequest): array
+    {
+        $url = "replenishments/pickup-time-slots";
+        $options = [
+            'body' => $pickupTimeSlotsRequest,
+            'produces' => 'application/vnd.retailer.v5+json',
+        ];
+        $responseTypes = [
+            '200' => Model\PickupTimeSlotsResponse::class,
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes)->timeSlots;
+    }
+
+    /**
+     * Retrieve product labels.
+     * @param Model\ProductLabelsRequest $productLabelsRequest
+     * @return string|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function postProductLabels(Model\ProductLabelsRequest $productLabelsRequest): ?string
+    {
+        $url = "replenishments/product-labels";
+        $options = [
+            'body' => $productLabelsRequest,
+            'produces' => 'application/vnd.retailer.v5+pdf',
+        ];
+        $responseTypes = [
+            '200' => 'string',
+            '404' => 'null',
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Gets a replenishment by replenishment id.
+     * @param string $replenishmentId The unique identifier of the replenishment.
+     * @return Model\ReplenishmentResponse|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getReplenishment(string $replenishmentId): ?Model\ReplenishmentResponse
+    {
+        $url = "replenishments/${replenishmentId}";
+        $options = [
+            'produces' => 'application/vnd.retailer.v5+json',
+        ];
+        $responseTypes = [
+            '200' => Model\ReplenishmentResponse::class,
+            '404' => 'null',
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Update a replenishment.
+     * @param string $replenishmentId The unique identifier of the replenishment.
+     * @param Model\UpdateReplenishmentRequest $updateReplenishmentRequest
+     * @return Model\ProcessStatus
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function putReplenishment(string $replenishmentId, Model\UpdateReplenishmentRequest $updateReplenishmentRequest): Model\ProcessStatus
+    {
+        $url = "replenishments/${replenishmentId}";
+        $options = [
+            'body' => $updateReplenishmentRequest,
+            'produces' => 'application/vnd.retailer.v5+json',
+        ];
+        $responseTypes = [
+            '202' => Model\ProcessStatus::class,
+        ];
+
+        return $this->request('PUT', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Retrieve the load carrier labels.
+     * @param string $replenishmentId The unique identifier of the replenishment.
+     * @param string $labelType The type of label which you want to print.
+     * @return string|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getLoadCarrierLabels(string $replenishmentId, string $labelType = 'WAREHOUSE'): ?string
+    {
+        $url = "replenishments/${replenishmentId}/load-carrier-labels";
+        $options = [
+            'query' => [
+                'label-type' => $labelType,
+            ],
+            'produces' => 'application/vnd.retailer.v5+pdf',
+        ];
+        $responseTypes = [
+            '200' => 'string',
+            '404' => 'null',
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Retrieve the pick list.
+     * @param string $replenishmentId The unique identifier of the replenishment.
+     * @return string|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getPickList(string $replenishmentId): ?string
+    {
+        $url = "replenishments/${replenishmentId}/pick-list";
+        $options = [
+            'produces' => 'application/vnd.retailer.v5+pdf',
+        ];
+        $responseTypes = [
+            '200' => 'string',
+            '404' => 'null',
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Get a paginated list of multi-item returns. Handled returns are sorted by date in descending order, while
+     * unhandled returns are sorted by date in ascending order.
      * @param int|null $page The page to get with a page size of 50.
      * @param bool|null $handled The status of the returns you wish to see, shows either handled or unhandled returns.
      * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
@@ -1026,7 +994,7 @@ class Client extends BaseClient
                 'handled' => $handled,
                 'fulfilment-method' => $fulfilmentMethod,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ReturnsResponse::class,
@@ -1051,7 +1019,7 @@ class Client extends BaseClient
         $url = "returns";
         $options = [
             'body' => $createReturnRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1062,7 +1030,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a return based on the return id.
-     * @param int $returnId Unique identifier for a return.
+     * @param string $returnId Unique identifier for a return.
      * @return Model\ReturnObject|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1070,11 +1038,11 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getReturn(int $returnId): ?Model\ReturnObject
+    public function getReturn(string $returnId): ?Model\ReturnObject
     {
         $url = "returns/${returnId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\ReturnObject::class,
@@ -1102,7 +1070,7 @@ class Client extends BaseClient
         $url = "returns/${rmaId}";
         $options = [
             'body' => $returnRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1135,10 +1103,10 @@ class Client extends BaseClient
                 'fulfilment-method' => $fulfilmentMethod,
                 'order-id' => $orderId,
             ],
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
-            '200' => Model\ShipmentResponse::class,
+            '200' => Model\ShipmentsResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->shipments;
@@ -1146,7 +1114,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve a single shipment by its corresponding id.
-     * @param int $shipmentId The id of the shipment.
+     * @param string $shipmentId The id of the shipment.
      * @return Model\Shipment|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1154,11 +1122,11 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getShipment(int $shipmentId): ?Model\Shipment
+    public function getShipment(string $shipmentId): ?Model\Shipment
     {
         $url = "shipments/${shipmentId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\Shipment::class,
@@ -1183,7 +1151,7 @@ class Client extends BaseClient
         $url = "shipping-labels";
         $options = [
             'body' => $shippingLabelRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1208,7 +1176,7 @@ class Client extends BaseClient
         $url = "shipping-labels/delivery-options";
         $options = [
             'body' => Model\DeliveryOptionsRequest::constructFromArray(['orderItems' => $orderItems]),
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '200' => Model\DeliveryOptionsResponse::class,
@@ -1220,7 +1188,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Gets a shipping label by shipping label id.
+     * Retrieves a shipping label by shipping label id. Metadata for the shipping label is added as headers in the
+     * response. If you are only interested in the metadata, you can do a HEAD request to retrieve only the headers
+     * without the label data.
      * @param string $shippingLabelId The shipping label id.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1233,7 +1203,7 @@ class Client extends BaseClient
     {
         $url = "shipping-labels/${shippingLabelId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v4+pdf',
+            'produces' => 'application/vnd.retailer.v5+pdf',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -1244,174 +1214,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a list of all configured and active push notification subscriptions.
-     * @return Model\SubscriptionResponse[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getPushNotificationSubscriptions(): array
-    {
-        $url = "subscriptions";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\SubscriptionsResponse::class,
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes)->subscriptions;
-    }
-
-    /**
-     * Create a push notification subscription for one (or more) of the available resources. The configured URL has to
-     * support https scheme.
-     * @param Model\CreateSubscriptionRequest $createSubscriptionRequest
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function postPushNotificationSubscription(Model\CreateSubscriptionRequest $createSubscriptionRequest): Model\ProcessStatus
-    {
-        $url = "subscriptions";
-        $options = [
-            'body' => $createSubscriptionRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('POST', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Retrieve a list of public keys that should be used to validate the signature header for push notifications
-     * received from bol.com
-     * @return Model\KeySet[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getSubscriptionKeys(): array
-    {
-        $url = "subscriptions/signature-keys";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\KeySetResponse::class,
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes)->signatureKeys;
-    }
-
-    /**
-     * Send a test push notification to all subscriptions for the provided event.
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function postTestPushNotification(): Model\ProcessStatus
-    {
-        $url = "subscriptions/test";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('POST', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Retrieve a configured and active push notification subscription with the provided id.
-     * @param int $subscriptionId A unique identifier for the subscription
-     * @return Model\SubscriptionResponse|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getPushNotificationSubscription(int $subscriptionId): ?Model\SubscriptionResponse
-    {
-        $url = "subscriptions/${subscriptionId}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '200' => Model\SubscriptionResponse::class,
-            '404' => 'null',
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Update an existing push notification subscription with the supplied id. The configured URL has to support https
-     * scheme.
-     * @param int $subscriptionId A unique identifier for the subscription
-     * @param Model\UpdateSubscriptionRequest $updateSubscriptionRequest
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function putPushNotificationSubscription(int $subscriptionId, Model\UpdateSubscriptionRequest $updateSubscriptionRequest): Model\ProcessStatus
-    {
-        $url = "subscriptions/${subscriptionId}";
-        $options = [
-            'body' => $updateSubscriptionRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('PUT', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Delete a push notification subscription with the provided id.
-     * @param int $subscriptionId A unique identifier for the subscription
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function deletePushNotificationSubscription(int $subscriptionId): Model\ProcessStatus
-    {
-        $url = "subscriptions/${subscriptionId}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v4+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('DELETE', $url, $options, $responseTypes);
-    }
-
-    /**
      * Add information to an existing transport. The transport id is part of the shipment. You can retrieve the
      * transport id through the GET shipment list request.
-     * @param int $transportId The transport id.
+     * @param string $transportId The transport id.
      * @param Model\ChangeTransportRequest $changeTransportRequest The change transport requested by the user.
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1420,12 +1225,12 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function addTransportInformationByTransportId(int $transportId, Model\ChangeTransportRequest $changeTransportRequest): Model\ProcessStatus
+    public function addTransportInformationByTransportId(string $transportId, Model\ChangeTransportRequest $changeTransportRequest): Model\ProcessStatus
     {
         $url = "transports/${transportId}";
         $options = [
             'body' => $changeTransportRequest,
-            'produces' => 'application/vnd.retailer.v4+json',
+            'produces' => 'application/vnd.retailer.v5+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,

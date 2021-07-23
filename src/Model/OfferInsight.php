@@ -18,7 +18,7 @@ class OfferInsight extends AbstractModel
             'name' => [ 'model' => null, 'array' => false ],
             'type' => [ 'model' => null, 'array' => false ],
             'total' => [ 'model' => null, 'array' => false ],
-            'countries' => [ 'model' => Country::class, 'array' => true ],
+            'countries' => [ 'model' => OfferInsightsCountry::class, 'array' => true ],
             'periods' => [ 'model' => Periods::class, 'array' => true ],
         ];
     }
@@ -40,7 +40,7 @@ class OfferInsight extends AbstractModel
     public $total;
 
     /**
-     * @var Country[]
+     * @var OfferInsightsCountry[]
      */
     public $countries = [];
 

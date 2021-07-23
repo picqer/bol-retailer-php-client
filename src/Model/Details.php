@@ -15,14 +15,14 @@ class Details extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'period' => [ 'model' => Period::class, 'array' => false ],
+            'period' => [ 'model' => PerformanceIndicatorPeriod::class, 'array' => false ],
             'score' => [ 'model' => Score::class, 'array' => false ],
             'norm' => [ 'model' => Norm::class, 'array' => false ],
         ];
     }
 
     /**
-     * @var Period The period for which the performance is measured.
+     * @var PerformanceIndicatorPeriod The period for which the performance is measured.
      */
     public $period;
 

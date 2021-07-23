@@ -20,6 +20,7 @@ class OrderFulfilment extends AbstractModel
             'latestDeliveryDate' => [ 'model' => null, 'array' => false ],
             'exactDeliveryDate' => [ 'model' => null, 'array' => false ],
             'expiryDate' => [ 'model' => null, 'array' => false ],
+            'timeFrameType' => [ 'model' => null, 'array' => false ],
         ];
     }
 
@@ -52,4 +53,9 @@ class OrderFulfilment extends AbstractModel
      * order.
      */
     public $expiryDate;
+
+    /**
+     * @var string The selected delivery option.
+     */
+    public $timeFrameType;
 }

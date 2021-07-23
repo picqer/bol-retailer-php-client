@@ -20,8 +20,7 @@ class ReturnItem extends AbstractModel
             'ean' => [ 'model' => null, 'array' => false ],
             'title' => [ 'model' => null, 'array' => false ],
             'expectedQuantity' => [ 'model' => null, 'array' => false ],
-            'returnReason' => [ 'model' => null, 'array' => false ],
-            'returnReasonComments' => [ 'model' => null, 'array' => false ],
+            'returnReason' => [ 'model' => ReturnReason::class, 'array' => false ],
             'trackAndTrace' => [ 'model' => null, 'array' => false ],
             'transporterName' => [ 'model' => null, 'array' => false ],
             'handled' => [ 'model' => null, 'array' => false ],
@@ -31,7 +30,7 @@ class ReturnItem extends AbstractModel
     }
 
     /**
-     * @var int The RMA (Return Merchandise Authorization) id that identifies this particular return.
+     * @var string The RMA (Return Merchandise Authorization) id that identifies this particular return.
      */
     public $rmaId;
 
@@ -57,14 +56,9 @@ class ReturnItem extends AbstractModel
     public $expectedQuantity;
 
     /**
-     * @var string The reason why the customer returned this product.
+     * @var ReturnReason
      */
     public $returnReason;
-
-    /**
-     * @var string Additional details from the customer as to why this item was returned.
-     */
-    public $returnReasonComments;
 
     /**
      * @var string The track and trace code that is associated with this transport.

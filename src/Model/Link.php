@@ -22,17 +22,17 @@ class Link extends AbstractModel
     }
 
     /**
-     * @var string
+     * @var string The link relation.
      */
     public $rel;
 
     /**
-     * @var string
+     * @var string The URI for the resource linked to.
      */
     public $href;
 
     /**
-     * @var string HTTP method
+     * @var string The HTTP method to use when accessing the link.
      */
     public $method;
 }

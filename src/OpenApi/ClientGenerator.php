@@ -327,13 +327,24 @@ class ClientGenerator
 
         foreach ($arguments as $argument) {
             if ($argument['default'] !== null) {
-                $argumentsList[] = sprintf('%s $%s = %s', $argument['php'], $argument['name'], $argument['default']);
+                $argumentsList[] = sprintf('%s $%s = %s', $argument['php'], $argument['name'], $this->argumentValueToString($argument['default']));
             } else {
                 $argumentsList[] = sprintf('%s $%s', $argument['php'], $argument['name']);
             }
         }
 
         return implode(', ', $argumentsList);
+    }
+
+    protected function argumentValueToString($argument): string
+    {
+        if ($argument === true) {
+            return 'true';
+        } elseif ($argument === false) {
+            return 'false';
+        }
+
+        return $argument;
     }
 
     protected function addQueryParams(array $arguments, array &$code): void
@@ -423,7 +434,7 @@ class ClientGenerator
             $refDefinition = $this->specs['definitions'][$apiType];
             if (count($refDefinition['properties']) == 1) {
                 $property = array_keys($refDefinition['properties'])[0];
-                if ($refDefinition['properties'][$property]['type'] == 'array') {
+                if (isset($refDefinition['properties'][$property]['type']) && $refDefinition['properties'][$property]['type'] == 'array') {
                     return [
                         'doc' => 'Model\\' . $this->getType(
                             $refDefinition['properties'][$property]['items']['$ref']

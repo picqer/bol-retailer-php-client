@@ -21,7 +21,8 @@ class CreateProductContentRequest extends AbstractModel
     }
 
     /**
-     * @var string The language to indicate the language of the supplied content.
+     * @var string The language to indicate the language of the supplied content. If you are selling to the Wallonian
+     * region, you should use `fr-BE`.
      */
     public $language;
 

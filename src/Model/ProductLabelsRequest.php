@@ -15,18 +15,18 @@ class ProductLabelsRequest extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'format' => [ 'model' => null, 'array' => false ],
-            'productLabels' => [ 'model' => ProductLabel::class, 'array' => true ],
+            'labelFormat' => [ 'model' => null, 'array' => false ],
+            'products' => [ 'model' => ProductLabelsProduct::class, 'array' => true ],
         ];
     }
 
     /**
      * @var string The printer format to create labels for.
      */
-    public $format;
+    public $labelFormat;
 
     /**
-     * @var ProductLabel[]
+     * @var ProductLabelsProduct[]
      */
-    public $productLabels = [];
+    public $products = [];
 }
