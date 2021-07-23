@@ -5,7 +5,7 @@ This is an open source PHP client for the [Bol.com Retailer API](https://api.bol
 This project can easily be installed through Composer:
 
 ```
-composer require picqer/bol-retailer-php-client
+composer require picqer/bol-retailer-php-client "^4"
 ```
 
 ## Usage
