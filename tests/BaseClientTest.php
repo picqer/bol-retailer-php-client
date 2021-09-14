@@ -453,7 +453,6 @@ class BaseClientTest extends TestCase
         $this->httpProphecy->request(Argument::cetera())->willReturn($response);
 
         $this->expectException(ResponseException::class);
-        $this->expectExceptionMessageMatches('/xml/');
         $this->client->request('GET', 'foobar', [], [
             '200' => $this->modelClass
         ]);
