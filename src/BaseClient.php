@@ -218,8 +218,24 @@ class BaseClient
             return (string)$response->getBody();
         }
 
+        $contentType = $response->getHeader('Content-Type')[0] ?? null;
+
+        // parse data depending on Content-Type
+        if ($contentType === 'None') {
+            $data = [];
+        } elseif (strpos($contentType, static::API_CONTENT_TYPE_JSON) !== false) {
+            $data = $this->jsonDecodeBody($response);
+        } else {
+            throw new ResponseException("Unknown Content-Type: '{$contentType}'");
+        }
+
+        // map headers to fields
+        $responseHeaderMapping = $options['response-headers-mapping'] ?? [];
+        foreach ($responseHeaderMapping as $header => $field) {
+            $data[$field] = $response->getHeader($header)[0] ?? null;
+        }
+
         // create new instance of model and fill it with the response data
-        $data = $this->jsonDecodeBody($response);
         return $responseType::constructFromArray($data);
     }
 

@@ -444,4 +444,37 @@ class BaseClientTest extends TestCase
         $this->assertArrayHasKey('query', $actualArgs);
         $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
     }
+
+    public function testRequestUnknownResponseContentTypeThrowsResponseException()
+    {
+        $this->authenticate();
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-unknown-content-type'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+
+        $this->expectException(ResponseException::class);
+        $this->expectExceptionMessageMatches('/xml/');
+        $this->client->request('GET', 'foobar', [], [
+            '200' => $this->modelClass
+        ]);
+    }
+
+    public function testResponseHeadersIsMappedToField()
+    {
+        $this->authenticate();
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-shipping-label-meta-data'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+
+        $response = $this->client->request('GET', 'foobar', [
+            'response-headers-mapping' => [
+                'X-Foo' => 'foo'
+            ],
+        ], [
+            '200' => $this->modelClass
+        ]);
+
+        $this->assertInstanceOf($this->modelClass, $response);
+        $this->assertEquals('bar', $response->foo);
+    }
 }

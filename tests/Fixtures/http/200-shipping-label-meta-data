@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: None
+Content-Disposition: attachment; filename=ShippingLabel_c628ba4f-f31a-4fac-a6a0-062326d0dbbd.pdf
+Content-Length: 0
+X-Transporter-Code: TNT
+X-Track-And-Trace-Code: 3SBLCQ928933678
+X-Foo: bar
+
