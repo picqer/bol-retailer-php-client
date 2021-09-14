@@ -139,4 +139,15 @@ class ClientTest extends TestCase
         $reducedOrders = $this->client->getOrders();
         $this->assertEquals([], $reducedOrders);
     }
+
+    public function testGetShippingLabelMetaData()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-shipping-label-meta-data'));
+        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+
+        $metaData = $this->client->getShippingLabelMetaData('1234');
+
+        $this->assertEquals('3SBLCQ928933678', $metaData->trackAndTrace);
+        $this->assertEquals('TNT', $metaData->transporterCode);
+    }
 }
