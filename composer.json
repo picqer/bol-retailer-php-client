@@ -29,24 +29,24 @@
     },
     "autoload": {
         "psr-4": {
-            "Picqer\\BolRetailer\\": "src"
+            "Picqer\\BolRetailerV5\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Picqer\\BolRetailer\\Tests\\": "tests"
+            "Picqer\\BolRetailerV5\\Tests\\": "tests"
         }
     },
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs src tests",
         "fix-style": "phpcbf src tests",
-        "generate-client": "Picqer\\BolRetailer\\OpenApi\\ClientGenerator::run",
-        "generate-models": "Picqer\\BolRetailer\\OpenApi\\ModelGenerator::run"
+        "generate-client": "Picqer\\BolRetailerV5\\OpenApi\\ClientGenerator::run",
+        "generate-models": "Picqer\\BolRetailerV5\\OpenApi\\ModelGenerator::run"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.0-dev"
+            "dev-master": "5.0-dev"
         }
     },
     "config": {

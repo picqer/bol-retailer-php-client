@@ -1,7 +1,7 @@
 HTTP/1.1 202 ACCEPTED
 Server: nginx
 Date: Fri, 12 Feb 2021 15:19:33 GMT
-Content-Type: application/vnd.retailer.v4+json;charset=UTF-8
+Content-Type: application/vnd.retailer.v5+json;charset=UTF-8
 Transfer-Encoding: chunked
 Connection: keep-alive
 Vary: Origin

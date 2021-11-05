@@ -1,5 +1,5 @@
 HTTP/1.1 401 Unauthorized
-Content-Type: application/vnd.retailer.v4+json
+Content-Type: application/vnd.retailer.v5+json
 X-RateLimit-Limit: 10
 X-RateLimit-Reset: 1539261914
 X-RateLimit-Remaining: 2
