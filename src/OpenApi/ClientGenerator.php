@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailer\OpenApi;
+namespace Picqer\BolRetailerV5\OpenApi;
 
 class ClientGenerator
 {

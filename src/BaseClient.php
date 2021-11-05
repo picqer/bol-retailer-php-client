@@ -1,20 +1,20 @@
 <?php
 
-namespace Picqer\BolRetailer;
+namespace Picqer\BolRetailerV5;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
-use Picqer\BolRetailer\Exception\RateLimitException;
-use Picqer\BolRetailer\Exception\ServerException;
-use Picqer\BolRetailer\Model\AbstractModel;
-use Picqer\BolRetailer\Exception\AuthenticationException;
-use Picqer\BolRetailer\Exception\ConnectException;
-use Picqer\BolRetailer\Exception\Exception;
-use Picqer\BolRetailer\Exception\ResponseException;
-use Picqer\BolRetailer\Exception\UnauthorizedException;
-use Picqer\BolRetailer\OpenApi\ModelCreator;
+use Picqer\BolRetailerV5\Exception\RateLimitException;
+use Picqer\BolRetailerV5\Exception\ServerException;
+use Picqer\BolRetailerV5\Model\AbstractModel;
+use Picqer\BolRetailerV5\Exception\AuthenticationException;
+use Picqer\BolRetailerV5\Exception\ConnectException;
+use Picqer\BolRetailerV5\Exception\Exception;
+use Picqer\BolRetailerV5\Exception\ResponseException;
+use Picqer\BolRetailerV5\Exception\UnauthorizedException;
+use Picqer\BolRetailerV5\OpenApi\ModelCreator;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClient

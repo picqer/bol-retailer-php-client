@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailer\Tests\Model;
+namespace Picqer\BolRetailerV5\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class GeneratedModelsTest extends TestCase
         });
 
         return array_map(function ($fileName) {
-            return ['Picqer\\BolRetailer\\Model\\' . substr($fileName, 0, -4)];
+            return ['Picqer\\BolRetailerV5\\Model\\' . substr($fileName, 0, -4)];
         }, $fileNames);
     }
 
