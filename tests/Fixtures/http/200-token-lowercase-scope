@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+
+{
+  "access_token": "sometoken",
+  "token_type": "Bearer",
+  "expires_in": 299,
+  "scope": "retailer"
+}
