@@ -147,13 +147,13 @@ class BaseClient
             throw new ResponseException('Missing expires_in');
         }
 
-        if ($token['token_type'] != 'Bearer') {
+        if (strtolower($token['token_type']) !== 'bearer') {
             throw new ResponseException(
                 sprintf('Unexpected token_type \'%s\', expected \'Bearer\'', $token['token_type'])
             );
         }
 
-        if ($token['scope'] != 'RETAILER') {
+        if (strtolower($token['scope']) !== 'retailer') {
             throw new ResponseException(
                 sprintf('Unexpected token_type \'%s\', expected \'RETAILER\'', $token['scope'])
             );
