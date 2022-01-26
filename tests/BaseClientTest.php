@@ -17,6 +17,7 @@ use Picqer\BolRetailer\Model\AbstractModel;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Message\ResponseInterface;
 
 class BaseClientTest extends TestCase
 {
@@ -54,9 +55,9 @@ class BaseClientTest extends TestCase
         $this->assertFalse($this->client->isAuthenticated());
     }
 
-    protected function authenticate()
+    protected function authenticate(?ResponseInterface $response = null)
     {
-        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
 
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
         $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
@@ -75,6 +76,20 @@ class BaseClientTest extends TestCase
     public function testClientIsAuthenticatedAfterSuccessfulAuthentication()
     {
         $this->authenticate();
+
+        $this->assertTrue($this->client->isAuthenticated());
+    }
+
+    public function testClientAcceptsLowercaseScopeInAccessToken()
+    {
+        $this->authenticate(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-scope')));
+
+        $this->assertTrue($this->client->isAuthenticated());
+    }
+
+    public function testClientAcceptsLowercaseTokenTypeInAccessToken()
+    {
+        $this->authenticate(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-type')));
 
         $this->assertTrue($this->client->isAuthenticated());
     }
