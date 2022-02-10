@@ -164,7 +164,7 @@ class Client extends BaseClient
         $url = "insights/performance/indicator";
         $options = [
             'query' => [
-                'name' => $name,
+                'name' => implode(',', $name),
                 'year' => $year,
                 'week' => $week,
             ],
