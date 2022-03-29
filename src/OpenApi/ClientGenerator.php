@@ -434,7 +434,7 @@ class ClientGenerator
             $refDefinition = $this->specs['definitions'][$apiType];
             if (count($refDefinition['properties']) == 1) {
                 $property = array_keys($refDefinition['properties'])[0];
-                if (isset($refDefinition['properties'][$property]['type']) && $refDefinition['properties'][$property]['type'] == 'array') {
+                if (isset($refDefinition['properties'][$property]['type'], $refDefinition['properties'][$property]['items']['$ref']) && $refDefinition['properties'][$property]['type'] == 'array') {
                     return [
                         'doc' => 'Model\\' . $this->getType(
                             $refDefinition['properties'][$property]['items']['$ref']
