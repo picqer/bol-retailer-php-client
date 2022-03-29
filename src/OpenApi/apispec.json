@@ -4,8 +4,8 @@
     "schemes": ["https"],
     "info" : {
         "description" : "The bol.com API for Retailers.",
-        "version" : "5.0",
-        "title" : "v5"
+        "version" : "6.0",
+        "title" : "v6"
     },
     "tags" : [ {
         "name" : "Commissions"
@@ -20,7 +20,7 @@
     }, {
         "name" : "Orders"
     }, {
-        "name" : "Process status"
+        "name" : "Process Status"
     }, {
         "name" : "Product Content"
     }, {
@@ -32,6 +32,8 @@
     }, {
         "name" : "Shipping Labels"
     }, {
+        "name" : "Subscriptions"
+    }, {
         "name" : "Transports"
     } ],
     "paths" : {
@@ -41,8 +43,8 @@
                 "summary" : "Get all commissions and reductions by EAN in bulk",
                 "description" : "Gets all commissions and possible reductions by EAN, price, and optionally condition.",
                 "operationId" : "get-commissions",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -79,7 +81,7 @@
                 "summary" : "Get all commissions and reductions by EAN per single EAN",
                 "description" : "Commissions can be filtered by condition, which defaults to NEW. We will calculate the commission amount from the EAN and price.",
                 "operationId" : "get-commission",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "ean",
                     "in" : "path",
@@ -131,8 +133,8 @@
                 "summary" : "Post product content",
                 "description" : "Create content for existing products or new products.",
                 "operationId" : "post-product-content",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -163,7 +165,7 @@
                 "summary" : "Get validation report",
                 "description" : "Retrieve a validation report of the product content upload based on the upload id.",
                 "operationId" : "get-validation-report",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "uploadId",
                     "in" : "path",
@@ -193,7 +195,7 @@
                 "summary" : "Get offer insights",
                 "description" : "Get the product visits and the buy box percentage for an offer during a given period.",
                 "operationId" : "get-offer-insights",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "query",
@@ -210,7 +212,7 @@
                 }, {
                     "name" : "number-of-periods",
                     "in" : "query",
-                    "description" : "The number of periods for which the offer insights are requested back in time.",
+                    "description" : "The number of periods for which the offer insights are requested back in time. The maximum available periods are 24 for MONTH, 104 for WEEK, and 730 for DAY.",
                     "required" : true,
                     "type" : "integer",
                     "format" : "int32"
@@ -247,8 +249,8 @@
                 "tags" : [ "Insights" ],
                 "summary" : "Get performance indicators",
                 "description" : "Gets the measurements for your performance indicators per week.",
-                "operationId" : "get-performance-indicator",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "operationId" : "get-performance-indicators",
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "name",
                     "in" : "query",
@@ -295,7 +297,7 @@
                 "summary" : "Get sales forecast",
                 "description" : "Get sales forecast to estimate the sales expectations on the total bol.com platform for the requested number of weeks ahead.",
                 "operationId" : "get-sales-forecast",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "query",
@@ -332,7 +334,7 @@
                 "summary" : "Get search terms",
                 "description" : "Retrieves the search volume for a specified search term and period. The search volume allows you to see what bol.com customers are searching for. Based on the search volume per search term you can optimize your product content, or spot opportunities to extend your assortment, or analyzing trends for inventory management.",
                 "operationId" : "get-search-terms",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "search-term",
                     "in" : "query",
@@ -383,7 +385,7 @@
                 "summary" : "Get LVB/FBB inventory",
                 "description" : "The inventory endpoint is a specific LVB/FBB endpoint. It provides a paginated list containing your fulfilment by bol.com inventory. This endpoint does not provide information about your own stock.",
                 "operationId" : "get-inventory",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "page",
                     "in" : "query",
@@ -451,7 +453,7 @@
                 "summary" : "Get all invoices",
                 "description" : "Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past, the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls. The available media types differ per invoice and are listed per invoice within the response. Note: the media types listed in the response must be given in our standard API format.",
                 "operationId" : "get-invoices",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "period-start-date",
                     "in" : "query",
@@ -493,7 +495,7 @@
                 "summary" : "Get an invoice by invoice id",
                 "description" : "Gets an invoice by invoice id. The available media types differ per invoice and are listed within the response from the ‘GET all invoices’ call. Note: the media types listed in the response must be given in our standard API format.",
                 "operationId" : "get-invoice",
-                "produces" : [ "application/vnd.retailer.v5+json", "application/vnd.retailer.v5+pdf" ],
+                "produces" : [ "application/vnd.retailer.v6+json", "application/vnd.retailer.v6+pdf" ],
                 "parameters" : [ {
                     "name" : "invoice-id",
                     "in" : "path",
@@ -527,7 +529,7 @@
                 "summary" : "Get an invoice specification by invoice id",
                 "description" : "Gets an invoice specification for an invoice with a paginated list of its transactions. The available media types differ per invoice specification and are listed within the response from the ‘GET all invoices’ call. Note, the media types listed in the response must be given in our standard API format.",
                 "operationId" : "get-invoice-specification",
-                "produces" : [ "application/vnd.retailer.v5+json", "application/vnd.retailer.v5+pdf", "application/vnd.retailer.v5+openxmlformats-officedocument.spreadsheetml.sheet" ],
+                "produces" : [ "application/vnd.retailer.v6+json", "application/vnd.retailer.v6+pdf", "application/vnd.retailer.v6+openxmlformats-officedocument.spreadsheetml.sheet" ],
                 "parameters" : [ {
                     "name" : "invoice-id",
                     "in" : "path",
@@ -569,8 +571,8 @@
                 "summary" : "Create a new offer",
                 "description" : "Creates a new offer, and adds it to the catalog. After creation, status information can be retrieved to review if the offer is valid and published to the shop.",
                 "operationId" : "post-offer",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -601,8 +603,8 @@
                 "summary" : "Request an offer export file",
                 "description" : "Request an offer export file containing all offers.",
                 "operationId" : "post-offer-export",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -633,7 +635,7 @@
                 "summary" : "Retrieve an offer export file by offer export id",
                 "description" : "Retrieve an offer export file containing all offers.",
                 "operationId" : "get-offer-export",
-                "produces" : [ "application/vnd.retailer.v5+csv" ],
+                "produces" : [ "application/vnd.retailer.v6+csv" ],
                 "parameters" : [ {
                     "name" : "report-id",
                     "in" : "path",
@@ -666,7 +668,7 @@
                 "summary" : "Retrieve an offer by its offer id",
                 "description" : "Retrieve an offer by using the offer id provided to you when creating or listing your offers.",
                 "operationId" : "get-offer",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "path",
@@ -694,8 +696,8 @@
                 "summary" : "Update an offer",
                 "description" : "Use this endpoint to send an offer update. This endpoint returns a process status.",
                 "operationId" : "put-offer",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "path",
@@ -730,7 +732,7 @@
                 "summary" : "Delete offer by id",
                 "description" : "Delete an offer by id.",
                 "operationId" : "delete-offer",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "path",
@@ -760,8 +762,8 @@
                 "summary" : "Update price(s) for offer by id",
                 "description" : "Update price(s) for offer by id.",
                 "operationId" : "update-offer-price",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "path",
@@ -798,8 +800,8 @@
                 "summary" : "Update stock for offer by id",
                 "description" : "Update stock for offer by id.",
                 "operationId" : "update-offer-stock",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "offer-id",
                     "in" : "path",
@@ -836,7 +838,7 @@
                 "summary" : "Get orders",
                 "description" : "Gets a paginated list of all orders sorted by date in descending order. To create a pick list you can set state to open.",
                 "operationId" : "get-orders",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "page",
                     "in" : "query",
@@ -879,8 +881,8 @@
                 "summary" : "Cancel an order item by an order item id",
                 "description" : "This endpoint can be used to either confirm a cancellation request by the customer or to cancel an order item you yourself are unable to fulfil.",
                 "operationId" : "cancel-order-item",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -909,10 +911,10 @@
             "put" : {
                 "tags" : [ "Orders" ],
                 "summary" : "Ship order item",
-                "description" : "Ship a single order item within a customer order by providing shipping information. If you purchased a shipping label you should add the shippingLabelId to this message and leave the transport element empty. If you will ship the item(s) using your own transporter method you must omit the shippingLabelId entirely and fill in the transport element with the fields from GET shipping labels.",
+                "description" : "Ship a single order item within a customer order by providing shipping information. If you purchased a shipping label you should add the shippingLabelId to this message and leave the transport element empty. If you will ship the item using your own transporter method you must omit the shippingLabelId entirely and fill in the transport element with the fields from GET shipping labels.",
                 "operationId" : "ship-order-item",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -943,7 +945,7 @@
                 "summary" : "Get order",
                 "description" : "Gets an order by order id. The order can be partially shipped or cancelled, and the message contains the quantity shipped or cancelled items. The unitPrice takes account of volume discounts.",
                 "operationId" : "get-order",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "order-id",
                     "in" : "path",
@@ -969,11 +971,11 @@
         },
         "/retailer/process-status" : {
             "get" : {
-                "tags" : [ "Process status" ],
-                "summary" : "Gets the status of an asynchronous process by entity id and event type for a retailer",
+                "tags" : [ "Process Status" ],
+                "summary" : "Get the status of an asynchronous process by entity id and event type for a retailer",
                 "description" : "Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests in descending order. You need to supply an entity id and event type.Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.",
                 "operationId" : "get-process-status-entity-id",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "entity-id",
                     "in" : "query",
@@ -988,7 +990,7 @@
                     "required" : true,
                     "type" : "string",
                     "x-example" : "CONFIRM_SHIPMENT",
-                    "enum" : [ "CONFIRM_SHIPMENT", "CANCEL_ORDER", "CHANGE_TRANSPORT", "HANDLE_RETURN_ITEM", "CREATE_RETURN_ITEM", "CREATE_INBOUND", "DELETE_OFFER", "CREATE_OFFER", "UPDATE_OFFER", "UPDATE_OFFER_STOCK", "UPDATE_OFFER_PRICE", "CREATE_OFFER_EXPORT", "UNPUBLISHED_OFFER_REPORT", "CREATE_PRODUCT_CONTENT", "CREATE_SUBSCRIPTION", "UPDATE_SUBSCRIPTION", "DELETE_SUBSCRIPTION", "SEND_SUBSCRIPTION_TST_MSG", "CREATE_SHIPPING_LABEL" ]
+                    "enum" : [ "CONFIRM_SHIPMENT", "CANCEL_ORDER", "CHANGE_TRANSPORT", "HANDLE_RETURN_ITEM", "CREATE_RETURN_ITEM", "CREATE_INBOUND", "DELETE_OFFER", "CREATE_OFFER", "UPDATE_OFFER", "UPDATE_OFFER_STOCK", "UPDATE_OFFER_PRICE", "CREATE_OFFER_EXPORT", "UNPUBLISHED_OFFER_REPORT", "CREATE_PRODUCT_CONTENT", "CREATE_SUBSCRIPTION", "UPDATE_SUBSCRIPTION", "DELETE_SUBSCRIPTION", "SEND_SUBSCRIPTION_TST_MSG", "CREATE_SHIPPING_LABEL", "CREATE_REPLENISHMENT", "UPDATE_REPLENISHMENT", "CREATE_CAMPAIGN", "UPDATE_CAMPAIGN", "CREATE_AD_GROUP", "CREATE_NEGATIVE_KEYWORD", "CREATE_TARGET_PRODUCT", "DELETE_NEGATIVE_KEYWORD", "UPDATE_AD_GROUP", "UPDATE_TARGET_PRODUCT", "CREATE_KEYWORD", "UPDATE_KEYWORD", "DELETE_KEYWORD" ]
                 }, {
                     "name" : "page",
                     "in" : "query",
@@ -1015,12 +1017,12 @@
                 }
             },
             "post" : {
-                "tags" : [ "Process status" ],
-                "summary" : "Gets the status of multiple asynchronous processes by an array of process status ids for a retailer",
+                "tags" : [ "Process Status" ],
+                "summary" : "Get the status of multiple asynchronous processes by an array of process status ids for a retailer",
                 "description" : "Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests. No more than 1000 process status id's can be sent in a single request.Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.",
                 "operationId" : "get-process-status-bulk",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1047,11 +1049,11 @@
         },
         "/retailer/process-status/{process-status-id}" : {
             "get" : {
-                "tags" : [ "Process status" ],
+                "tags" : [ "Process Status" ],
                 "summary" : "Get the status of an asynchronous process by process status id",
                 "description" : "Retrieve a specific process-status, which shows information regarding a previously executed PUT/POST/DELETE request. All PUT/POST/DELETE requests on the other endpoints will supply a process-status-id in the related response. You can use this id to retrieve a status by using the endpoint below. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these statuses.",
                 "operationId" : "get-process-status",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "process-status-id",
                     "in" : "path",
@@ -1081,7 +1083,7 @@
                 "summary" : "Get replenishments",
                 "description" : "Gets a list of replenishments.",
                 "operationId" : "get-replenishments",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "reference",
                     "in" : "query",
@@ -1152,8 +1154,8 @@
                 "summary" : "Post replenishment",
                 "description" : "Create a replenishment.",
                 "operationId" : "post-replenishment",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1178,14 +1180,37 @@
                 }
             }
         },
+        "/retailer/replenishments/delivery-dates" : {
+            "get" : {
+                "tags" : [ "Replenishments" ],
+                "summary" : "Get delivery dates",
+                "description" : "Retrieve a list of available delivery dates for a replenishment.",
+                "operationId" : "get-delivery-dates",
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "responses" : {
+                    "200" : {
+                        "description" : "Ok: Successfully processed the request.",
+                        "schema" : {
+                            "$ref" : "#/definitions/DeliveryDatesResponse"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            }
+        },
         "/retailer/replenishments/pickup-time-slots" : {
             "post" : {
                 "tags" : [ "Replenishments" ],
                 "summary" : "Post pickup time slots",
                 "description" : "Retrieve pickup time slots.",
                 "operationId" : "post-pickup-time-slots",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1216,8 +1241,8 @@
                 "summary" : "Post product labels",
                 "description" : "Retrieve product labels.",
                 "operationId" : "post-product-labels",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+pdf" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+pdf" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1237,14 +1262,14 @@
                             }
                         }
                     },
-                    "400" : {
-                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404" : {
+                        "description" : "Not found: The requested item could not be found.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
                     },
-                    "404" : {
-                        "description" : "Not found: The requested item could not be found.",
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
@@ -1258,7 +1283,7 @@
                 "summary" : "Get a replenishment by replenishment id",
                 "description" : "Gets a replenishment by replenishment id.",
                 "operationId" : "get-replenishment",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "replenishment-id",
                     "in" : "path",
@@ -1274,14 +1299,14 @@
                             "$ref" : "#/definitions/ReplenishmentResponse"
                         }
                     },
-                    "400" : {
-                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404" : {
+                        "description" : "Not found: The requested item could not be found.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
                     },
-                    "404" : {
-                        "description" : "Not found: The requested item could not be found.",
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
@@ -1293,8 +1318,8 @@
                 "summary" : "Update replenishment ",
                 "description" : "Update a replenishment.",
                 "operationId" : "put-replenishment",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "replenishment-id",
                     "in" : "path",
@@ -1332,7 +1357,7 @@
                 "summary" : "Get load carrier labels",
                 "description" : "Retrieve the load carrier labels.",
                 "operationId" : "get-load-carrier-labels",
-                "produces" : [ "application/vnd.retailer.v5+pdf" ],
+                "produces" : [ "application/vnd.retailer.v6+pdf" ],
                 "parameters" : [ {
                     "name" : "replenishment-id",
                     "in" : "path",
@@ -1344,7 +1369,7 @@
                     "name" : "label-type",
                     "in" : "query",
                     "description" : "The type of label which you want to print.",
-                    "required" : true,
+                    "required" : false,
                     "type" : "string",
                     "default" : "WAREHOUSE",
                     "x-example" : "WAREHOUSE",
@@ -1361,14 +1386,14 @@
                             }
                         }
                     },
-                    "400" : {
-                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404" : {
+                        "description" : "Not found: The requested item could not be found.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
                     },
-                    "404" : {
-                        "description" : "Not found: The requested item could not be found.",
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
@@ -1382,7 +1407,7 @@
                 "summary" : "Get pick list",
                 "description" : "Retrieve the pick list.",
                 "operationId" : "get-pick-list",
-                "produces" : [ "application/vnd.retailer.v5+pdf" ],
+                "produces" : [ "application/vnd.retailer.v6+pdf" ],
                 "parameters" : [ {
                     "name" : "replenishment-id",
                     "in" : "path",
@@ -1402,14 +1427,14 @@
                             }
                         }
                     },
-                    "400" : {
-                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404" : {
+                        "description" : "Not found: The requested item could not be found.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
                     },
-                    "404" : {
-                        "description" : "Not found: The requested item could not be found.",
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "schema" : {
                             "$ref" : "#/definitions/Problem"
                         }
@@ -1423,7 +1448,7 @@
                 "summary" : "Get returns",
                 "description" : "Get a paginated list of multi-item returns. Handled returns are sorted by date in descending order, while unhandled returns are sorted by date in ascending order.",
                 "operationId" : "get-returns",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "page",
                     "in" : "query",
@@ -1468,7 +1493,7 @@
                 "summary" : "Create return",
                 "description" : "Create a return, and automatically handle it with the provided handling result. When successfully created, the resulting return id is provided in the process status.",
                 "operationId" : "create-return",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1499,7 +1524,7 @@
                 "summary" : "Get a return by return id",
                 "description" : "Retrieve a return based on the return id.",
                 "operationId" : "get-return",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "return-id",
                     "in" : "path",
@@ -1529,8 +1554,8 @@
                 "summary" : "Handle a return",
                 "description" : "Allows the user to handle a return. This can be to either handle an open return, or change the handlingResult of an already handled return. The latter is only possible in limited scenarios, please check the returns documentation for a complete list.",
                 "operationId" : "handle-return",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "rma-id",
                     "in" : "path",
@@ -1569,7 +1594,7 @@
                 "summary" : "Get shipment list",
                 "description" : "A paginated list to retrieve all your shipments up to 3 months old. The shipments will be sorted by date in descending order.",
                 "operationId" : "get-shipments",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "page",
                     "in" : "query",
@@ -1615,7 +1640,7 @@
                 "summary" : "Get a shipment by shipment id",
                 "description" : "Retrieve a single shipment by its corresponding id.",
                 "operationId" : "get-shipment",
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "shipment-id",
                     "in" : "path",
@@ -1645,8 +1670,8 @@
                 "summary" : "Create a shipping label",
                 "description" : "Create a shipping label with a shipping label offer id retrieved from get delivery options.",
                 "operationId" : "post-shipping-label",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1674,11 +1699,11 @@
         "/retailer/shipping-labels/delivery-options" : {
             "post" : {
                 "tags" : [ "Shipping Labels" ],
-                "summary" : "Get delivery options for a shippable configuration of a number of order items within an order.",
+                "summary" : "Get delivery options for a shippable configuration of a number of order items within an order",
                 "description" : "Retrieves all available delivery options based on the supplied configuration of order items that has to be shipped.",
                 "operationId" : "get-delivery-options",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "in" : "body",
                     "name" : "body",
@@ -1715,7 +1740,7 @@
                 "summary" : "Get a shipping label",
                 "description" : "Retrieves a shipping label by shipping label id. Metadata for the shipping label is added as headers in the response. If you are only interested in the metadata, you can do a HEAD request to retrieve only the headers without the label data.",
                 "operationId" : "get-shipping-label",
-                "produces" : [ "application/vnd.retailer.v5+pdf" ],
+                "produces" : [ "application/vnd.retailer.v6+pdf" ],
                 "parameters" : [ {
                     "name" : "shipping-label-id",
                     "in" : "path",
@@ -1760,14 +1785,220 @@
                 }
             }
         },
+        "/retailer/subscriptions" : {
+            "get" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Get push notification subscriptions",
+                "description" : "Retrieve a list of all configured and active push notification subscriptions.",
+                "operationId" : "get-push-notification-subscriptions",
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "responses" : {
+                    "200" : {
+                        "description" : "Ok: Successfully processed the request.",
+                        "schema" : {
+                            "$ref" : "#/definitions/SubscriptionsResponse"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            },
+            "post" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Create push notification subscription",
+                "description" : "Create a push notification subscription for one (or more) of the available resources. The configured URL has to support https scheme.",
+                "operationId" : "post-push-notification-subscription",
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "parameters" : [ {
+                    "in" : "body",
+                    "name" : "body",
+                    "required" : false,
+                    "schema" : {
+                        "$ref" : "#/definitions/CreateSubscriptionRequest"
+                    }
+                } ],
+                "responses" : {
+                    "202" : {
+                        "description" : "Accepted: Successfully scheduled the request for processing.",
+                        "schema" : {
+                            "$ref" : "#/definitions/ProcessStatus"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/subscriptions/signature-keys" : {
+            "get" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Retrieve public keys for push notification signature validation.",
+                "description" : "Retrieve a list of public keys that should be used to validate the signature header for push notifications received from bol.com.",
+                "operationId" : "get-subscription-keys",
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "responses" : {
+                    "200" : {
+                        "description" : "Ok: Successfully processed the request.",
+                        "schema" : {
+                            "$ref" : "#/definitions/KeySetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/subscriptions/test/{subscription-id}" : {
+            "post" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Send test push notification for subscriptions",
+                "description" : "Send a test push notification to all subscriptions for the provided event.",
+                "operationId" : "post-test-push-notification",
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "parameters" : [ {
+                    "name" : "subscription-id",
+                    "in" : "path",
+                    "description" : "A unique identifier for the subscription.",
+                    "required" : true,
+                    "type" : "string",
+                    "x-example" : "1234"
+                } ],
+                "responses" : {
+                    "202" : {
+                        "description" : "Accepted: Successfully scheduled the request for processing.",
+                        "schema" : {
+                            "$ref" : "#/definitions/ProcessStatus"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/subscriptions/{subscription-id}" : {
+            "get" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Get push notification subscription by id",
+                "description" : "Retrieve a configured and active push notification subscription with the provided id.",
+                "operationId" : "get-push-notification-subscription",
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "parameters" : [ {
+                    "name" : "subscription-id",
+                    "in" : "path",
+                    "description" : "A unique identifier for the subscription.",
+                    "required" : true,
+                    "type" : "string",
+                    "x-example" : "1234"
+                } ],
+                "responses" : {
+                    "200" : {
+                        "description" : "Ok: Successfully processed the request.",
+                        "schema" : {
+                            "$ref" : "#/definitions/SubscriptionResponse"
+                        }
+                    },
+                    "404" : {
+                        "description" : "Not found: The requested item could not be found.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            },
+            "put" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Update push notification subscription",
+                "description" : "Update an existing push notification subscription with the supplied id. The configured URL has to support https scheme.",
+                "operationId" : "put-push-notification-subscription",
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "parameters" : [ {
+                    "name" : "subscription-id",
+                    "in" : "path",
+                    "description" : "A unique identifier for the subscription.",
+                    "required" : true,
+                    "type" : "string",
+                    "x-example" : "1234"
+                }, {
+                    "in" : "body",
+                    "name" : "body",
+                    "required" : false,
+                    "schema" : {
+                        "$ref" : "#/definitions/UpdateSubscriptionRequest"
+                    }
+                } ],
+                "responses" : {
+                    "202" : {
+                        "description" : "Accepted: Successfully scheduled the request for processing.",
+                        "schema" : {
+                            "$ref" : "#/definitions/ProcessStatus"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            },
+            "delete" : {
+                "tags" : [ "Subscriptions" ],
+                "summary" : "Delete push notification subscription",
+                "description" : "Delete a push notification subscription with the provided id.",
+                "operationId" : "delete-push-notification-subscription",
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
+                "parameters" : [ {
+                    "name" : "subscription-id",
+                    "in" : "path",
+                    "description" : "A unique identifier for the subscription.",
+                    "required" : true,
+                    "type" : "string",
+                    "x-example" : "1234"
+                } ],
+                "responses" : {
+                    "202" : {
+                        "description" : "Accepted: Successfully scheduled the request for processing.",
+                        "schema" : {
+                            "$ref" : "#/definitions/ProcessStatus"
+                        }
+                    },
+                    "400" : {
+                        "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "schema" : {
+                            "$ref" : "#/definitions/Problem"
+                        }
+                    }
+                }
+            }
+        },
         "/retailer/transports/{transport-id}" : {
             "put" : {
                 "tags" : [ "Transports" ],
                 "summary" : "Add transport information by transport id",
                 "description" : "Add information to an existing transport. The transport id is part of the shipment. You can retrieve the transport id through the GET shipment list request.",
                 "operationId" : "add-transport-information-by-transport-id",
-                "consumes" : [ "application/vnd.retailer.v5+json" ],
-                "produces" : [ "application/vnd.retailer.v5+json" ],
+                "consumes" : [ "application/vnd.retailer.v6+json" ],
+                "produces" : [ "application/vnd.retailer.v6+json" ],
                 "parameters" : [ {
                     "name" : "transport-id",
                     "in" : "path",
@@ -1849,6 +2080,27 @@
                     "type" : "string",
                     "example" : "Jan Jansen",
                     "description" : "Name of the person responsible for this replenishment."
+                }
+            }
+        },
+        "Asset" : {
+            "type" : "object",
+            "required" : [ "labels", "url" ],
+            "properties" : {
+                "url" : {
+                    "type" : "string",
+                    "example" : "http://example.com",
+                    "description" : "The url of the asset that will be used to do the actual uploading."
+                },
+                "labels" : {
+                    "type" : "array",
+                    "example" : "[ \"primary\" ]",
+                    "description" : "The labels characterizing the asset, for detailed information see the datamodel.",
+                    "items" : {
+                        "type" : "string"
+                    },
+                    "maxItems" : 2,
+                    "minItems" : 1
                 }
             }
         },
@@ -2302,7 +2554,7 @@
                 "unknownProductTitle" : {
                     "type" : "string",
                     "example" : "Unknown Product Title",
-                    "description" : "In case the item is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored.",
+                    "description" : "In case the product is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored.",
                     "minLength" : 0,
                     "maxLength" : 500
                 },
@@ -2437,7 +2689,7 @@
                 "orderItemId" : {
                     "type" : "string",
                     "example" : "2012345678",
-                    "description" : "The id for the order item (1 order can have multiple order items)."
+                    "description" : "The id for the order item. One order can have multiple order items, but the list can only take one item."
                 },
                 "quantityReturned" : {
                     "type" : "integer",
@@ -2455,13 +2707,38 @@
                 }
             }
         },
+        "CreateSubscriptionRequest" : {
+            "type" : "object",
+            "required" : [ "resources", "url" ],
+            "properties" : {
+                "resources" : {
+                    "type" : "array",
+                    "example" : "['PROCESS_STATUS']",
+                    "description" : "Type of event.",
+                    "items" : {
+                        "type" : "string",
+                        "enum" : [ "PROCESS_STATUS", "SHIPMENT", "OFFER" ]
+                    }
+                },
+                "url" : {
+                    "type" : "string",
+                    "example" : "https://www.bol.com/webhook",
+                    "description" : "URL to receive this WebHook notification.",
+                    "minLength" : 0,
+                    "maxLength" : 255,
+                    "pattern" : "^https.*"
+                }
+            }
+        },
         "CustomerDetails" : {
             "type" : "object",
+            "required" : [ "salutation" ],
             "properties" : {
-                "salutationCode" : {
+                "salutation" : {
                     "type" : "string",
                     "example" : "MALE",
-                    "description" : "The salutation of the customer."
+                    "description" : "The salutation of the customer.",
+                    "enum" : [ "MALE", "FEMALE", "UNKNOWN" ]
                 },
                 "firstName" : {
                     "type" : "string",
@@ -2483,7 +2760,7 @@
                     "example" : "1",
                     "description" : "The house number."
                 },
-                "houseNumberExtended" : {
+                "houseNumberExtension" : {
                     "type" : "string",
                     "example" : "B",
                     "description" : "The extension on the house number."
@@ -2531,6 +2808,19 @@
             },
             "description" : "Information related to the customer."
         },
+        "DeliveryDatesResponse" : {
+            "type" : "object",
+            "properties" : {
+                "deliveryDates" : {
+                    "type" : "array",
+                    "example" : "2021-01-02",
+                    "description" : "Allowed delivery dates for shipments to the bol.com warehouse in ISO 8601 format.",
+                    "items" : {
+                        "type" : "string"
+                    }
+                }
+            }
+        },
         "DeliveryInformation" : {
             "type" : "object",
             "required" : [ "destinationWarehouse", "expectedDeliveryDate", "transporterCode" ],
@@ -2554,12 +2844,17 @@
         },
         "DeliveryOption" : {
             "type" : "object",
-            "required" : [ "labelPrice", "packageRestrictions" ],
+            "required" : [ "labelDisplayName", "labelPrice", "labelType", "packageRestrictions", "recommended", "shippingLabelOfferId", "transporterCode" ],
             "properties" : {
                 "shippingLabelOfferId" : {
                     "type" : "string",
                     "example" : "027b79fa-5743-40f0-94c7-0eac761af611",
                     "description" : "Unique identifier for the shipping label offer."
+                },
+                "recommended" : {
+                    "type" : "boolean",
+                    "example" : false,
+                    "description" : "Indicates whether this delivery option is recommended to be the best option to ship your order item(s) with."
                 },
                 "validUntilDate" : {
                     "type" : "string",
@@ -2577,6 +2872,11 @@
                     "example" : "MAILBOX_LIGHT",
                     "description" : "The type of the label, representing the way an item is being transported. MAILBOX is a mailbox package with delivery scan. MAILBOX_LIGHT is a mailbox package without delivery scan. PARCEL is a normal package.",
                     "enum" : [ "PARCEL", "MAILBOX", "MAILBOX_LIGHT" ]
+                },
+                "labelDisplayName" : {
+                    "type" : "string",
+                    "example" : "PostNL & bol.com - Pakket",
+                    "description" : "The display name of the shipping label."
                 },
                 "labelPrice" : {
                     "$ref" : "#/definitions/LabelPrice"
@@ -2683,7 +2983,7 @@
                 "method" : {
                     "type" : "string",
                     "example" : "FBR",
-                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.",
+                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).",
                     "enum" : [ "FBR", "FBB" ]
                 },
                 "deliveryCode" : {
@@ -2802,8 +3102,42 @@
                 }
             }
         },
+        "KeySet" : {
+            "type" : "object",
+            "properties" : {
+                "id" : {
+                    "type" : "string",
+                    "example" : "0",
+                    "description" : "Key identifier. Maps to the keyId value in the signature header of the push request."
+                },
+                "type" : {
+                    "type" : "string",
+                    "example" : "RSA",
+                    "description" : "Key encryption type.",
+                    "enum" : [ "RSA" ]
+                },
+                "publicKey" : {
+                    "type" : "string",
+                    "example" : "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCDO7X3OGEqB6LU2ZQdznuYJX1KhCiJUB0+IwW9UjcgbU2Y/LzUIgGPT33s/+OqqMQOtXp2RV4JM6Zv5/YUZgZAqEIkvvrIYvJB8tXv73VQS2r4Ssy3Y/frJsqy8a3sDOoFeJygHYE6kVf3sOCdo4CO6PFUe7ZwsOSS2/7fNWAaMhY6tEuZwkA7ZLoSd3UHTdeKlV1TH5I3yFClMo1FwABsWzj9DhvEb6Q36j+QLJZAj0xvusJUsOjcSgyXRzVBFtwwNILzs9BO+GWRI4li+rjhaST2pNtvGfnQB5TUOO7Yegk/ucSiV1cFzy95gWQV2F0c9P1vBctETrYKxQBklBbjAgMBAAECggEAGISLVoi9/nA2x7VuqrLs/FvksItIV38UN4urgtddXT2OhcqSLL+9styTFjgofLXTCzx0iKwlCWsQ6U9Y9i6pdGL7GIplqBJ0WEXaGl2OeVXdwk2XOZv/sXsp24yzhapT/nmuKWvZvOtyl9//1vO5DPoQPExwpVUnHxji4SjDr6DuKVNDwh9Z4mVsdfdYVeLYGJ356IGWhTu/JDie4byl8B75UgbmyvfJRjQkoLpVZuhu+jkmhogpoSl6NtaKA+iFlGT9JLtGVHDn15kdEHb+dtzTzyJH40KGjQ7OiZcmA8GFft6zrNlOpyziH7fICtt0//7fR348/Z+XIYUFqfadQQKBgQDeVnqAlkt2Uab/1OjX9O8CRWqdoFLpUGDiHhkaXEylJtm1osFHGiyOi1eEQOy//lnJWKUp7c0b8D/QioP7kI38ES1mBx1KDzFgob4p/U+4R+z24SV/Q3CT6vHbfbe1XxWvE4SOdh4p7+Kuhxz1n6P0TWltvsTbpCJ9GM4wi2Z26QKBgQCXGiObkJI4Wv6RGxq76BHEDZdrLWppXh1+FYfyUaq6bfcSF86yAIRlleEJUh1V8KDw2DCX0rhO3BW0juEl5qz5RohLIxuak+2RbX6IQrVPwtCCeGQzKIRPktht+fi+eSaa5XNMLXURTzjVUdxzFwqDKp+7YQWL8DJ6qEfJGGYX6wKBgBXM8PIOypNtaiyHmdUjBRR57fxKrhaGdRl2zgtRpYpEBvDSZpUsMdZAP3KOUyh4LiGZ+Yfk80mcAwXVrx9Ji0J+BK+OXwbV+od5FIZVei2dj9SdOuoBmNZIITLeXtb/3cZu6X52gnqmNNncEbDb2F2qAX5rSC4pJ+CQQBduc7uRAoGAHzjxfqWi8S4sSAOXxJgxg5djYGwj/t3JrlH4o2OoqZkrYnu05CcjNHKB65EiKq3sM5gYgmayWukzOvoDH/fIakHey9fXTluezVwYt0NBf9e7ihoiakfG/0JSonbypTkXdw5OgsEp3YfHMJ0XtlhefbgDBY8IvF/HrnyzSKRYBD0CgYBlq6nIEZOIqngHdtskT8JOZBcniVPGjUjSiNcYQXfeMwKINUqDGC/YmpPgBOhO93ozeQTCBeeMD8nlbkTHPu7BxCCfpKj6/PPMfxmyFQyDg9ZjjHOIhUMddRw+mSq0zS212JbIr3O4eEtrXPqWfq5phxyE3dRvaX3A3wiEQN9WRA==",
+                    "description" : "The Base64 encoded public key to use when verifying the signature."
+                }
+            }
+        },
+        "KeySetResponse" : {
+            "type" : "object",
+            "required" : [ "signatureKeys" ],
+            "properties" : {
+                "signatureKeys" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "#/definitions/KeySet"
+                    }
+                }
+            }
+        },
         "LabelPrice" : {
             "type" : "object",
+            "required" : [ "totalPrice" ],
             "properties" : {
                 "totalPrice" : {
                     "type" : "number",
@@ -3030,7 +3364,7 @@
                 "method" : {
                     "type" : "string",
                     "example" : "FBR",
-                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR."
+                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB)."
                 },
                 "distributionParty" : {
                     "type" : "string",
@@ -3082,7 +3416,7 @@
                 "orderItemId" : {
                     "type" : "string",
                     "example" : "2012345678",
-                    "description" : "The id for the order item (1 order can have multiple order items)."
+                    "description" : "The id for the order item. One order can have multiple order items, but the list can only take one item."
                 },
                 "reasonCode" : {
                     "type" : "string",
@@ -3113,7 +3447,7 @@
                 "orderItemId" : {
                     "type" : "string",
                     "example" : "2012345678",
-                    "description" : "The id for the order item (1 order can have multiple order items)."
+                    "description" : "The id for the order item. One order can have multiple order items, but the list can only take one item."
                 },
                 "cancellationRequest" : {
                     "type" : "boolean",
@@ -3183,6 +3517,7 @@
         },
         "PackageRestrictions" : {
             "type" : "object",
+            "required" : [ "maxDimensions", "maxWeight" ],
             "properties" : {
                 "maxWeight" : {
                     "type" : "string",
@@ -3405,6 +3740,7 @@
         },
         "Problem" : {
             "type" : "object",
+            "required" : [ "violations" ],
             "properties" : {
                 "type" : {
                     "type" : "string",
@@ -3486,7 +3822,7 @@
                 "createTimestamp" : {
                     "type" : "string",
                     "format" : "date-time",
-                    "example" : "2020-10-01T09:34:41+01:00",
+                    "example" : "2018-11-14T09:34:41+01:00",
                     "description" : "Time of creation of the response."
                 },
                 "links" : {
@@ -3539,6 +3875,14 @@
                     },
                     "maxItems" : 150,
                     "minItems" : 1
+                },
+                "assets" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "#/definitions/Asset"
+                    },
+                    "maxItems" : 30,
+                    "minItems" : 0
                 }
             }
         },
@@ -3560,8 +3904,7 @@
                 "status" : {
                     "type" : "string",
                     "example" : "VALIDATED_WITH_ATTRIBUTE_FAILURES",
-                    "description" : "The end status of the rejected attribute.",
-                    "enum" : [ "VALIDATED_OK", "VALIDATED_WITH_ATTRIBUTE_FAILURES", "REJECTED", "REJECTED_WITH_ATTRIBUTE_FAILURES" ]
+                    "description" : "The end status of the rejected attribute."
                 },
                 "errorCode" : {
                     "type" : "integer",
@@ -3575,7 +3918,7 @@
                     "description" : "The rejection error message explains why the value was rejected."
                 }
             },
-            "description" : "An rejected product content."
+            "description" : "A rejected product content."
         },
         "ProductLabelsProduct" : {
             "type" : "object",
@@ -3658,7 +4001,7 @@
                 "orderItemId" : {
                     "type" : "string",
                     "example" : "2012345678",
-                    "description" : "The id for the order item (1 order can have multiple order items)."
+                    "description" : "The id for the order item. One order can have multiple order items, but the list can only take one item."
                 },
                 "ean" : {
                     "type" : "string",
@@ -3762,7 +4105,7 @@
                 "fulfilmentMethod" : {
                     "type" : "string",
                     "example" : "FBR",
-                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR."
+                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB)."
                 },
                 "returnItems" : {
                     "type" : "array",
@@ -3818,9 +4161,8 @@
             "required" : [ "order", "shipmentItems", "transport" ],
             "properties" : {
                 "shipmentId" : {
-                    "type" : "integer",
-                    "format" : "int64",
-                    "example" : 541757635,
+                    "type" : "string",
+                    "example" : "541757635",
                     "description" : "A unique identifier for this shipment."
                 },
                 "shipmentDateTime" : {
@@ -3883,16 +4225,15 @@
             "type" : "object",
             "properties" : {
                 "transportId" : {
-                    "type" : "integer",
-                    "format" : "int64",
-                    "example" : 312778947,
+                    "type" : "string",
+                    "example" : "312778947",
                     "description" : "The transport id."
                 }
             }
         },
         "Reduction" : {
             "type" : "object",
-            "required" : [ "costReduction", "endDate", "maximumPrice", "startDate" ],
+            "required" : [ "costReduction", "maximumPrice", "startDate" ],
             "properties" : {
                 "maximumPrice" : {
                     "type" : "number",
@@ -3934,7 +4275,7 @@
                     }
                 }
             },
-            "description" : "An rejected attribute."
+            "description" : "A rejected attribute."
         },
         "RejectionError" : {
             "type" : "object",
@@ -4143,7 +4484,7 @@
                 "unknownProductTitle" : {
                     "type" : "string",
                     "example" : "Unknown Product Title",
-                    "description" : "In case the item is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored."
+                    "description" : "In case the product is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored."
                 },
                 "pricing" : {
                     "$ref" : "#/definitions/Pricing"
@@ -4186,7 +4527,7 @@
                 "fulfilmentMethod" : {
                     "type" : "string",
                     "example" : "FBR",
-                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR."
+                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB)."
                 },
                 "returnItems" : {
                     "type" : "array",
@@ -4257,7 +4598,7 @@
         },
         "ReturnProcessingResult" : {
             "type" : "object",
-            "required" : [ "handlingResult", "processingDateTime", "processingResult", "quantity" ],
+            "required" : [ "handlingResult", "processingDateTime", "quantity" ],
             "properties" : {
                 "quantity" : {
                     "type" : "integer",
@@ -4398,13 +4739,13 @@
                 "numerator" : {
                     "type" : "integer",
                     "format" : "int32",
-                    "example" : 10,
+                    "example" : 5,
                     "description" : "The top part of the fraction (above the line). This usually is the smaller number compared to the denominator."
                 },
                 "denominator" : {
                     "type" : "integer",
                     "format" : "int32",
-                    "example" : 5,
+                    "example" : 10,
                     "description" : "The lower part of the fraction (below the line). This usually is the larger number compared to the the numerator."
                 },
                 "value" : {
@@ -4517,9 +4858,8 @@
             "required" : [ "order", "shipmentItems" ],
             "properties" : {
                 "shipmentId" : {
-                    "type" : "integer",
-                    "format" : "int64",
-                    "example" : 541757635,
+                    "type" : "string",
+                    "example" : "541757635",
                     "description" : "A unique identifier for this shipment."
                 },
                 "shipmentDateTime" : {
@@ -4647,7 +4987,7 @@
                 "method" : {
                     "type" : "string",
                     "example" : "FBR",
-                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). Defaults to FBR.",
+                    "description" : "Specifies whether this shipment has been fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).",
                     "enum" : [ "FBR", "FBB" ]
                 },
                 "distributionParty" : {
@@ -4721,7 +5061,7 @@
             "properties" : {
                 "orderItems" : {
                     "type" : "array",
-                    "description" : "List of order items to ship. Order item id's must belong to the same order.",
+                    "description" : "Single element list with the order item to ship.",
                     "items" : {
                         "$ref" : "#/definitions/OrderItem"
                     },
@@ -4731,7 +5071,7 @@
                 "shipmentReference" : {
                     "type" : "string",
                     "example" : "B321SR",
-                    "description" : "A user-defined reference that you can provide to add to the shipment. Can be used for own administration purposes.",
+                    "description" : "A user-defined reference that you can provide to add to the shipment. Can be used for own administration purposes. Only 'null' or non-empty strings accepted.",
                     "minLength" : 0,
                     "maxLength" : 90
                 },
@@ -4749,9 +5089,8 @@
             "type" : "object",
             "properties" : {
                 "transportId" : {
-                    "type" : "integer",
-                    "format" : "int64",
-                    "example" : 312778947,
+                    "type" : "string",
+                    "example" : "312778947",
                     "description" : "The transport id."
                 },
                 "transporterCode" : {
@@ -4768,6 +5107,12 @@
                     "type" : "string",
                     "example" : "123456789",
                     "description" : "The shipping label id."
+                },
+                "transportEvents" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "#/definitions/TransportEvent"
+                    }
                 }
             }
         },
@@ -4834,7 +5179,7 @@
                     "type" : "integer",
                     "format" : "int32",
                     "example" : 5,
-                    "description" : "The amount of items in stock minus handled order and minus open orders. As compared to the stock you sent us. When this reaches zero, your offer will not be for sale on the shop."
+                    "description" : "The amount of items in stock minus handled order and minus open orders. As compared to the stock you sent us. When this reaches 0, your offer will not be for sale on the shop."
                 },
                 "managedByRetailer" : {
                     "type" : "boolean",
@@ -4879,6 +5224,42 @@
                 }
             }
         },
+        "SubscriptionResponse" : {
+            "type" : "object",
+            "required" : [ "id", "resources", "url" ],
+            "properties" : {
+                "id" : {
+                    "type" : "string",
+                    "example" : "1234",
+                    "description" : "A unique identifier for the subscription."
+                },
+                "resources" : {
+                    "type" : "array",
+                    "example" : "['PROCESS_STATUS']",
+                    "description" : "Type of event.",
+                    "items" : {
+                        "type" : "string"
+                    }
+                },
+                "url" : {
+                    "type" : "string",
+                    "example" : "https://www.bol.com/webhook",
+                    "description" : "URL to receive this WebHook notification."
+                }
+            }
+        },
+        "SubscriptionsResponse" : {
+            "type" : "object",
+            "required" : [ "subscriptions" ],
+            "properties" : {
+                "subscriptions" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "#/definitions/SubscriptionResponse"
+                    }
+                }
+            }
+        },
         "Total" : {
             "type" : "object",
             "required" : [ "maximum", "minimum" ],
@@ -4915,6 +5296,23 @@
                     "items" : {
                         "$ref" : "#/definitions/SearchTermsCountry"
                     }
+                }
+            }
+        },
+        "TransportEvent" : {
+            "type" : "object",
+            "properties" : {
+                "eventCode" : {
+                    "type" : "string",
+                    "example" : "AT_TRANSPORTER",
+                    "description" : "The transport event code indicates the location of the parcel within the distribution process.",
+                    "enum" : [ "PRE_ANNOUNCED", "AT_TRANSPORTER", "IN_TRANSIT", "DELIVERED_AT_NEIGHBOURS", "DELIVERED_AT_CUSTOMER", "PICKED_UP_AT_PICK_UP_POINT", "AT_PICK_UP_POINT", "RETURNED_TO_SENDER" ]
+                },
+                "eventDateTime" : {
+                    "type" : "string",
+                    "format" : "date-time",
+                    "example" : "2021-07-28T17:21:07+02:00",
+                    "description" : "The date time of the transport event."
                 }
             }
         },
@@ -4981,7 +5379,7 @@
                 "unknownProductTitle" : {
                     "type" : "string",
                     "example" : "Unknown Product Title",
-                    "description" : "In case the item is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored.",
+                    "description" : "In case the product is not known to bol.com you can use this field to identify this particular product. Note: in case the product is known to bol.com, the unknown product title will not be stored.",
                     "minLength" : 0,
                     "maxLength" : 500
                 },
@@ -5036,6 +5434,27 @@
                     },
                     "maxItems" : 50,
                     "minItems" : 1
+                }
+            }
+        },
+        "UpdateSubscriptionRequest" : {
+            "type" : "object",
+            "required" : [ "resources", "url" ],
+            "properties" : {
+                "resources" : {
+                    "type" : "array",
+                    "example" : "['PROCESS_STATUS']",
+                    "description" : "Type of event.",
+                    "items" : {
+                        "type" : "string",
+                        "enum" : [ "PROCESS_STATUS", "SHIPMENT", "OFFER" ]
+                    }
+                },
+                "url" : {
+                    "type" : "string",
+                    "example" : "https://www.bol.com/webhook",
+                    "description" : "URL to receive this WebHook notification.",
+                    "pattern" : "^https.*"
                 }
             }
         },

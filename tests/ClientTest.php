@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Picqer\BolRetailerV5\Tests;
+namespace Picqer\BolRetailerV6\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use Picqer\BolRetailerV5\Client;
+use Picqer\BolRetailerV6\Client;
 use GuzzleHttp\Client as HttpClient;
-use Picqer\BolRetailerV5\Model\AbstractModel;
-use Picqer\BolRetailerV5\Model\OrderItem;
+use Picqer\BolRetailerV6\Model\AbstractModel;
+use Picqer\BolRetailerV6\Model\OrderItem;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
