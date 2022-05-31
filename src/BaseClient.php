@@ -37,10 +37,12 @@ class BaseClient
 
     /**
      * BaseClient constructor.
+     *
+     * @param array $options The options to use for the default HTTP client.
      */
-    public function __construct()
+    public function __construct(array $options = [])
     {
-        $this->setHttp(new HttpClient());
+        $this->setHttp(new HttpClient($options));
     }
 
     /**

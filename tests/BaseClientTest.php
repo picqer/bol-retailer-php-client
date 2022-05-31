@@ -50,6 +50,16 @@ class BaseClientTest extends TestCase
         $this->modelClass = get_class($stub);
     }
 
+    public function testClientHasDefaultHttpRequestOptions()
+    {
+        $client = new BaseClient([
+            'timeout' => 10,
+        ]);
+
+        $http = $client->getHttp();
+        $this->assertEquals(10, $http->getConfig('timeout'));
+    }
+
     public function testClientIsInitiallyNotAuthenticated()
     {
         $this->assertFalse($this->client->isAuthenticated());
