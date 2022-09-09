@@ -1,19 +1,19 @@
 <?php
 
 
-namespace Picqer\BolRetailerV5\Tests;
+namespace Picqer\BolRetailerV6\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use Picqer\BolRetailerV5\BaseClient;
-use Picqer\BolRetailerV5\Exception\RateLimitException;
-use Picqer\BolRetailerV5\Exception\ResponseException;
-use Picqer\BolRetailerV5\Exception\ServerException;
-use Picqer\BolRetailerV5\Exception\UnauthorizedException;
-use Picqer\BolRetailerV5\Model\AbstractModel;
+use Picqer\BolRetailerV6\BaseClient;
+use Picqer\BolRetailerV6\Exception\RateLimitException;
+use Picqer\BolRetailerV6\Exception\ResponseException;
+use Picqer\BolRetailerV6\Exception\ServerException;
+use Picqer\BolRetailerV6\Exception\UnauthorizedException;
+use Picqer\BolRetailerV6\Model\AbstractModel;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;

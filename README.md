@@ -1,17 +1,17 @@
 # Bol.com Retailer API client for PHP
-This is an open source PHP client for the [Bol.com Retailer API](https://api.bol.com/retailer/public/Retailer-API/v5/releasenotes.html) version 5.
+This is an open source PHP client for the [Bol.com Retailer API](https://api.bol.com/retailer/public/Retailer-API/v6/releasenotes.html) version 6.
 
 ## Installation
 This project can easily be installed through Composer:
 
 ```
-composer require picqer/bol-retailer-php-client "^5"
+composer require picqer/bol-retailer-php-client "^6"
 ```
 
 ## Usage
 Create an instance of the client and authenticate
 ```php
-$client = new \Picqer\BolRetailerV5\Client();
+$client = new \Picqer\BolRetailerV6\Client();
 $client->authenticate('your-client-id', 'your-client-secret');
 ```
 
@@ -25,7 +25,7 @@ foreach ($reducedOrders as $reducedOrder) {
 ```
 
 ## Exceptions
-Methods on the Client may throw Exceptions. All Exceptions have the parent class `Picqer\BolRetailerV5\Exception\Exception`:
+Methods on the Client may throw Exceptions. All Exceptions have the parent class `Picqer\BolRetailerV6\Exception\Exception`:
 - `ConnectException` is thrown when a problem occurred in the connection (e.g. API server is down or a network issue). You may retry later.
 - `ServerException` (extends `ConnectException`) is thrown when a problem occurred on the Server (e.g. 500 Internal Server Error). You may retry later.
 - `ResponseException` is thrown when the received response could not be handled (e.g. not of proper format or unexpected type). Retrying will not help, investigation is needed.
@@ -50,7 +50,7 @@ The specifications define types for each request and response (if it needs to se
 
 To generate the Client, the following composer script may be used:
 ```
-# Generates Picqer\BolRetailerV5\Client
+# Generates Picqer\BolRetailerV6\Client
 composer run-script generate-client
 ```
 
@@ -59,7 +59,7 @@ The class names for models are equal to the keys of the array 'definitions' in t
 
 To generate the Models, the following composer script may be used:
 ```
-# Generates all Picqer\BolRetailerV5\Model\* models
+# Generates all Picqer\BolRetailerV6\Model\* models
 composer run-script generate-models
 ```
 
