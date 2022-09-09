@@ -22,10 +22,11 @@
         "guzzlehttp/guzzle": "^6.3|^7.0"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12",
-        "phpunit/phpunit": "^7|^8",
+        "phpspec/prophecy": "^1.15",
+        "phpstan/phpstan": "^1.8",
+        "phpunit/phpunit": "^7|^8|^9",
         "squizlabs/php_codesniffer": "^3.0",
-        "vimeo/psalm": "^3.5"
+        "vimeo/psalm": "^4.27"
     },
     "autoload": {
         "psr-4": {
