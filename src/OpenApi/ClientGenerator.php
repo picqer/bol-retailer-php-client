@@ -225,7 +225,7 @@ class ClientGenerator
 
     protected function getUrl(string $path, array $arguments): string
     {
-        $url = substr($path, strlen('/retailer/'));
+        $url = substr($path, strlen('/'));
 
         foreach ($arguments as $argument) {
             if ($argument['in'] != 'path') {

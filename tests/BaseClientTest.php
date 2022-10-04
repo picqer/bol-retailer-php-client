@@ -382,7 +382,7 @@ class BaseClientTest extends TestCase
             ->with('GET', 'https://api.bol.com/retailer/foobar')
             ->willReturn($response);
 
-        $this->client->request('GET', 'foobar', [], [
+        $this->client->request('GET', 'retailer/foobar', [], [
             '200' => 'string'
         ]);
     }

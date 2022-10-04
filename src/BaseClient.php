@@ -20,7 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 class BaseClient
 {
     protected const API_TOKEN_URI = 'https://login.bol.com/token';
-    protected const API_ENDPOINT = 'https://api.bol.com/retailer/';
+    protected const API_ENDPOINT = 'https://api.bol.com/';
     protected const API_DEMO_ENDPOINT = 'https://api.bol.com/retailer-demo/';
     protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v8+json';
 
