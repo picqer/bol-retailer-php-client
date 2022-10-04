@@ -68,7 +68,7 @@ composer run-script generate-models
 
 ### Known quirks
 - Some type definitions in de specifications are sentences, for example 'Container for the order items that have to be cancelled.'. These are converted to CamelCase and dots are removed.
-- Some operations in the specifications have no response type specified, while there is a response. Currently, this is only the case for operations that return CSV.
+- Some operations (get-offer-export and get-unpublished-offer-report) in the specifications have no response schema (type) specified, while there is a response. Currently, this is only the case for operations that return CSV.
 - There a type 'Return' defined in the specifications. As this is a reserved keyword in PHP, it can't be used as class name for the model (in PHP <= 7), so for now it's replaced with 'ReturnObject'.
 - If an array field in a response is empty, the field is (sometimes?) omitted from the response. E.g. the raw JSON response for getOrders is
   ```
@@ -80,4 +80,5 @@ composer run-script generate-models
     "orders": [ ]
   }
   ``` 
-- Operation 'Get all invoices' is specified to have a string as response, while there is clearly some data model returned in JSON or XML.
+- Operation 'get-invoices' is specified to have a string as response, while there is clearly some data model returned in JSON or XML.
+- The description of the operation 'get-invoices' contains a weird space marked as 'ENSP'.
