@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV5\Model;
+namespace Picqer\BolRetailerV8\Model;
 
 abstract class AbstractModel
 {

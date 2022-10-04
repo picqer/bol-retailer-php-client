@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV5\Exception;
+namespace Picqer\BolRetailerV8\Exception;
 
 class ResponseException extends Exception
 {
