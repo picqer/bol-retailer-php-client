@@ -1563,4 +1563,97 @@ class Client extends BaseClient
 
         return $this->request('PUT', $url, $options, $responseTypes);
     }
+
+    /**
+     * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE
+     * requests in descending order. You need to supply an entity id and event type. Please note: process status
+     * instances are only retained for a limited period of time after completion. Outside of this period, deleted
+     * process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for
+     * these statuses.
+     * @param string $entityId The entity id is not unique, so you will need to provide an event type. For example, an
+     * entity id can be an order item id, transport id, return number, replenishment id, campaign id, and keyword id.
+     * @param string $eventType The event type can only be used in combination with the entity id.
+     * @param int|null $page The requested page number with a page size of 50 items.
+     * @return Model\ProcessStatus[]
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getProcessStatusEntityId(string $entityId, string $eventType, ?int $page = 1): array
+    {
+        $url = "shared/process-status";
+        $options = [
+            'query' => [
+                'entity-id' => $entityId,
+                'event-type' => $eventType,
+                'page' => $page,
+            ],
+            'produces' => 'application/vnd.retailer.v8+json',
+        ];
+        $responseTypes = [
+            '200' => Model\ProcessStatusResponse::class,
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes)->processStatuses;
+    }
+
+    /**
+     * Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE
+     * requests. No more than 1000 process status id's can be sent in a single request. Please note: process status
+     * instances are only retained for a limited period of time after completion. Outside of this period, deleted
+     * process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for
+     * these statuses.
+     * @param Model\ProcessStatusId[] $processStatusQueries
+     * @return Model\ProcessStatus[]
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getProcessStatusBulk(array $processStatusQueries): array
+    {
+        $url = "shared/process-status";
+        $options = [
+            'body' => Model\BulkProcessStatusRequest::constructFromArray(['processStatusQueries' => $processStatusQueries]),
+            'produces' => 'application/vnd.retailer.v8+json',
+        ];
+        $responseTypes = [
+            '200' => Model\ProcessStatusResponse::class,
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes)->processStatuses;
+    }
+
+    /**
+     * Retrieve a specific process status, which shows information regarding a previously executed PUT/POST/DELETE
+     * request. All PUT/POST/DELETE requests on the other endpoints will supply a process status id in the related
+     * response. You can use this id to retrieve a status by using the endpoint below. Please note: process status
+     * instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be
+     * returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these
+     * statuses.
+     * @param string $processStatusId The id of the process status being requested. This id is supplied in every
+     * response to a PUT/POST/DELETE request on the other endpoints.
+     * @return Model\ProcessStatus|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getProcessStatus(string $processStatusId): ?Model\ProcessStatus
+    {
+        $url = "shared/process-status/${processStatusId}";
+        $options = [
+            'produces' => 'application/vnd.retailer.v8+json',
+        ];
+        $responseTypes = [
+            '200' => Model\ProcessStatus::class,
+            '404' => 'null',
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
+    }
 }

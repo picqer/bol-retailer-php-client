@@ -18,7 +18,8 @@ class ModelGenerator
 
     public function __construct()
     {
-        $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json');
+        $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json')
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared.json'));
 
         $this->specs = $retailer->getSpecs();
     }
