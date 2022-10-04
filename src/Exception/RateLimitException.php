@@ -8,9 +8,8 @@ class RateLimitException extends RequestException
     /** @var null|int  */
     protected $retryAfter = null;
 
-    public function __construct(string $message, int $code, ?int $retryAfter)
+    public function setRetryAfter(?int $retryAfter): void
     {
-        parent::__construct($message, $code);
         $this->retryAfter = $retryAfter;
     }
 
