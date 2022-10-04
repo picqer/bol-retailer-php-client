@@ -18,7 +18,9 @@ class ModelGenerator
 
     public function __construct()
     {
-        $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
+        $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json');
+
+        $this->specs = $retailer->getSpecs();
     }
 
     public static function run()

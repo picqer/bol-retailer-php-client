@@ -23,16 +23,9 @@ class ClientGenerator
 
     public function __construct()
     {
-        $this->specs = json_decode($this->fixCharacters(file_get_contents(__DIR__ . '/apispec.json')), true);
-    }
+        $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json');
 
-    protected function fixCharacters(string $content): string
-    {
-        $replacements = [
-            ' ' => ' ', // 'ENSP' space
-        ];
-
-        return str_replace(array_keys($replacements), array_values($replacements), $content);
+        $this->specs = $retailer->getSpecs();
     }
 
     public static function run()
