@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV8\BaseClient;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
+use Picqer\BolRetailerV8\Exception\RequestException;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\ServerException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
@@ -107,16 +108,7 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrowException($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionCode(401);
@@ -133,21 +125,39 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrowException($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
-        $this->expectException(RateLimitException::class);
-        $this->expectExceptionCode(429);
-        $this->expectExceptionMessage("Too many requests, retry in 4 seconds.");
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $actualException = null;
+        try {
+            $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        } catch (RateLimitException $actualException) {
+        }
+
+        $this->assertInstanceOf(RateLimitException::class, $actualException);
+        $this->assertEquals(429, $actualException->getCode());
+        $this->assertEquals(4, $actualException->getRetryAfter());
+    }
+
+    public function testRateLimitWithoutRetryAfter()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/429-too-many-requests-without-retry-after'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $this->httpClientMock->method('request')->willThrowException($clientException);
+
+        $actualException = null;
+        try {
+            $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        } catch (RateLimitException $actualException) {
+        }
+
+        $this->assertInstanceOf(RateLimitException::class, $actualException);
+        $this->assertEquals(429, $actualException->getCode());
+        $this->assertNull($actualException->getRetryAfter());
     }
 
     public function testAuthenticateThrowsResponseExceptionAtForbidden()
@@ -159,16 +169,7 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrowException($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $this->expectException(ResponseException::class);
         $this->expectExceptionCode(403);
@@ -185,16 +186,7 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrowException($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $this->expectException(ServerException::class);
         $this->expectExceptionCode(500);
@@ -226,15 +218,7 @@ class BaseClientTest extends TestCase
     public function testAuthenticateThrowsResponseExceptionWhenTokenIsMalformed($response)
     {
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $this->expectException(ResponseException::class);
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
