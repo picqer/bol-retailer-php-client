@@ -329,7 +329,7 @@ class Client extends BaseClient
      * Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and
      * period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past,
      * the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in
-     * different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’
+     * different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’
      * calls. The available media types differ per invoice and are listed per invoice within the response. Note: the
      * media types listed in the response must be given in our standard API format.
      * @param string|null $periodStartDate Period start date in ISO 8601 standard.

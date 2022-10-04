@@ -23,7 +23,16 @@ class ClientGenerator
 
     public function __construct()
     {
-        $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
+        $this->specs = json_decode($this->fixCharacters(file_get_contents(__DIR__ . '/apispec.json')), true);
+    }
+
+    protected function fixCharacters(string $content): string
+    {
+        $replacements = [
+            ' ' => ' ', // 'ENSP' space
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $content);
     }
 
     public static function run()
