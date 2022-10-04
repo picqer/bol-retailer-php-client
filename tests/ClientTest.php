@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Picqer\BolRetailerV5\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
@@ -11,9 +10,6 @@ use Picqer\BolRetailerV5\Client;
 use GuzzleHttp\Client as HttpClient;
 use Picqer\BolRetailerV5\Model\AbstractModel;
 use Picqer\BolRetailerV5\Model\OrderItem;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class ClientTest extends TestCase
 {
@@ -21,14 +17,14 @@ class ClientTest extends TestCase
     /** @var Client */
     private $client;
 
-    /** @var ObjectProphecy */
-    private $httpProphecy;
+    /** @var HttpClient */
+    private $httpClientMock;
 
     public function setup(): void
     {
-        $this->httpProphecy = $this->prophesize(HttpClient::class);
+        $this->httpClientMock = $this->createMock(HttpClient::class);
         $this->client = new Client();
-        $this->client->setHttp($this->httpProphecy->reveal());
+        $this->client->setHttp($this->httpClientMock);
 
         $this->authenticate();
     }
@@ -37,8 +33,10 @@ class ClientTest extends TestCase
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
 
+        $httpClientMock = $this->createMock(HttpClient::class);
+
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
+        $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . $credentials
@@ -48,13 +46,19 @@ class ClientTest extends TestCase
             ]
         ])->willReturn($response);
 
+        // use the HttpClient mock created in this method for authentication, put the original one back afterwards
+        $prevHttpClient = $this->client->getHttp();
+        $this->client->setHttp($httpClientMock);
+
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+
+        $this->client->setHttp($prevHttpClient);
     }
 
     public function testMethodReturnsModel()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-order'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $order = $this->client->getOrder('test');
         $this->assertInstanceOf(AbstractModel::class, $order);
@@ -63,7 +67,7 @@ class ClientTest extends TestCase
     public function testMethodUnwrapsMonoFieldResponse()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-reduced-orders'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $reducedOrders = $this->client->getOrders();
         $this->assertIsArray($reducedOrders);
@@ -78,7 +82,7 @@ class ClientTest extends TestCase
             $response
         );
 
-        $this->httpProphecy->request(Argument::cetera())->willThrow($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $deliveryOptions = $this->client->getDeliveryOptions([]);
 
@@ -88,9 +92,8 @@ class ClientTest extends TestCase
     public function testMethodWrapsScalarArgumentToMonoFieldRequest()
     {
         $body = null;
-        $this->httpProphecy->request('POST', Argument::any(), Argument::any())
-            ->will(function ($args) use (&$body) {
-                $options = $args[2];
+        $this->httpClientMock->method('request')->with('POST')
+            ->willReturnCallback(function ($method, $uri, $options) use (&$body) {
                 $body = $options['body'] ?? '';
                 return Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/202-offers-export'));
             });
@@ -107,9 +110,8 @@ class ClientTest extends TestCase
     public function testMethodWrapsArrayArgumentToMonoFieldRequest()
     {
         $body = null;
-        $this->httpProphecy->request('POST', Argument::any(), Argument::any())
-            ->will(function ($args) use (&$body) {
-                $options = $args[2];
+        $this->httpClientMock->method('request')->with('POST')
+            ->willReturnCallback(function ($method, $uri, $options) use (&$body) {
                 $body = $options['body'] ?? '';
                 return Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-delivery-options'));
             });
@@ -134,7 +136,7 @@ class ClientTest extends TestCase
     public function testMethodWithMissingFieldDueToEmptyArrayReturnsEmptyArray()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-reduced-orders-empty'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $reducedOrders = $this->client->getOrders();
         $this->assertEquals([], $reducedOrders);
