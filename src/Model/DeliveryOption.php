@@ -16,9 +16,11 @@ class DeliveryOption extends AbstractModel
     {
         return [
             'shippingLabelOfferId' => [ 'model' => null, 'array' => false ],
+            'recommended' => [ 'model' => null, 'array' => false ],
             'validUntilDate' => [ 'model' => null, 'array' => false ],
             'transporterCode' => [ 'model' => null, 'array' => false ],
             'labelType' => [ 'model' => null, 'array' => false ],
+            'labelDisplayName' => [ 'model' => null, 'array' => false ],
             'labelPrice' => [ 'model' => LabelPrice::class, 'array' => false ],
             'packageRestrictions' => [ 'model' => PackageRestrictions::class, 'array' => false ],
             'handoverDetails' => [ 'model' => HandoverDetails::class, 'array' => false ],
@@ -29,6 +31,12 @@ class DeliveryOption extends AbstractModel
      * @var string Unique identifier for the shipping label offer.
      */
     public $shippingLabelOfferId;
+
+    /**
+     * @var bool Indicates whether this delivery option is recommended to be the best option to ship your order item(s)
+     * with.
+     */
+    public $recommended;
 
     /**
      * @var string The date until the delivery option (incl total price) is valid.
@@ -45,6 +53,11 @@ class DeliveryOption extends AbstractModel
      * package with delivery scan. MAILBOX_LIGHT is a mailbox package without delivery scan. PARCEL is a normal package.
      */
     public $labelType;
+
+    /**
+     * @var string The display name of the shipping label.
+     */
+    public $labelDisplayName;
 
     /**
      * @var LabelPrice

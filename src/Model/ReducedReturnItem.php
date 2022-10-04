@@ -26,7 +26,7 @@ class ReducedReturnItem extends AbstractModel
     }
 
     /**
-     * @var string The RMA (Return Merchandise Authorization) id that identifies this particular return.
+     * @var string The RMA (Return Merchandise Authorization) identifier of the return.
      */
     public $rmaId;
 

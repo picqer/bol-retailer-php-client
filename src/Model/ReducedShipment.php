@@ -25,7 +25,7 @@ class ReducedShipment extends AbstractModel
     }
 
     /**
-     * @var int A unique identifier for this shipment.
+     * @var string A unique identifier for this shipment.
      */
     public $shipmentId;
 
@@ -65,18 +65,18 @@ class ReducedShipment extends AbstractModel
 
     /**
      * Returns transportId from transport.
-     * @return int TransportId from transport.
+     * @return string TransportId from transport.
      */
-    public function getTransportId(): int
+    public function getTransportId(): string
     {
         return $this->transport->transportId;
     }
 
     /**
      * Sets transport by transportId.
-     * @param int $transportId TransportId for transport.
+     * @param string $transportId TransportId for transport.
      */
-    public function setTransportId(int $transportId): void
+    public function setTransportId(string $transportId): void
     {
         $this->transport = ReducedTransport::constructFromArray(['transportId' => $transportId]);
     }

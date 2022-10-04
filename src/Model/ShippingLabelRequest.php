@@ -15,13 +15,13 @@ class ShippingLabelRequest extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'orderItems' => [ 'model' => OrderItem::class, 'array' => true ],
+            'orderItems' => [ 'model' => DeliveryOptionsRequestOrderItem::class, 'array' => true ],
             'shippingLabelOfferId' => [ 'model' => null, 'array' => false ],
         ];
     }
 
     /**
-     * @var OrderItem[] Order items for which the delivery options are requested.
+     * @var DeliveryOptionsRequestOrderItem[] Order items for which the delivery options are requested.
      */
     public $orderItems = [];
 
@@ -48,16 +48,16 @@ class ShippingLabelRequest extends AbstractModel
     public function setOrderItemIds(array $orderItemIds): void
     {
         $this->orderItems = array_map(function ($orderItemId) {
-            return OrderItem::constructFromArray(['orderItemId' => $orderItemId]);
+            return DeliveryOptionsRequestOrderItem::constructFromArray(['orderItemId' => $orderItemId]);
         }, $orderItemIds);
     }
 
     /**
-     * Adds a new OrderItem to orderItems by orderItemId.
-     * @param string $orderItemId OrderItemId for the OrderItem to add.
+     * Adds a new DeliveryOptionsRequestOrderItem to orderItems by orderItemId.
+     * @param string $orderItemId OrderItemId for the DeliveryOptionsRequestOrderItem to add.
      */
     public function addOrderItemId(string $orderItemId): void
     {
-        $this->orderItems[] = OrderItem::constructFromArray(['orderItemId' => $orderItemId]);
+        $this->orderItems[] = DeliveryOptionsRequestOrderItem::constructFromArray(['orderItemId' => $orderItemId]);
     }
 }

@@ -28,8 +28,8 @@ class Stock extends AbstractModel
     public $amount;
 
     /**
-     * @var int The amount of items in stock minus handled order and minus open orders. As compared to the stock you
-     * sent us. When this reaches zero, your offer will not be for sale on the shop.
+     * @var int The amount of order items in stock minus handled order items and minus open order items. As compared to
+     * the stock you sent us. When this reaches 0, your offer will not be for sale on the shop.
      */
     public $correctedStock;
 

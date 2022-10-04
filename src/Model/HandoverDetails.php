@@ -16,6 +16,7 @@ class HandoverDetails extends AbstractModel
     {
         return [
             'meetsCustomerExpectation' => [ 'model' => null, 'array' => false ],
+            'earliestHandoverDateTime' => [ 'model' => null, 'array' => false ],
             'latestHandoverDateTime' => [ 'model' => null, 'array' => false ],
             'collectionMethod' => [ 'model' => null, 'array' => false ],
         ];
@@ -29,6 +30,12 @@ class HandoverDetails extends AbstractModel
     public $meetsCustomerExpectation;
 
     /**
+     * @var string The date and time at which the parcel can be earliest  at the transporter to make sure your parcel is
+     * delivered on time.
+     */
+    public $earliestHandoverDateTime;
+
+    /**
      * @var string The date and time at which the parcel must ultimately be at the transporter to make sure your parcel
      * is delivered on time. If you handover after this date you will receive a strike because you order will be
      * delivered too late.
@@ -39,6 +46,15 @@ class HandoverDetails extends AbstractModel
      * @var string The type of collection for this parcel.
      */
     public $collectionMethod;
+
+    public function getEarliestHandoverDateTime(): ?\DateTime
+    {
+        if (empty($this->earliestHandoverDateTime)) {
+            return null;
+        }
+
+        return \DateTime::createFromFormat(\DateTime::ATOM, $this->earliestHandoverDateTime);
+    }
 
     public function getLatestHandoverDateTime(): ?\DateTime
     {

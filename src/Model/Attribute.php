@@ -21,12 +21,12 @@ class Attribute extends AbstractModel
     }
 
     /**
-     * @var string Identifier of the attribute from the data model.
+     * @var string The identifier of the attribute for which the value has changed.
      */
     public $id;
 
     /**
-     * @var AttributeValue[] A list of attribute values.
+     * @var AttributeValue[]
      */
     public $values = [];
 }

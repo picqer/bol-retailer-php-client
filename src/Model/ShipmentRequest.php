@@ -23,13 +23,13 @@ class ShipmentRequest extends AbstractModel
     }
 
     /**
-     * @var OrderItem[] List of order items to ship. Order item id's must belong to the same order.
+     * @var OrderItem[] Single element list with the order item to ship.
      */
     public $orderItems = [];
 
     /**
      * @var string A user-defined reference that you can provide to add to the shipment. Can be used for own
-     * administration purposes.
+     * administration purposes. Only 'null' or non-empty strings accepted.
      */
     public $shipmentReference;
 

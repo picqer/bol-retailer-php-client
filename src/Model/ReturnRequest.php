@@ -21,12 +21,12 @@ class ReturnRequest extends AbstractModel
     }
 
     /**
-     * @var string
+     * @var string The handling result requested by the retailer.
      */
     public $handlingResult;
 
     /**
-     * @var int
+     * @var int The quantity of items returned.
      */
     public $quantityReturned;
 }

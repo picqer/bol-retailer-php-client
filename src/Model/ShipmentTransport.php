@@ -19,11 +19,12 @@ class ShipmentTransport extends AbstractModel
             'transporterCode' => [ 'model' => null, 'array' => false ],
             'trackAndTrace' => [ 'model' => null, 'array' => false ],
             'shippingLabelId' => [ 'model' => null, 'array' => false ],
+            'transportEvents' => [ 'model' => TransportEvent::class, 'array' => true ],
         ];
     }
 
     /**
-     * @var int The transport id.
+     * @var string The transport id.
      */
     public $transportId;
 
@@ -41,4 +42,9 @@ class ShipmentTransport extends AbstractModel
      * @var string The shipping label id.
      */
     public $shippingLabelId;
+
+    /**
+     * @var TransportEvent[]
+     */
+    public $transportEvents = [];
 }

@@ -36,12 +36,13 @@ class CreateReplenishmentRequest extends AbstractModel
     public $deliveryInfo;
 
     /**
-     * @var bool Indicates whether the replenishment will be labeled by bol.com or not.
+     * @var bool Indicates whether the replenishment will be labeled by bol.com.
      */
     public $labelingByBol;
 
     /**
-     * @var int The number of parcels in this replenishment.
+     * @var int The number of parcels in this replenishment. Note: if you are using the bol.com pickup service, the
+     * maximum number is 20.
      */
     public $numberOfLoadCarriers;
 

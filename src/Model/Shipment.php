@@ -28,7 +28,7 @@ class Shipment extends AbstractModel
     }
 
     /**
-     * @var int A unique identifier for this shipment.
+     * @var string A unique identifier for this shipment.
      */
     public $shipmentId;
 

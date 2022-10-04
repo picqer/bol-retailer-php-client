@@ -22,17 +22,17 @@ class SubscriptionResponse extends AbstractModel
     }
 
     /**
-     * @var int A unique identifier for the subscription
+     * @var string A unique identifier for the subscription.
      */
     public $id;
 
     /**
-     * @var array Type of event
+     * @var array Type of event.
      */
     public $resources = [];
 
     /**
-     * @var string URL to receive this WebHook notification
+     * @var string URL to receive this WebHook notification.
      */
     public $url;
 }

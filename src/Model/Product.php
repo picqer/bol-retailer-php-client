@@ -16,10 +16,8 @@ class Product extends AbstractModel
     {
         return [
             'ean' => [ 'model' => null, 'array' => false ],
-            'bsku' => [ 'model' => null, 'array' => false ],
-            'announcedQuantity' => [ 'model' => null, 'array' => false ],
-            'receivedQuantity' => [ 'model' => null, 'array' => false ],
-            'state' => [ 'model' => null, 'array' => false ],
+            'relevanceScores' => [ 'model' => RelevanceScore::class, 'array' => true ],
+            'maximumPrice' => [ 'model' => null, 'array' => false ],
         ];
     }
 
@@ -29,22 +27,12 @@ class Product extends AbstractModel
     public $ean;
 
     /**
-     * @var string The BSKU number associated with this product.
+     * @var RelevanceScore[]
      */
-    public $bsku;
+    public $relevanceScores = [];
 
     /**
-     * @var int The number of announced items.
+     * @var float The maximum price a product can have in order to be part of the promotion.
      */
-    public $announcedQuantity;
-
-    /**
-     * @var int The number of received items.
-     */
-    public $receivedQuantity;
-
-    /**
-     * @var string The current state of the inbound product.
-     */
-    public $state;
+    public $maximumPrice;
 }

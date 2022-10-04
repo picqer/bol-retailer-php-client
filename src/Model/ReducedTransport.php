@@ -20,7 +20,7 @@ class ReducedTransport extends AbstractModel
     }
 
     /**
-     * @var int The transport id.
+     * @var string The transport id.
      */
     public $transportId;
 }

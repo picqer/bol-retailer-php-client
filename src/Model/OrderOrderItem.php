@@ -26,11 +26,13 @@ class OrderOrderItem extends AbstractModel
             'unitPrice' => [ 'model' => null, 'array' => false ],
             'commission' => [ 'model' => null, 'array' => false ],
             'additionalServices' => [ 'model' => AdditionalService::class, 'array' => true ],
+            'latestChangedDateTime' => [ 'model' => null, 'array' => false ],
         ];
     }
 
     /**
-     * @var string The id for the order item (1 order can have multiple order items).
+     * @var string The id for the order item. One order can have multiple order items, but the list can only take one
+     * item.
      */
     public $orderItemId;
 
@@ -84,6 +86,20 @@ class OrderOrderItem extends AbstractModel
      * @var AdditionalService[]
      */
     public $additionalServices = [];
+
+    /**
+     * @var string The date and time in ISO 8601 format when the orderItem was last changed.
+     */
+    public $latestChangedDateTime;
+
+    public function getLatestChangedDateTime(): ?\DateTime
+    {
+        if (empty($this->latestChangedDateTime)) {
+            return null;
+        }
+
+        return \DateTime::createFromFormat(\DateTime::ATOM, $this->latestChangedDateTime);
+    }
 
     /**
      * Returns an array with the serviceTypes from additionalServices.

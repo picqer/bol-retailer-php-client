@@ -20,7 +20,7 @@ class OrderItem extends AbstractModel
     }
 
     /**
-     * @var string The id for the order item (1 order can have multiple order items).
+     * @var string The order item being confirmed.
      */
     public $orderItemId;
 }

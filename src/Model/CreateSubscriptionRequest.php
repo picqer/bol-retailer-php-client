@@ -21,12 +21,12 @@ class CreateSubscriptionRequest extends AbstractModel
     }
 
     /**
-     * @var array Type of event
+     * @var array Type of event.
      */
     public $resources = [];
 
     /**
-     * @var string URL to receive this WebHook notification
+     * @var string URL to receive this WebHook notification.
      */
     public $url;
 }

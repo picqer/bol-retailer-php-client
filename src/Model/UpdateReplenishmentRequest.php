@@ -33,8 +33,8 @@ class UpdateReplenishmentRequest extends AbstractModel
     public $deliveryInfo;
 
     /**
-     * @var int The number of parcels in this replenishment. Note: for first mile this is only a maximum of 20 load
-     * carriers.
+     * @var int The number of parcels in this replenishment. Note: if you are using the bol.com pickup service, the
+     * maximum number is 20.
      */
     public $numberOfLoadCarriers;
 

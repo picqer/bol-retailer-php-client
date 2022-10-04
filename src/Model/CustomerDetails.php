@@ -15,12 +15,12 @@ class CustomerDetails extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'salutationCode' => [ 'model' => null, 'array' => false ],
+            'salutation' => [ 'model' => null, 'array' => false ],
             'firstName' => [ 'model' => null, 'array' => false ],
             'surname' => [ 'model' => null, 'array' => false ],
             'streetName' => [ 'model' => null, 'array' => false ],
             'houseNumber' => [ 'model' => null, 'array' => false ],
-            'houseNumberExtended' => [ 'model' => null, 'array' => false ],
+            'houseNumberExtension' => [ 'model' => null, 'array' => false ],
             'extraAddressInformation' => [ 'model' => null, 'array' => false ],
             'zipCode' => [ 'model' => null, 'array' => false ],
             'city' => [ 'model' => null, 'array' => false ],
@@ -35,7 +35,7 @@ class CustomerDetails extends AbstractModel
     /**
      * @var string The salutation of the customer.
      */
-    public $salutationCode;
+    public $salutation;
 
     /**
      * @var string The first name of the customer.
@@ -60,7 +60,7 @@ class CustomerDetails extends AbstractModel
     /**
      * @var string The extension on the house number.
      */
-    public $houseNumberExtended;
+    public $houseNumberExtension;
 
     /**
      * @var string Additional information related to the address that helps in delivering the package.

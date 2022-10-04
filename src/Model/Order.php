@@ -25,7 +25,7 @@ class Order extends AbstractModel
     }
 
     /**
-     * @var string The order id.
+     * @var string The identifier of the order.
      */
     public $orderId;
 
