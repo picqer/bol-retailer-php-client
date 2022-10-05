@@ -28,8 +28,6 @@ class ModelGenerator
     {
         $generator = new static;
         $generator->generateModels();
-//        $generator->generateModel('ProductDestination');
-//        $generator->generateModel('ProductDestinationWarehouse');
     }
 
     public function generateModels(): void

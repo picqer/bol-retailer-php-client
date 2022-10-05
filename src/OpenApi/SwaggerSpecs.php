@@ -24,7 +24,7 @@ class SwaggerSpecs
     private function replaceErroneousCharacters(string $content): string
     {
         $replacements = [
-            ' ' => ' ', // 'ENSP' space
+            hex2bin('e28082') => ' ', // 'ENSP' space
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $content);
