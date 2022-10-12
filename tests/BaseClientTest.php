@@ -1,22 +1,18 @@
 <?php
 
-
-namespace Picqer\BolRetailerV6\Tests;
+namespace Picqer\BolRetailerV8\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use Picqer\BolRetailerV6\BaseClient;
-use Picqer\BolRetailerV6\Exception\RateLimitException;
-use Picqer\BolRetailerV6\Exception\ResponseException;
-use Picqer\BolRetailerV6\Exception\ServerException;
-use Picqer\BolRetailerV6\Exception\UnauthorizedException;
-use Picqer\BolRetailerV6\Model\AbstractModel;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use Picqer\BolRetailerV8\BaseClient;
+use Picqer\BolRetailerV8\Exception\RateLimitException;
+use Picqer\BolRetailerV8\Exception\ResponseException;
+use Picqer\BolRetailerV8\Exception\ServerException;
+use Picqer\BolRetailerV8\Exception\UnauthorizedException;
+use Picqer\BolRetailerV8\Model\AbstractModel;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClientTest extends TestCase
@@ -25,17 +21,17 @@ class BaseClientTest extends TestCase
     /** @var BaseClient */
     private $client;
 
-    /** @var ObjectProphecy */
-    private $httpProphecy;
+    /** @var HttpClient */
+    private $httpClientMock;
 
-    /** @var ObjectProphecy */
+    /** @var string */
     private $modelClass;
 
     public function setup(): void
     {
-        $this->httpProphecy = $this->prophesize(HttpClient::class);
+        $this->httpClientMock = $this->createMock(HttpClient::class);
         $this->client = new BaseClient();
-        $this->client->setHttp($this->httpProphecy->reveal());
+        $this->client->setHttp($this->httpClientMock);
 
         $stub = new class () extends AbstractModel {
             public $foo;
@@ -59,8 +55,10 @@ class BaseClientTest extends TestCase
     {
         $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
 
+        $httpClientMock = $this->createMock(HttpClient::class);
+
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
+        $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . $credentials
@@ -70,7 +68,13 @@ class BaseClientTest extends TestCase
             ]
         ])->willReturn($response);
 
+        // use the HttpClient mock created in this method for authentication, put the original one back afterwards
+        $prevHttpClient = $this->client->getHttp();
+        $this->client->setHttp($httpClientMock);
+
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+
+        $this->client->setHttp($prevHttpClient);
     }
 
     public function testClientIsAuthenticatedAfterSuccessfulAuthentication()
@@ -103,16 +107,7 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrow($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionCode(401);
@@ -129,21 +124,39 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrow($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
-        $this->expectException(RateLimitException::class);
-        $this->expectExceptionCode(429);
-        $this->expectExceptionMessage("Too many requests, retry in 4 seconds.");
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $actualException = null;
+        try {
+            $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        } catch (RateLimitException $actualException) {
+        }
+
+        $this->assertInstanceOf(RateLimitException::class, $actualException);
+        $this->assertEquals(429, $actualException->getCode());
+        $this->assertEquals(4, $actualException->getRetryAfter());
+    }
+
+    public function testRateLimitWithoutRetryAfter()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/429-too-many-requests-without-retry-after'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $this->httpClientMock->method('request')->willThrowException($clientException);
+
+        $actualException = null;
+        try {
+            $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        } catch (RateLimitException $actualException) {
+        }
+
+        $this->assertInstanceOf(RateLimitException::class, $actualException);
+        $this->assertEquals(429, $actualException->getCode());
+        $this->assertNull($actualException->getRetryAfter());
     }
 
     public function testAuthenticateThrowsResponseExceptionAtForbidden()
@@ -155,16 +168,7 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrow($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $this->expectException(ResponseException::class);
         $this->expectExceptionCode(403);
@@ -181,16 +185,7 @@ class BaseClientTest extends TestCase
             $response
         );
 
-        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willThrow($clientException);
+        $this->httpClientMock->method('request')->willThrowException($clientException);
 
         $this->expectException(ServerException::class);
         $this->expectExceptionCode(500);
@@ -222,15 +217,7 @@ class BaseClientTest extends TestCase
     public function testAuthenticateThrowsResponseExceptionWhenTokenIsMalformed($response)
     {
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $this->httpProphecy->request('POST', 'https://login.bol.com/token', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
-            ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
-        ])->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $this->expectException(ResponseException::class);
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
@@ -241,7 +228,7 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $response = $this->client->request('GET', 'foobar', [], [
             '200' => $this->modelClass
@@ -256,7 +243,7 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $response = $this->client->request('GET', 'foobar', [], [
             '200' => 'string'
@@ -270,7 +257,7 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $response = $this->client->request('GET', 'foobar', [], [
             '404' => 'null'
@@ -284,7 +271,7 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $this->expectException(ResponseException::class);
         $this->client->request('GET', 'foobar', [], []);
@@ -294,25 +281,25 @@ class BaseClientTest extends TestCase
     {
         $this->authenticate();
 
-        $actualArgs = null;
+        $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy
-            ->request(Argument::cetera())
-            ->will(function ($args) use ($response, &$actualArgs) {
-                $actualArgs = $args[2];
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->willReturnCallback(function ($method, $uri, $options) use ($response, &$actualOptions) {
+                $actualOptions = $options;
                 return $response;
-            })
-            ->shouldBeCalled();
+            });
 
         $this->client->request('GET', 'foobar', [
-            'produces' => 'application/vnd.retailer.v5+pdf'
+            'produces' => 'application/vnd.retailer.v8+pdf'
         ], [
             '200' => 'string'
         ]);
 
-        $this->assertArrayHasKey('headers', $actualArgs);
-        $this->assertArrayHasKey('Accept', $actualArgs['headers']);
-        $this->assertEquals('application/vnd.retailer.v5+pdf', $actualArgs['headers']['Accept']);
+        $this->assertArrayHasKey('headers', $actualOptions);
+        $this->assertArrayHasKey('Accept', $actualOptions['headers']);
+        $this->assertEquals('application/vnd.retailer.v8+pdf', $actualOptions['headers']['Accept']);
     }
 
     public function testRequestJsonEncodesBodyModelIntoBody()
@@ -322,15 +309,15 @@ class BaseClientTest extends TestCase
         $model = new $this->modelClass();
         $model->foo = 'bar';
 
-        $actualArgs = null;
+        $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy
-            ->request(Argument::cetera())
-            ->will(function ($args) use ($response, &$actualArgs) {
-                $actualArgs = $args[2];
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->willReturnCallback(function ($method, $uri, $options) use ($response, &$actualOptions) {
+                $actualOptions = $options;
                 return $response;
-            })
-            ->shouldBeCalled();
+            });
 
         $this->client->request('GET', 'foobar', [
             'body' => $model,
@@ -338,8 +325,8 @@ class BaseClientTest extends TestCase
             '200' => 'string'
         ]);
 
-        $this->assertArrayHasKey('body', $actualArgs);
-        $this->assertEquals(json_encode(['foo' => 'bar']), $actualArgs['body']);
+        $this->assertArrayHasKey('body', $actualOptions);
+        $this->assertEquals(json_encode(['foo' => 'bar']), $actualOptions['body']);
     }
 
     public function testRequestJsonEncodesBodyModelWithoutNullValuesIntoBody()
@@ -363,15 +350,15 @@ class BaseClientTest extends TestCase
         $model = new $modelClass();
         $model->foo = 'bar';
 
-        $actualArgs = null;
+        $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy
-            ->request(Argument::cetera())
-            ->will(function ($args) use ($response, &$actualArgs) {
-                $actualArgs = $args[2];
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->willReturnCallback(function ($method, $uri, $options) use ($response, &$actualOptions) {
+                $actualOptions = $options;
                 return $response;
-            })
-            ->shouldBeCalled();
+            });
 
         $this->client->request('GET', 'foobar', [
             'body' => $model,
@@ -379,8 +366,8 @@ class BaseClientTest extends TestCase
             '200' => 'string'
         ]);
 
-        $this->assertArrayHasKey('body', $actualArgs);
-        $this->assertEquals(json_encode(['foo' => 'bar']), $actualArgs['body']);
+        $this->assertArrayHasKey('body', $actualOptions);
+        $this->assertEquals(json_encode(['foo' => 'bar']), $actualOptions['body']);
     }
 
     public function testRequestConstructsEndpoint()
@@ -388,12 +375,35 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy
-            ->request('GET', 'https://api.bol.com/retailer/foobar', Argument::cetera())
-            ->willReturn($response)
-            ->shouldBeCalled();
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->with('GET', 'https://api.bol.com/retailer/foobar')
+            ->willReturn($response);
 
-        $this->client->request('GET', 'foobar', [], [
+        $this->client->request('GET', 'retailer/foobar', [], [
+            '200' => 'string'
+        ]);
+    }
+
+    public function testDemoModeConstructsDemoEndpoint()
+    {
+        $this->client->setDemoMode(true);
+        $this->authenticate();
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->with('GET', 'https://api.bol.com/foobar-demo/some-resource')
+            ->willReturn($response);
+
+        $this->client->request('GET', 'foobar/some-resource', [
+            'query' => [
+                'page' => null,
+                'foo' => 'bar',
+            ],
+        ], [
             '200' => 'string'
         ]);
     }
@@ -401,7 +411,7 @@ class BaseClientTest extends TestCase
     public function testRequestThrowsUnauthorizedExceptionWhenNotAuthenticated()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
-        $this->httpProphecy->request(Argument::cetera())->willReturn($response);
+        $this->httpClientMock->method('request')->willReturn($response);
 
         $this->expectException(UnauthorizedException::class);
         $this->client->request('GET', 'foobar', [], []);
@@ -411,15 +421,15 @@ class BaseClientTest extends TestCase
     {
         $this->authenticate();
 
-        $actualArgs = null;
+        $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy
-            ->request(Argument::cetera())
-            ->will(function ($args) use ($response, &$actualArgs) {
-                $actualArgs = $args[2];
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->willReturnCallback(function ($method, $uri, $options) use ($response, &$actualOptions) {
+                $actualOptions = $options;
                 return $response;
-            })
-            ->shouldBeCalled();
+            });
 
         $this->client->request('GET', 'foobar', [
             'query' => [
@@ -429,23 +439,23 @@ class BaseClientTest extends TestCase
             '200' => 'string'
         ]);
 
-        $this->assertArrayHasKey('query', $actualArgs);
-        $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
+        $this->assertArrayHasKey('query', $actualOptions);
+        $this->assertEquals(['foo' => 'bar'], $actualOptions['query']);
     }
 
     public function testQueryParameterWithValueNullIsNotSentInRequest()
     {
         $this->authenticate();
 
-        $actualArgs = null;
+        $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
-        $this->httpProphecy
-            ->request(Argument::cetera())
-            ->will(function ($args) use ($response, &$actualArgs) {
-                $actualArgs = $args[2];
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->willReturnCallback(function ($method, $uri, $options) use ($response, &$actualOptions) {
+                $actualOptions = $options;
                 return $response;
-            })
-            ->shouldBeCalled();
+            });
 
         $this->client->request('GET', 'foobar', [
             'query' => [
@@ -456,7 +466,7 @@ class BaseClientTest extends TestCase
             '200' => 'string'
         ]);
 
-        $this->assertArrayHasKey('query', $actualArgs);
-        $this->assertEquals(['foo' => 'bar'], $actualArgs['query']);
+        $this->assertArrayHasKey('query', $actualOptions);
+        $this->assertEquals(['foo' => 'bar'], $actualOptions['query']);
     }
 }

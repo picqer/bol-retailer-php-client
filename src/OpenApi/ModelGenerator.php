@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV6\OpenApi;
+namespace Picqer\BolRetailerV8\OpenApi;
 
 class ModelGenerator
 {
@@ -18,18 +18,16 @@ class ModelGenerator
 
     public function __construct()
     {
-        $this->specs = json_decode(file_get_contents(__DIR__ . '/apispec.json'), true);
+        $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json')
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared.json'));
+
+        $this->specs = $retailer->getSpecs();
     }
 
     public static function run()
     {
         $generator = new static;
         $generator->generateModels();
-//        $generator->generateModel('Store');
-//        $generator->generateModel('DeliveryOption');
-//        $generator->generateModel('ShipmentRequest');
-//        $generator->generateModel('ShippingLabelRequest');
-//        $generator->generateModel('BulkProcessStatusRequest');
     }
 
     public function generateModels(): void
@@ -181,7 +179,11 @@ class ModelGenerator
                 $accessorFullName = $fieldName . ucfirst($accessorName);
             }
 
-            $accessorTypePhp = static::$propTypeMapping[$fieldProps['monoFieldType']];
+            if (isset(static::$propTypeMapping[$fieldProps['monoFieldType']])) {
+                $accessorTypePhp = static::$propTypeMapping[$fieldProps['monoFieldType']];
+            } else {
+                $accessorTypePhp = $fieldProps['monoFieldType'];
+            }
             $accessorTypeDoc = $accessorTypePhp;
 
             $code[] = '';
@@ -300,7 +302,15 @@ class ModelGenerator
             }
 
             $subPropName = array_keys($this->specs['definitions'][$propType]['properties'])[0];
-            $subPropType = $this->specs['definitions'][$propType]['properties'][$subPropName]['type'];
+
+            $subProp = $this->specs['definitions'][$propType]['properties'][$subPropName];
+            if (isset($subProp['type'])) {
+                $subPropType = $subProp['type'];
+            } elseif (isset($subProp['$ref'])) {
+                $subPropType = $this->getType($subProp['$ref']);
+            } else {
+                throw new \Exception('Unknown sub property type');
+            }
 
             $fields[$propName] = [
                 'fieldType' => $propType,

@@ -1,28 +1,27 @@
 <?php
 
-namespace Picqer\BolRetailerV6;
+namespace Picqer\BolRetailerV8;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
-use Picqer\BolRetailerV6\Exception\RateLimitException;
-use Picqer\BolRetailerV6\Exception\ServerException;
-use Picqer\BolRetailerV6\Model\AbstractModel;
-use Picqer\BolRetailerV6\Exception\AuthenticationException;
-use Picqer\BolRetailerV6\Exception\ConnectException;
-use Picqer\BolRetailerV6\Exception\Exception;
-use Picqer\BolRetailerV6\Exception\ResponseException;
-use Picqer\BolRetailerV6\Exception\UnauthorizedException;
-use Picqer\BolRetailerV6\OpenApi\ModelCreator;
+use Picqer\BolRetailerV8\Exception\RateLimitException;
+use Picqer\BolRetailerV8\Exception\ServerException;
+use Picqer\BolRetailerV8\Model\AbstractModel;
+use Picqer\BolRetailerV8\Exception\AuthenticationException;
+use Picqer\BolRetailerV8\Exception\ConnectException;
+use Picqer\BolRetailerV8\Exception\Exception;
+use Picqer\BolRetailerV8\Exception\ResponseException;
+use Picqer\BolRetailerV8\Exception\UnauthorizedException;
+use Picqer\BolRetailerV8\OpenApi\ModelCreator;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClient
 {
     protected const API_TOKEN_URI = 'https://login.bol.com/token';
-    protected const API_ENDPOINT = 'https://api.bol.com/retailer/';
-    protected const API_DEMO_ENDPOINT = 'https://api.bol.com/retailer-demo/';
-    protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v6+json';
+    protected const API_ENDPOINT = 'https://api.bol.com/';
+    protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v8+json';
 
     /**
      * @var bool Whether request will be sent to the demo endpoint.
@@ -178,7 +177,7 @@ class BaseClient
             throw new UnauthorizedException('No or expired token, please authenticate first');
         }
 
-        $url = $this->getEndpoint() . $url;
+        $url = $this->getEndpoint($url);
 
         $httpOptions = [];
         $httpOptions['headers'] = [
@@ -226,14 +225,16 @@ class BaseClient
     /**
      * Returns the url of the endpoint, taking demo mode into account.
      *
+     * @param string $url The relative url of the endpoint.
      * @return string The url of the endpoint.
      */
-    protected function getEndpoint(): string
+    protected function getEndpoint(string $url): string
     {
         if ($this->isDemoMode) {
-            return static::API_DEMO_ENDPOINT;
+            // add '-demo' to the first path item of the url
+            $url = preg_replace('/^([^\/]+)/', '$1-demo', $url);
         }
-        return static::API_ENDPOINT;
+        return static::API_ENDPOINT . $url;
     }
 
     /**
@@ -277,7 +278,12 @@ class BaseClient
             if ($statusCode == 401) {
                 throw new UnauthorizedException($message, $statusCode);
             } if ($statusCode == 429) {
-                throw new RateLimitException($message, $statusCode);
+                $retryAfter = null;
+                if ($response->hasHeader('Retry-After')) {
+                    $retryAfter = (int) $response->getHeader('Retry-After')[0];
+                }
+
+                throw new RateLimitException($message, $statusCode, null, $retryAfter);
             } elseif (in_array($statusCode, [500, 502, 503, 504, 507])) {
                 throw new ServerException($message, $statusCode);
             } elseif ($statusCode != 404) {
