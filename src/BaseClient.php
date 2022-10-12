@@ -21,7 +21,6 @@ class BaseClient
 {
     protected const API_TOKEN_URI = 'https://login.bol.com/token';
     protected const API_ENDPOINT = 'https://api.bol.com/';
-    protected const API_DEMO_ENDPOINT = 'https://api.bol.com/retailer-demo/';
     protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v8+json';
 
     /**
@@ -178,7 +177,7 @@ class BaseClient
             throw new UnauthorizedException('No or expired token, please authenticate first');
         }
 
-        $url = $this->getEndpoint() . $url;
+        $url = $this->getEndpoint($url);
 
         $httpOptions = [];
         $httpOptions['headers'] = [
@@ -226,14 +225,16 @@ class BaseClient
     /**
      * Returns the url of the endpoint, taking demo mode into account.
      *
+     * @param string $url The relative url of the endpoint.
      * @return string The url of the endpoint.
      */
-    protected function getEndpoint(): string
+    protected function getEndpoint(string $url): string
     {
         if ($this->isDemoMode) {
-            return static::API_DEMO_ENDPOINT;
+            // add '-demo' to the first path item of the url
+            $url = preg_replace('/^([^\/]+)/', '$1-demo', $url);
         }
-        return static::API_ENDPOINT;
+        return static::API_ENDPOINT . $url;
     }
 
     /**

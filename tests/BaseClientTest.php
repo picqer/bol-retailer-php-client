@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV8\BaseClient;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
-use Picqer\BolRetailerV8\Exception\RequestException;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\ServerException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
@@ -383,6 +382,28 @@ class BaseClientTest extends TestCase
             ->willReturn($response);
 
         $this->client->request('GET', 'retailer/foobar', [], [
+            '200' => 'string'
+        ]);
+    }
+
+    public function testDemoModeConstructsDemoEndpoint()
+    {
+        $this->client->setDemoMode(true);
+        $this->authenticate();
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->with('GET', 'https://api.bol.com/foobar-demo/some-resource')
+            ->willReturn($response);
+
+        $this->client->request('GET', 'foobar/some-resource', [
+            'query' => [
+                'page' => null,
+                'foo' => 'bar',
+            ],
+        ], [
             '200' => 'string'
         ]);
     }
