@@ -277,13 +277,12 @@ class BaseClient
             if ($statusCode == 401) {
                 throw new UnauthorizedException($message, $statusCode);
             } if ($statusCode == 429) {
-                $exception = new RateLimitException($message, $statusCode);
-
-                $retryAfterHeaders = $response->getHeader('Retry-After');
-                if (count($retryAfterHeaders) > 0) {
-                    $exception->setRetryAfter((int)$retryAfterHeaders[0]);
+                $retryAfter = null;
+                if ($response->hasHeader('Retry-After')) {
+                    $retryAfter = (int) $response->getHeader('Retry-After')[0];
                 }
-                throw $exception;
+
+                throw new RateLimitException($message, $statusCode, null, $retryAfter);
             } elseif (in_array($statusCode, [500, 502, 503, 504, 507])) {
                 throw new ServerException($message, $statusCode);
             } elseif ($statusCode != 404) {

@@ -5,11 +5,13 @@ namespace Picqer\BolRetailerV8\Exception;
 
 class RateLimitException extends RequestException
 {
-    /** @var null|int  */
+    /** @var int|null  */
     protected $retryAfter = null;
 
-    public function setRetryAfter(?int $retryAfter): void
+    public function __construct($message = '', $code = 0, \Exception $previous = null, $retryAfter = null)
     {
+        parent::__construct($message, $code, $previous);
+
         $this->retryAfter = $retryAfter;
     }
 
