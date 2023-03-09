@@ -14,6 +14,8 @@ use Picqer\BolRetailerV8\Exception\ConnectException;
 use Picqer\BolRetailerV8\Exception\Exception;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
+use Picqer\BolRetailerV8\Model\Authentication\TokenResponse;
+use Picqer\BolRetailerV8\Model\Authentication\TokenRequest;
 use Picqer\BolRetailerV8\OpenApi\ModelCreator;
 use Psr\Http\Message\ResponseInterface;
 
@@ -31,7 +33,7 @@ class BaseClient
     /** @var HttpClient|null */
     protected $http = null;
 
-    /** @var array|null */
+    /** @var ?Token */
     protected $token = null;
 
     /**
@@ -79,18 +81,18 @@ class BaseClient
      */
     public function isAuthenticated(): bool
     {
-        if (! is_array($this->token)) {
+        if ($this->token === null) {
             return false;
         }
 
-        return $this->token['expires_at'] > time();
+        return ! $this->token->isExpired();
     }
 
     /**
      * Returns the authentication token.
-     * @return array|null Authentication token.
+     * @return ?Token Authentication token.
      */
-    public function getToken(): ?array
+    public function getToken(): ?Token
     {
         return $this->token;
     }
@@ -109,54 +111,73 @@ class BaseClient
      */
     public function authenticate(string $clientId, string $clientSecret): void
     {
+        $tokenRequest = TokenRequest::constructFromArray([
+            'grant_type' => 'client_credentials',
+        ]);
+
+        $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
+        $this->validateTokenResponse($tokenResponse);
+
+        $this->token = Token::fromTokenResponse($tokenResponse);
+    }
+
+    /**
+     * @param $token TokenResponse data from HTTP response.
+     *
+     * @throws ResponseException when the token data is invalid.
+     */
+    protected function validateTokenResponse(TokenResponse $tokenResponse): void
+    {
+
+        if ($tokenResponse->access_token === null || $tokenResponse->access_token === '') {
+            throw new ResponseException('Missing access_token');
+        }
+
+        if ($tokenResponse->expires_in === null || $tokenResponse->expires_in === '') {
+            throw new ResponseException('Missing expires_in');
+        }
+
+        if (strtolower($tokenResponse->token_type) !== 'bearer') {
+            throw new ResponseException(
+                sprintf('Unexpected token_type \'%s\', expected \'Bearer\'', $tokenResponse->token_type)
+            );
+        }
+
+        if (strtolower($tokenResponse->scope) !== 'retailer') {
+            throw new ResponseException(
+                sprintf('Unexpected token_type \'%s\', expected \'RETAILER\'', $tokenResponse->scope)
+            );
+        }
+    }
+
+    /**
+     * Executes the request to the token endpoint.
+     *
+     * @param string $clientId The client ID to use for authentication.
+     * @param string $clientSecret The client secret to use for authentication.
+     *
+     * @throws ConnectException when an error occurred in the HTTP connection.
+     * @throws ResponseException when an unexpected response was received.
+     * @throws UnauthorizedException when authentication failed.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception when something unexpected went wrong.
+     */
+    protected function requestToken(string $clientId, string $clientSecret, TokenRequest $token): TokenResponse
+    {
         $credentials = base64_encode(sprintf('%s:%s', $clientId, $clientSecret));
         $response = $this->rawRequest('POST', static::API_TOKEN_URI, [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => sprintf('Basic %s', $credentials)
             ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
+            'query' => $token->toArray()
         ]);
 
-        $token = $this->jsonDecodeBody($response);
-        $this->validateToken($token);
+        $responseTypes = [
+            '200' => TokenResponse::class
+        ];
 
-        $token['expires_at'] = time() + $token['expires_in'] ?? 0;
-        $this->token = $token;
-    }
-
-    /**
-     * @param $token Token data from HTTP response.
-     *
-     * @throws ResponseException when the token data is invalid.
-     */
-    protected function validateToken($token): void
-    {
-        if (! is_array($token)) {
-            throw new ResponseException('Token is not an array');
-        }
-
-        if (empty($token['access_token'])) {
-            throw new ResponseException('Missing access_token');
-        }
-
-        if (empty($token['expires_in'])) {
-            throw new ResponseException('Missing expires_in');
-        }
-
-        if (strtolower($token['token_type']) !== 'bearer') {
-            throw new ResponseException(
-                sprintf('Unexpected token_type \'%s\', expected \'Bearer\'', $token['token_type'])
-            );
-        }
-
-        if (strtolower($token['scope']) !== 'retailer') {
-            throw new ResponseException(
-                sprintf('Unexpected token_type \'%s\', expected \'RETAILER\'', $token['scope'])
-            );
-        }
+        return $this->decodeResponse($response, $responseTypes, static::API_TOKEN_URI);
     }
 
     /**
@@ -182,7 +203,7 @@ class BaseClient
         $httpOptions = [];
         $httpOptions['headers'] = [
             'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
-            'Authorization' => sprintf('Bearer %s', $this->token['access_token']),
+            'Authorization' => sprintf('Bearer %s', $this->token->accessToken),
         ];
 
         // encode the body if a model is supplied for it
@@ -199,6 +220,19 @@ class BaseClient
         }
 
         $response = $this->rawRequest($method, $url, $httpOptions);
+        return $this->decodeResponse($response, $responseTypes, $url);
+    }
+
+    /**
+     * Decodes an HTTP response into a value: null, string or model.
+     * @param ResponseInterface $response HTTP Response
+     * @param array $responseTypes Expected response type per HTTP status code
+     * @param string $url Url
+     * @return string|null
+     * @throws ResponseException
+     */
+    private function decodeResponse(ResponseInterface $response, array $responseTypes, string $url)
+    {
         $statusCode = $response->getStatusCode();
 
         if (!array_key_exists($statusCode, $responseTypes)) {
