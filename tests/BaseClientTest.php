@@ -52,6 +52,18 @@ class BaseClientTest extends TestCase
         $this->assertFalse($this->client->isAuthenticated());
     }
 
+    public function testClientIsAuthenticatedByStoredToken()
+    {
+        $token = new Token();
+        $token->expiresAt = time() + 10;
+        $token->scope = 'RETAILER';
+        $token->accessToken = 'stored_access_token';
+
+        $client = new BaseClient($token);
+
+        $this->assertTrue($client->isAuthenticated());
+    }
+
     protected function authenticate(?ResponseInterface $response = null)
     {
         $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));

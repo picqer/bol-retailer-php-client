@@ -36,9 +36,12 @@ class BaseClient
 
     /**
      * BaseClient constructor.
+     *
+     * @param ?Token $token Authentication token.
      */
-    public function __construct()
+    public function __construct(?Token $token = null)
     {
+        $this->token = $token;
         $this->setHttp(new HttpClient());
     }
 
