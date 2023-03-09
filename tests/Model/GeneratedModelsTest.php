@@ -11,7 +11,7 @@ class GeneratedModelsTest extends TestCase
         $fileNames = scandir("src/Model");
 
         $fileNames = array_filter($fileNames, function ($fileName) {
-            return ! in_array($fileName, ['.', '..', 'AbstractModel.php']);
+            return ! in_array($fileName, ['.', '..', 'AbstractModel.php', 'Authentication']);
         });
 
         return array_map(function ($fileName) {
