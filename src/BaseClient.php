@@ -114,6 +114,34 @@ class BaseClient
         ]);
 
         $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
+        $this->validateTokenResponse($tokenResponse, 'RETAILER');
+
+        $this->token = Token::fromTokenResponse($tokenResponse);
+    }
+
+    /**
+     * Authenticates with Bol.com Retailer API Server using an authorization code.
+     *
+     * @param string $clientId The client ID to use for authentication.
+     * @param string $clientSecret The client secret to use for authentication.
+     * @param string $code Authorization code received from Bol.com.
+     * @param string $redirectUri The redirect URI used for the authorization code request.
+     * @return void
+     * @throws ConnectException
+     * @throws Exception
+     * @throws RateLimitException
+     * @throws ResponseException
+     * @throws UnauthorizedException
+     */
+    public function authenticateByAuthorizationCode(string $clientId, string $clientSecret, string $code, string $redirectUri): void
+    {
+        $tokenRequest = TokenRequest::constructFromArray([
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'redirect_uri' => $redirectUri,
+        ]);
+
+        $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
         $this->validateTokenResponse($tokenResponse);
 
         $this->token = Token::fromTokenResponse($tokenResponse);
@@ -124,7 +152,7 @@ class BaseClient
      *
      * @throws ResponseException when the token data is invalid.
      */
-    protected function validateTokenResponse(TokenResponse $tokenResponse): void
+    protected function validateTokenResponse(TokenResponse $tokenResponse, ?string $expectedScope = null): void
     {
 
         if ($tokenResponse->access_token === null || $tokenResponse->access_token === '') {
@@ -141,9 +169,9 @@ class BaseClient
             );
         }
 
-        if (strtolower($tokenResponse->scope) !== 'retailer') {
+        if ($expectedScope !== null && strtolower($tokenResponse->scope) !== strtolower($expectedScope)) {
             throw new ResponseException(
-                sprintf('Unexpected token_type \'%s\', expected \'RETAILER\'', $tokenResponse->scope)
+                sprintf('Unexpected token_type \'%s\', expected \'%s\'', $tokenResponse->scope, $expectedScope)
             );
         }
     }

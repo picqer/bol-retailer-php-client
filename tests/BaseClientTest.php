@@ -13,6 +13,7 @@ use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\ServerException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
 use Picqer\BolRetailerV8\Model\AbstractModel;
+use Picqer\BolRetailerV8\Token;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClientTest extends TestCase
@@ -198,6 +199,60 @@ class BaseClientTest extends TestCase
         $this->expectException(ServerException::class);
         $this->expectExceptionCode(500);
         $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+    }
+
+    protected function authenticateByAuthorizationCode(?ResponseInterface $response = null)
+    {
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token'));
+
+        $httpClientMock = $this->createMock(HttpClient::class);
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+        $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'authorization_code',
+                'code' => '123456',
+                'redirect_uri' => 'http://someserver.xxx/redirect',
+            ]
+        ])->willReturn($response);
+
+        // use the HttpClient mock created in this method for authentication, put the original one back afterwards
+        $prevHttpClient = $this->client->getHttp();
+        $this->client->setHttp($httpClientMock);
+
+        $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
+
+        $this->client->setHttp($prevHttpClient);
+    }
+
+    public function testClientIsAuthenticatedAfterSuccessfulAuthenticationByAuthorizationCode()
+    {
+        $this->authenticateByAuthorizationCode();
+
+        $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('sometoken', $this->client->getToken()->accessToken);
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $this->client->getToken()->refreshToken);
+    }
+
+    public function testAuthenticateByAuthorizationCodeThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $this->httpClientMock->method('request')->willThrowException($clientException);
+
+        $this->expectException(UnauthorizedException::class);
+        $this->expectExceptionCode(401);
+        $this->expectExceptionMessage("Bad client credentials");
+        $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
     }
 
     public function providerMalformedTokenResponses()
