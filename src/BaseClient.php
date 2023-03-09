@@ -9,14 +9,12 @@ use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
 use Picqer\BolRetailerV8\Exception\ServerException;
 use Picqer\BolRetailerV8\Model\AbstractModel;
-use Picqer\BolRetailerV8\Exception\AuthenticationException;
 use Picqer\BolRetailerV8\Exception\ConnectException;
 use Picqer\BolRetailerV8\Exception\Exception;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
 use Picqer\BolRetailerV8\Model\Authentication\TokenResponse;
 use Picqer\BolRetailerV8\Model\Authentication\TokenRequest;
-use Picqer\BolRetailerV8\OpenApi\ModelCreator;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClient
