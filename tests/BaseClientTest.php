@@ -82,6 +82,7 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('sometoken', $this->client->getToken()->accessToken);
     }
 
     public function testClientAcceptsLowercaseScopeInAccessToken()
@@ -96,6 +97,13 @@ class BaseClientTest extends TestCase
         $this->authenticate(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-type')));
 
         $this->assertTrue($this->client->isAuthenticated());
+    }
+
+    public function testTokenIsExpired()
+    {
+        $this->authenticate(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-expires-immediately')));
+
+        $this->assertFalse($this->client->isAuthenticated());
     }
 
     public function testAuthenticateThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
@@ -228,7 +236,11 @@ class BaseClientTest extends TestCase
         $this->authenticate();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
-        $this->httpClientMock->method('request')->willReturn($response);
+        $this->httpClientMock->method('request')
+            ->with($this->anything(), $this->anything(), $this->callback(function ($options) {
+                return isset($options['headers']['Authorization']) && $options['headers']['Authorization'] === 'Bearer sometoken';
+            }))
+            ->willReturn($response);
 
         $response = $this->client->request('GET', 'foobar', [], [
             '200' => $this->modelClass
