@@ -143,10 +143,7 @@ class BaseClient
             'grant_type' => 'client_credentials',
         ]);
 
-        $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
-        $this->validateTokenResponse($tokenResponse, 'RETAILER');
-
-        $this->token = Token::fromTokenResponse($tokenResponse);
+        $this->requestToken($clientId, $clientSecret, $tokenRequest, 'RETAILER');
     }
 
     /**
@@ -156,7 +153,7 @@ class BaseClient
      * @param string $clientSecret The client secret to use for authentication.
      * @param string $code Authorization code received from Bol.com.
      * @param string $redirectUri The redirect URI used for the authorization code request.
-     * @return void
+     *
      * @throws ConnectException
      * @throws Exception
      * @throws RateLimitException
@@ -171,14 +168,71 @@ class BaseClient
             'redirect_uri' => $redirectUri,
         ]);
 
-        $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
-        $this->validateTokenResponse($tokenResponse);
+        $this->requestToken($clientId, $clientSecret, $tokenRequest);
+    }
 
+    /**
+     * Refreshes the authentication token. This requires an existing token with a refresh token.
+     *
+     * @param string $clientId The client ID to use for authentication.
+     * @param string $clientSecret The client secret to use for authentication.
+     *
+     * @throws ConnectException
+     * @throws Exception
+     * @throws RateLimitException
+     * @throws ResponseException
+     * @throws UnauthorizedException
+     */
+    public function refreshToken(string $clientId, string $clientSecret): void
+    {
+        if ($this->token === null || $this->token->refreshToken === null) {
+            throw new Exception('Only tokens with a refresh token can be refreshed');
+        }
+
+        $tokenRequest = TokenRequest::constructFromArray([
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $this->token->refreshToken,
+        ]);
+
+        $this->requestToken($clientId, $clientSecret, $tokenRequest);
+    }
+
+    /**
+     * Executes the request to the token endpoint.
+     *
+     * @param string $clientId The client ID to use for authentication.
+     * @param string $clientSecret The client secret to use for authentication.
+     * @param $expectedScope ?string The expected scope of the token.
+     *
+     * @throws ConnectException when an error occurred in the HTTP connection.
+     * @throws ResponseException when an unexpected response was received.
+     * @throws UnauthorizedException when authentication failed.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception when something unexpected went wrong.
+     */
+    protected function requestToken(string $clientId, string $clientSecret, TokenRequest $token, ?string $expectedScope = null): void
+    {
+        $credentials = base64_encode(sprintf('%s:%s', $clientId, $clientSecret));
+        $response = $this->rawRequest('POST', static::API_TOKEN_URI, [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => sprintf('Basic %s', $credentials)
+            ],
+            'query' => $token->toArray()
+        ]);
+
+        $responseTypes = [
+            '200' => TokenResponse::class
+        ];
+
+        $tokenResponse = $this->decodeResponse($response, $responseTypes, static::API_TOKEN_URI);
+        $this->validateTokenResponse($tokenResponse, $expectedScope);
         $this->token = Token::fromTokenResponse($tokenResponse);
     }
 
     /**
      * @param $token TokenResponse data from HTTP response.
+     * @param $expectedScope ?string The expected scope of the token.
      *
      * @throws ResponseException when the token data is invalid.
      */
@@ -204,36 +258,6 @@ class BaseClient
                 sprintf('Unexpected token_type \'%s\', expected \'%s\'', $tokenResponse->scope, $expectedScope)
             );
         }
-    }
-
-    /**
-     * Executes the request to the token endpoint.
-     *
-     * @param string $clientId The client ID to use for authentication.
-     * @param string $clientSecret The client secret to use for authentication.
-     *
-     * @throws ConnectException when an error occurred in the HTTP connection.
-     * @throws ResponseException when an unexpected response was received.
-     * @throws UnauthorizedException when authentication failed.
-     * @throws RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception when something unexpected went wrong.
-     */
-    protected function requestToken(string $clientId, string $clientSecret, TokenRequest $token): TokenResponse
-    {
-        $credentials = base64_encode(sprintf('%s:%s', $clientId, $clientSecret));
-        $response = $this->rawRequest('POST', static::API_TOKEN_URI, [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => sprintf('Basic %s', $credentials)
-            ],
-            'query' => $token->toArray()
-        ]);
-
-        $responseTypes = [
-            '200' => TokenResponse::class
-        ];
-
-        return $this->decodeResponse($response, $responseTypes, static::API_TOKEN_URI);
     }
 
     /**

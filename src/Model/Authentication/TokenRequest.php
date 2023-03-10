@@ -12,6 +12,7 @@ class TokenRequest extends AbstractModel
             'grant_type' => [ 'model' => null, 'array' => false ],
             'code' => [ 'model' => null, 'array' => true ],
             'redirect_uri' => [ 'model' => null, 'array' => true ],
+            'refresh_token' => [ 'model' => null, 'array' => true ],
         ];
     }
 
@@ -29,4 +30,9 @@ class TokenRequest extends AbstractModel
      * @var string
      */
     public $redirect_uri;
+
+    /**
+     * @var string
+     */
+    public $refresh_token;
 }

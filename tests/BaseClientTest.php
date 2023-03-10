@@ -8,6 +8,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV8\BaseClient;
+use Picqer\BolRetailerV8\Exception\Exception;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\ServerException;
@@ -331,6 +332,93 @@ class BaseClientTest extends TestCase
         $this->expectExceptionCode(401);
         $this->expectExceptionMessage("Bad client credentials");
         $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
+    }
+
+    protected function refreshToken(?ResponseInterface $response = null)
+    {
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token'));
+
+        $httpClientMock = $this->createMock(HttpClient::class);
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+        $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => '123456',
+            ]
+        ])->willReturn($response);
+
+        // use the HttpClient mock created in this method for authentication, put the original one back afterwards
+        $prevHttpClient = $this->client->getHttp();
+        $this->client->setHttp($httpClientMock);
+
+        $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+
+        $this->client->setHttp($prevHttpClient);
+    }
+
+    public function testTokenIsRefreshed()
+    {
+        $token = new Token();
+        $token->expiresAt = time() + 10;
+        $token->scope = 'RETAILER';
+        $token->accessToken = 'stored_access_token';
+        $token->refreshToken = '123456';
+        $this->client->setToken($token);
+
+        $this->refreshToken();
+
+        $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('sometoken', $this->client->getToken()->accessToken);
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $this->client->getToken()->refreshToken);
+    }
+
+    public function testTokenWithoutRefreshTokenCannotBeRefreshed()
+    {
+        $token = new Token();
+        $token->expiresAt = time() + 10;
+        $token->scope = 'RETAILER';
+        $token->accessToken = 'stored_access_token';
+        $this->client->setToken($token);
+
+        $this->expectException(Exception::class);
+
+        $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+    }
+
+    public function testRefreshingTokenRequiresOldToken()
+    {
+        $this->expectException(Exception::class);
+
+        $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+    }
+
+    public function testRefreshTokenThrowsUnauthorizedExceptionWhenUsingWithBadCredentials()
+    {
+        $token = new Token();
+        $token->expiresAt = time() + 10;
+        $token->scope = 'RETAILER';
+        $token->accessToken = 'stored_access_token';
+        $token->refreshToken = '123456';
+        $this->client->setToken($token);
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $this->httpClientMock->method('request')->willThrowException($clientException);
+
+        $this->expectException(UnauthorizedException::class);
+        $this->expectExceptionCode(401);
+        $this->expectExceptionMessage("Bad client credentials");
+        $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
     public function providerMalformedTokenResponses()
