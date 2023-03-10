@@ -173,7 +173,8 @@ class BaseClient
     }
 
     /**
-     * Refreshes the authentication token. This requires an existing token with a refresh token.
+     * Refreshes the access token and refresh token (latter depending on your account settings). This requires an
+     * existing token with a refresh token.
      *
      * @param string $clientId The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
@@ -187,7 +188,7 @@ class BaseClient
      * @throws ResponseException
      * @throws UnauthorizedException
      */
-    public function refreshToken(string $clientId, string $clientSecret, JWTToken $refreshToken): JWTToken
+    public function refreshAccessToken(string $clientId, string $clientSecret, JWTToken $refreshToken): JWTToken
     {
         if ($refreshToken->isExpired()) {
             throw new Exception('The refresh token is expired.');

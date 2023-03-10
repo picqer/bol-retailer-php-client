@@ -387,7 +387,7 @@ class BaseClientTest extends TestCase
         $this->client->setHttp($httpClientMock);
 
 
-        $refreshToken = $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
+        $refreshToken = $this->client->refreshAccessToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
 
         $this->client->setHttp($prevHttpClient);
 
@@ -413,7 +413,7 @@ class BaseClientTest extends TestCase
         $this->expectException(Exception::class);
 
         $refreshToken = $this->constructToken(['exp' => time() - 10]);
-        $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
+        $this->client->refreshAccessToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
     }
 
     public function testRefreshTokenThrowsUnauthorizedExceptionWhenUsingWithBadCredentials()
@@ -433,7 +433,7 @@ class BaseClientTest extends TestCase
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionCode(401);
         $this->expectExceptionMessage("Bad client credentials");
-        $this->client->refreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->constructToken(['exp' => time() + 10]));
+        $this->client->refreshAccessToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->constructToken(['exp' => time() + 10]));
     }
 
     public function providerMalformedTokenResponses()
