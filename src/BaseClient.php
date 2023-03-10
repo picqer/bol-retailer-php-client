@@ -34,14 +34,16 @@ class BaseClient
     /** @var ?Token */
     protected $token = null;
 
+    /** @var ?callable */
+    private $tokenExpiredCallback = null;
+
     /**
      * BaseClient constructor.
      *
      * @param ?Token $token Authentication token.
      */
-    public function __construct(?Token $token = null)
+    public function __construct()
     {
-        $this->token = $token;
         $this->setHttp(new HttpClient());
     }
 
@@ -76,6 +78,22 @@ class BaseClient
     }
 
     /**
+     * Sets a callback which is called at the start of a request when a token is set, but expired. This callback may
+     * attempt to refresh the token. If the token is valid after the callback, the request will continue, otherwise an
+     * UnauthorizedException will be thrown.
+     * WARNING: when using the 'Code flow' for authentication where every refresh of a token results in a new refresh
+     * token (named 'method 2' by Bol.com), only the last refresh token is valid. So if multiple processes may refresh
+     * the token at the same time, you need a locking mechanism such as a mutex to make sure you only store the last
+     * retrieved refresh token.
+     *
+     * @param callable $callback The callback to be called when the token is expired.
+     */
+    public function setTokenExpiredCallback(callable $callback): void
+    {
+        $this->tokenExpiredCallback = $callback;
+    }
+
+    /**
      * Check if the client is authenticated.
      *
      * @return bool Whether the client is authenticated.
@@ -96,6 +114,15 @@ class BaseClient
     public function getToken(): ?Token
     {
         return $this->token;
+    }
+
+    /**
+     * Sets the authentication token.
+     * @param ?Token $token Authentication token.
+     */
+    public function setToken(?Token $token): void
+    {
+        $this->token = $token;
     }
 
     /**
@@ -223,9 +250,7 @@ class BaseClient
      */
     public function request(string $method, string $url, array $options, array $responseTypes)
     {
-        if (!$this->isAuthenticated()) {
-            throw new UnauthorizedException('No or expired token, please authenticate first');
-        }
+        $this->checkToken();
 
         $url = $this->getEndpoint($url);
 
@@ -250,6 +275,29 @@ class BaseClient
 
         $response = $this->rawRequest($method, $url, $httpOptions);
         return $this->decodeResponse($response, $responseTypes, $url);
+    }
+
+    /**
+     * Checks the existence of the token and its expiration. If the token is expired, the tokenExpiredCallback is
+     * called.
+     *
+     * @throws UnauthorizedException
+     */
+    private function checkToken()
+    {
+        if ($this->isAuthenticated()) {
+            return;
+        }
+
+        if ($this->token !== null && $this->tokenExpiredCallback !== null) {
+            ($this->tokenExpiredCallback)($this);
+
+            if ($this->isAuthenticated()) {
+                return;
+            }
+        }
+
+        throw new UnauthorizedException('No or expired token, please authenticate first');
     }
 
     /**

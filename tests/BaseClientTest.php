@@ -59,9 +59,75 @@ class BaseClientTest extends TestCase
         $token->scope = 'RETAILER';
         $token->accessToken = 'stored_access_token';
 
-        $client = new BaseClient($token);
+        $this->client->setToken($token);
 
-        $this->assertTrue($client->isAuthenticated());
+        $this->assertTrue($this->client->isAuthenticated());
+    }
+
+    public function testTokenExpiredCallbackIsCalledOnExpiredToken()
+    {
+        $token = new Token();
+        $token->expiresAt = time() -10;
+        $token->scope = 'RETAILER';
+        $token->accessToken = 'stored_access_token';
+        $this->client->setToken($token);
+
+        $callbackCalled = false;
+        $this->client->setTokenExpiredCallback(function () use (&$callbackCalled) {
+            $callbackCalled = true;
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should be aborted, as the callback does not set a valid token
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+        $this->assertTrue($callbackCalled);
+    }
+
+    public function testTokenExpiredCallbackIsCalledOnNoToken()
+    {
+        $callbackCalled = false;
+        $this->client->setTokenExpiredCallback(function () use (&$callbackCalled) {
+            $callbackCalled = true;
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should be aborted, as the callback does not set a valid token
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+        $this->assertFalse($callbackCalled);
+    }
+
+    public function testRequestContinuesAfterSettingValidToken()
+    {
+        $token = new Token();
+        $token->expiresAt = time() + -10;
+        $token->scope = 'RETAILER';
+        $token->accessToken = 'stored_access_token';
+        $this->client->setToken($token);
+
+        $this->client->setTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
+            $client->getToken()->expiresAt = time() + 10;
+        });
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
+        $this->httpClientMock->method('request')
+            ->willReturn($response);
+
+        $response = $this->client->request('GET', 'foobar', [], [
+            '200' => $this->modelClass
+        ]);
+
+        $this->assertInstanceOf($this->modelClass, $response);
+        $this->assertEquals('bar', $response->foo);
     }
 
     protected function authenticate(?ResponseInterface $response = null)
