@@ -110,7 +110,7 @@ class BaseClientTest extends TestCase
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
-        $this->assertFalse($callbackCalled);
+        $this->assertTrue($callbackCalled);
     }
 
     public function testRequestContinuesAfterSettingValidToken()

@@ -324,7 +324,7 @@ class BaseClient
             return;
         }
 
-        if ($this->accessToken !== null && $this->accessTokenExpiredCallback !== null) {
+        if ($this->accessTokenExpiredCallback !== null) {
             ($this->accessTokenExpiredCallback)($this);
 
             if ($this->isAuthenticated()) {
