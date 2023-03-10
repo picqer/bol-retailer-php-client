@@ -6,5 +6,5 @@ Content-Type: application/json;charset=UTF-8
   "refresh_token" : "eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.",
   "token_type" : "Bearer",
   "scope" : "offline_access",
-  "access_token" : "sometoken"
+  "access_token" : "<access_token>"
 }
