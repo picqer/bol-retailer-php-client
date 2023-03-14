@@ -58,7 +58,7 @@ class BaseClientTest extends TestCase
         return new JWTToken('x.' . base64_encode(json_encode($claims)) . '.y');
     }
 
-    public function testClientIsAuthenticatedByStoredToken()
+    public function testClientIsAuthenticatedByStoredAccessToken()
     {
         $token = $this->constructToken(['exp' => time() + 10]);
         $this->client->setAccessToken($token);
@@ -66,7 +66,7 @@ class BaseClientTest extends TestCase
         $this->assertTrue($this->client->isAuthenticated());
     }
 
-    public function testClientIsNotAuthenticatedByExpiredToken()
+    public function testClientIsNotAuthenticatedByExpiredAccessToken()
     {
         $token = $this->constructToken(['exp' => time() - 10]);
         $this->client->setAccessToken($token);
@@ -74,7 +74,7 @@ class BaseClientTest extends TestCase
         $this->assertFalse($this->client->isAuthenticated());
     }
 
-    public function testAccessTokenExpiredCallbackIsCalledOnExpiredToken()
+    public function testAccessTokenExpiredCallbackIsCalledOnExpiredAccessToken()
     {
         $token = $this->constructToken(['exp' => time() - 10]);
         $this->client->setAccessToken($token);
@@ -95,7 +95,7 @@ class BaseClientTest extends TestCase
         $this->assertTrue($callbackCalled);
     }
 
-    public function testAccessTokenExpiredCallbackIsCalledOnNoToken()
+    public function testAccessTokenExpiredCallbackIsCalledOnNoAccessToken()
     {
         $callbackCalled = false;
         $this->client->setAccessTokenExpiredCallback(function () use (&$callbackCalled) {
@@ -113,7 +113,7 @@ class BaseClientTest extends TestCase
         $this->assertTrue($callbackCalled);
     }
 
-    public function testRequestContinuesAfterSettingValidToken()
+    public function testRequestContinuesAfterSettingValidAccessToken()
     {
         $token = $this->constructToken(['exp' => time() - 10]);
         $this->client->setAccessToken($token);
