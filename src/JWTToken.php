@@ -18,6 +18,19 @@ class JWTToken
     }
 
     /**
+     * Creates a new token from a string.
+     * @param string|null $encoded The encoded token.
+     * @return ?self The token or null if the encoded token is null.
+     */
+    public static function fromString(?string $encoded): ?self
+    {
+        if ($encoded === null) {
+            return null;
+        }
+        return new self($encoded);
+    }
+
+    /**
      * Returns the encoded token.
      * @return string The encoded token.
      */
