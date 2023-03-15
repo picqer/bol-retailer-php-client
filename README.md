@@ -9,10 +9,10 @@ composer require picqer/bol-retailer-php-client "^8"
 ```
 
 ## Usage
-Create an instance of the client and authenticate (using the [Client Credentials flow](https://api.bol.com/retailer/public/Retailer-API/authentication.html#_client_credentials_flow))
+Create an instance of the client and authenticate using the [Client Credentials flow](https://api.bol.com/retailer/public/Retailer-API/authentication.html#_client_credentials_flow)
 ```php
 $client = new \Picqer\BolRetailerV8\Client();
-$client->authenticate('your-client-id', 'your-client-secret');
+$client->authenticateByClientCredentials('your-client-id', 'your-client-secret');
 ```
 
 Then you can get the first page of open orders by calling the getOrders() method on the client
@@ -34,7 +34,7 @@ $client->setAccessToken($accessToken);
 $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) {
   // Called at the beginning of a request to the Retailer API when the token was expired or non-existent.
   
-  $client->authenticate('your-client-id', 'your-client-secret'); // retrieves a new access token
+  $client->authenticateByClientCredentials('your-client-id', 'your-client-secret'); // retrieves a new access token
   $accessToken = $client->getAccessToken();
   ... // store $accessToken for future use
 });

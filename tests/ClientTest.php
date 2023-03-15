@@ -27,10 +27,10 @@ class ClientTest extends TestCase
         $this->client = new Client();
         $this->client->setHttp($this->httpClientMock);
 
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
     }
 
-    protected function authenticate()
+    protected function authenticateByClientCredentials()
     {
         $rawResponse = file_get_contents(__DIR__ . '/Fixtures/http/200-token');
         $accessToken = new JWTToken('x.' . base64_encode(json_encode(['exp' => time() + 10])) . '.y');
@@ -55,7 +55,7 @@ class ClientTest extends TestCase
         $prevHttpClient = $this->client->getHttp();
         $this->client->setHttp($httpClientMock);
 
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
 
         $this->client->setHttp($prevHttpClient);
     }

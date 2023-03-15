@@ -134,8 +134,27 @@ class BaseClient
      * @throws UnauthorizedException when authentication failed.
      * @throws RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception when something unexpected went wrong.
+     *
+     * @deprecated Use authenticateByClientCredentials instead.
      */
     public function authenticate(string $clientId, string $clientSecret): void
+    {
+        $this->authenticateByClientCredentials($clientId, $clientSecret);
+    }
+
+    /**
+     * Authenticates with Bol.com Retailer API Server using client credentials.
+     *
+     * @param string $clientId The client ID to use for authentication.
+     * @param string $clientSecret The client secret to use for authentication.
+     *
+     * @throws ConnectException when an error occurred in the HTTP connection.
+     * @throws ResponseException when an unexpected response was received.
+     * @throws UnauthorizedException when authentication failed.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception when something unexpected went wrong.
+     */
+    public function authenticateByClientCredentials(string $clientId, string $clientSecret): void
     {
         $tokenRequest = TokenRequest::constructFromArray([
             'grant_type' => 'client_credentials',
