@@ -18,7 +18,7 @@ class TokenResponse extends AbstractModel
     }
 
     /**
-     * @var int
+     * @var int|string
      */
     public $expires_in;
 

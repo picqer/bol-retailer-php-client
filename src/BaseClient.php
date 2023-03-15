@@ -269,11 +269,11 @@ class BaseClient
     protected function validateTokenResponse(TokenResponse $tokenResponse, ?string $expectedScope = null): void
     {
 
-        if ($tokenResponse->access_token === null || $tokenResponse->access_token === '') {
+        if (trim($tokenResponse->access_token ?? '') === '') {
             throw new ResponseException('Missing access_token');
         }
 
-        if ($tokenResponse->expires_in === null || $tokenResponse->expires_in === '') {
+        if (trim((string)$tokenResponse->expires_in ?? '') === '') {
             throw new ResponseException('Missing expires_in');
         }
 
