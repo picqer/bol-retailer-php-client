@@ -79,7 +79,7 @@ $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $cl
   // an Exception.
   
   $refreshToken = ... // your implementation of getting the refresh token from the storage
-  $client->refreshAccessToken('your-client-id', 'your-client-secret', $refreshToken);
+  $client->authenticateByRefreshToken('your-client-id', 'your-client-secret', $refreshToken);
   $accessToken = $client->getAccessToken();
   ... // store $accessToken for future use
 });
@@ -112,7 +112,7 @@ $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $cl
     }
   
     $refreshToken = ... // your implementation of getting the refresh token from the storage
-    $newRefreshToken = $client->refreshAccessToken('your-client-id', 'your-client-secret', $refreshToken);
+    $newRefreshToken = $client->authenticateByRefreshToken('your-client-id', 'your-client-secret', $refreshToken);
     $accessToken = $client->getAccessToken();
     
     ... // store $accessToken and $newRefreshToken for future use

@@ -192,14 +192,13 @@ class BaseClient
     }
 
     /**
-     * Refreshes the access token and refresh token (latter depending on your account settings). This requires an
-     * existing token with a refresh token.
+     * AAuthenticates with Bol.com Retailer API Server by refresh token.
      *
      * @param string $clientId The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
      * @param JWTToken $refreshToken The refresh token.
-     * @return JWTToken The (current or new) refresh token, depending on the authentication settings managed by Bol.com
-     * for your account.
+     * @return JWTToken The refresh token to use next time. Whether this is the same or a new one depends on the
+     * authentication settings managed by Bol.com for your account.
      *
      * @throws ConnectException
      * @throws Exception
@@ -207,7 +206,7 @@ class BaseClient
      * @throws ResponseException
      * @throws UnauthorizedException
      */
-    public function refreshAccessToken(string $clientId, string $clientSecret, JWTToken $refreshToken): JWTToken
+    public function authenticateByRefreshToken(string $clientId, string $clientSecret, JWTToken $refreshToken): JWTToken
     {
         if ($refreshToken->isExpired()) {
             throw new Exception('The refresh token is expired.');

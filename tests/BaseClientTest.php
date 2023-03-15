@@ -355,7 +355,7 @@ class BaseClientTest extends TestCase
         $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
     }
 
-    protected function refreshAccessToken(?ResponseInterface $response = null): JWTToken
+    protected function authenticateByRefreshToken(?ResponseInterface $response = null): JWTToken
     {
         if ($response === null) {
             $response = file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token');
@@ -387,7 +387,7 @@ class BaseClientTest extends TestCase
         $this->client->setHttp($httpClientMock);
 
 
-        $refreshToken = $this->client->refreshAccessToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
+        $refreshToken = $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
 
         $this->client->setHttp($prevHttpClient);
 
@@ -399,7 +399,7 @@ class BaseClientTest extends TestCase
         $token = $this->constructToken(['exp' => time() + 10]);
         $this->client->setAccessToken($token);
 
-        $refreshToken = $this->refreshAccessToken();
+        $refreshToken = $this->authenticateByRefreshToken();
 
         $this->assertTrue($this->client->isAuthenticated());
         $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->encode());
@@ -413,7 +413,7 @@ class BaseClientTest extends TestCase
         $this->expectException(Exception::class);
 
         $refreshToken = $this->constructToken(['exp' => time() - 10]);
-        $this->client->refreshAccessToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
+        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
     }
 
     public function testRefreshTokenThrowsUnauthorizedExceptionWhenUsingWithBadCredentials()
@@ -433,7 +433,7 @@ class BaseClientTest extends TestCase
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionCode(401);
         $this->expectExceptionMessage("Bad client credentials");
-        $this->client->refreshAccessToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->constructToken(['exp' => time() + 10]));
+        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->constructToken(['exp' => time() + 10]));
     }
 
     public function providerMalformedTokenResponses()
