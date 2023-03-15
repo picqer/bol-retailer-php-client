@@ -304,7 +304,7 @@ class BaseClient
      */
     public function request(string $method, string $url, array $options, array $responseTypes)
     {
-        $this->checkToken();
+        $this->validateToken();
 
         $url = $this->getEndpoint($url);
 
@@ -332,12 +332,12 @@ class BaseClient
     }
 
     /**
-     * Checks the existence of the token and its expiration. If the token is expired, the tokenExpiredCallback is
+     * Validates the existence of the token and its expiration. If the token is expired, the accessTokenExpiredCallback is
      * called.
      *
      * @throws UnauthorizedException
      */
-    private function checkToken()
+    private function validateToken()
     {
         if ($this->isAuthenticated()) {
             return;
