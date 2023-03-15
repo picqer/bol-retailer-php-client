@@ -34,7 +34,7 @@ class ClientTest extends TestCase
     {
         $rawResponse = file_get_contents(__DIR__ . '/Fixtures/http/200-token');
         $accessToken = new JWTToken('x.' . base64_encode(json_encode(['exp' => time() + 10])) . '.y');
-        $rawResponse = str_replace('<access_token>', $accessToken->getEncoded(), $rawResponse);
+        $rawResponse = str_replace('<access_token>', $accessToken->encode(), $rawResponse);
 
         $response = Message::parseResponse($rawResponse);
 

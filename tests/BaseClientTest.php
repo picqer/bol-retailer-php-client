@@ -142,7 +142,7 @@ class BaseClientTest extends TestCase
         }
 
         if (is_string($response)) {
-            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->getEncoded(), $response);
+            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->encode(), $response);
             $response = Message::parseResponse($response);
         }
 
@@ -192,7 +192,7 @@ class BaseClientTest extends TestCase
     public function testAccessTokenIsExpired()
     {
         $response = file_get_contents(__DIR__ . '/Fixtures/http/200-token-expires-immediately');
-        $response = str_replace('<access_token>', $this->constructToken(['exp' => time()-10])->getEncoded(), $response);
+        $response = str_replace('<access_token>', $this->constructToken(['exp' => time()-10])->encode(), $response);
 
         $this->authenticate($response);
 
@@ -300,7 +300,7 @@ class BaseClientTest extends TestCase
         }
 
         if (is_string($response)) {
-            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->getEncoded(), $response);
+            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->encode(), $response);
             $response = Message::parseResponse($response);
         }
 
@@ -335,7 +335,7 @@ class BaseClientTest extends TestCase
         $refreshToken = $this->authenticateByAuthorizationCode();
 
         $this->assertTrue($this->client->isAuthenticated());
-        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->getEncoded());
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->encode());
     }
 
     public function testAuthenticateByAuthorizationCodeThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
@@ -362,7 +362,7 @@ class BaseClientTest extends TestCase
         }
 
         if (is_string($response)) {
-            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->getEncoded(), $response);
+            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->encode(), $response);
             $response = Message::parseResponse($response);
         }
 
@@ -378,7 +378,7 @@ class BaseClientTest extends TestCase
             ],
             'query' => [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => $refreshToken->getEncoded(),
+                'refresh_token' => $refreshToken->encode(),
             ]
         ])->willReturn($response);
 
@@ -402,7 +402,7 @@ class BaseClientTest extends TestCase
         $refreshToken = $this->refreshAccessToken();
 
         $this->assertTrue($this->client->isAuthenticated());
-        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->getEncoded());
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->encode());
     }
 
     public function testAccessTokenWithExpiredRefreshTokenCannotBeRefreshed()
@@ -474,7 +474,7 @@ class BaseClientTest extends TestCase
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
         $this->httpClientMock->method('request')
             ->with($this->anything(), $this->anything(), $this->callback(function ($options) {
-                return isset($options['headers']['Authorization']) && $options['headers']['Authorization'] === 'Bearer ' . $this->client->getAccessToken()->getEncoded();
+                return isset($options['headers']['Authorization']) && $options['headers']['Authorization'] === 'Bearer ' . $this->client->getAccessToken()->encode();
             }))
             ->willReturn($response);
 

@@ -196,7 +196,7 @@ class BaseClient
 
         $tokenRequest = TokenRequest::constructFromArray([
             'grant_type' => 'refresh_token',
-            'refresh_token' => $refreshToken->getEncoded(),
+            'refresh_token' => $refreshToken->encode(),
         ]);
 
         $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
@@ -292,7 +292,7 @@ class BaseClient
         $httpOptions = [];
         $httpOptions['headers'] = [
             'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
-            'Authorization' => sprintf('Bearer %s', $this->accessToken->getEncoded()),
+            'Authorization' => sprintf('Bearer %s', $this->accessToken->encode()),
         ];
 
         // encode the body if a model is supplied for it
