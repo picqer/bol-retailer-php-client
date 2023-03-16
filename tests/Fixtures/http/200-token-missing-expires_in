@@ -2,7 +2,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
 
 {
-  "access_token": "xxxx",
+  "access_token": "sometoken",
   "token_type": "Bearer",
   "scope": "RETAILER"
 }

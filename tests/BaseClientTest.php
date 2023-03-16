@@ -165,6 +165,7 @@ class BaseClientTest extends TestCase
         $this->authenticateByClientCredentials();
 
         $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('sometoken', $this->client->getAccessToken()->getToken());
     }
 
     public function testClientAcceptsLowercaseScopeInAccessToken()
