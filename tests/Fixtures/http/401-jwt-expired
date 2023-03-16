@@ -1,0 +1,8 @@
+HTTP/1.1 401 Unauthorized
+Content-Type: application/vnd.retailer.v8+json
+
+{
+  "title": "Expired JWT",
+  "status": 401,
+  "detail": "JWT expired at 2023-03-16T12:53:03Z. Current time: 2023-03-16T14:10:20Z, a difference of 4636598 milliseconds.  Allowed clock skew: 1000 milliseconds."
+}

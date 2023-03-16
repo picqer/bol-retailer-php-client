@@ -303,6 +303,11 @@ class BaseClient
     }
 
     /**
+     * Executes a request and decodes the response into a Model. When the access token is expired, the access token
+     * expired callback is called and the request is continued. When Bol responds with an error about an expired access
+     * token, the callback is called as well and the request is retried once if the access token has been changed after
+     * the execution of the callback.
+     *
      * @param string $method HTTP Method
      * @param string $url Url
      * @param array $options Request options to apply
@@ -316,30 +321,30 @@ class BaseClient
      */
     public function request(string $method, string $url, array $options, array $responseTypes)
     {
+        // check existence and expiration of the token and call access token expired callback when invalid
         $this->validateToken();
 
-        $url = $this->getEndpoint($url);
+        try {
+            $response = $this->prepareAndExecuteRequest($method, $url, $options);
+        } catch (UnauthorizedException $e) {
+            if (! $e->accessTokenExpired()) {
+                throw $e;
+            }
 
-        $httpOptions = [];
-        $httpOptions['headers'] = [
-            'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
-            'Authorization' => sprintf('Bearer %s', $this->accessToken->getToken()),
-        ];
+            // allow one retry after calling access token expired callback
+            $oldAccessToken = $this->accessToken;
 
-        // encode the body if a model is supplied for it
-        if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
-            $httpOptions['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
-            $httpOptions['body'] = json_encode($options['body']->toArray(true));
+            if ($this->accessTokenExpiredCallback !== null) {
+                ($this->accessTokenExpiredCallback)($this);
+            }
+
+            if ($this->accessToken !== $oldAccessToken) {
+                $response = $this->prepareAndExecuteRequest($method, $url, $options);
+            } else {
+                throw $e;
+            }
         }
 
-        // pass through query parameters without null values
-        if (isset($options['query'])) {
-            $httpOptions['query'] = array_filter($options['query'], function ($value) {
-                return $value !== null;
-            });
-        }
-
-        $response = $this->rawRequest($method, $url, $httpOptions);
         return $this->decodeResponse($response, $responseTypes, $url);
     }
 
@@ -364,6 +369,45 @@ class BaseClient
         }
 
         throw new UnauthorizedException('No or expired token, please authenticate first');
+    }
+
+    /**
+     * Prepares and executes a raw request.
+     *
+     * @param string $method HTTP Method
+     * @param string $url Url
+     * @param array $options Request options to apply
+     * @return AbstractModel|string|null Model or array representing response
+     * @throws ConnectException when an error occurred in the HTTP connection.
+     * @throws UnauthorizedException when the request was unauthorized.
+     * @throws ResponseException when no suitable responseType could be applied.
+     * @throws RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception when something unexpected went wrong.
+     */
+    private function prepareAndExecuteRequest(string $method, string $url, array $options): ResponseInterface
+    {
+        $url = $this->getEndpoint($url);
+
+        $httpOptions = [];
+        $httpOptions['headers'] = [
+            'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
+            'Authorization' => sprintf('Bearer %s', $this->accessToken->getToken()),
+        ];
+
+        // encode the body if a model is supplied for it
+        if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
+            $httpOptions['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
+            $httpOptions['body'] = json_encode($options['body']->toArray(true));
+        }
+
+        // pass through query parameters without null values
+        if (isset($options['query'])) {
+            $httpOptions['query'] = array_filter($options['query'], function ($value) {
+                return $value !== null;
+            });
+        }
+
+        return $this->rawRequest($method, $url, $httpOptions);
     }
 
     /**

@@ -115,7 +115,7 @@ class BaseClientTest extends TestCase
         $this->assertTrue($callbackCalled);
     }
 
-    public function testRequestContinuesAfterSettingValidAccessToken()
+    public function testRequestContinuesAfterSettingValidAccessTokenAfter()
     {
         $this->client->setAccessToken($this->expiredAccessToken);
 
@@ -126,6 +126,65 @@ class BaseClientTest extends TestCase
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
         $this->httpClientMock->method('request')
             ->willReturn($response);
+
+        $response = $this->client->request('GET', 'foobar', [], [
+            '200' => $this->modelClass
+        ]);
+
+        $this->assertInstanceOf($this->modelClass, $response);
+        $this->assertEquals('bar', $response->foo);
+    }
+
+    public function testAccessTokenExpiredCallbackIsCalledOnUnauthorizedExpiredToken()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-jwt-expired'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+        $this->httpClientMock
+            ->expects($this->once()) // once, as the access token will not be refreshed by the callback
+            ->method('request')->willThrowException($clientException);
+
+        $callbackCalled = false;
+        $this->client->setAccessTokenExpiredCallback(function () use (&$callbackCalled) {
+            $callbackCalled = true;
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should throw the UnauthorizedException, as a new token was not set
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+        $this->assertTrue($callbackCalled);
+    }
+
+    public function testRequestIsRetriedAfterSettingNewAccessToken()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-jwt-expired'))
+        );
+
+        $this->httpClientMock->method('request')->will(
+            $this->onConsecutiveCalls(
+                $this->throwException($clientException),
+                Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'))
+            )
+        );
+
+        $this->client->setAccessTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
+            $client->setAccessToken(new AuthToken('zzz', time() + 10));
+        });
 
         $response = $this->client->request('GET', 'foobar', [], [
             '200' => $this->modelClass
