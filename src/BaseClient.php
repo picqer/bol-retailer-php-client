@@ -31,7 +31,7 @@ class BaseClient
     /** @var HttpClient|null */
     protected $http = null;
 
-    /** @var ?JWTToken */
+    /** @var ?AuthToken */
     protected $accessToken = null;
 
     /** @var ?callable */
@@ -107,18 +107,18 @@ class BaseClient
 
     /**
      * Returns the authentication token.
-     * @return ?JWTToken Authentication token.
+     * @return ?AuthToken Authentication token.
      */
-    public function getAccessToken(): ?JWTToken
+    public function getAccessToken(): ?AuthToken
     {
         return $this->accessToken;
     }
 
     /**
      * Sets the authentication token.
-     * @param ?JWTToken $accessToken Authentication token.
+     * @param ?AuthToken $accessToken Authentication token.
      */
-    public function setAccessToken(?JWTToken $accessToken): void
+    public function setAccessToken(?AuthToken $accessToken): void
     {
         $this->accessToken = $accessToken;
     }
@@ -170,7 +170,7 @@ class BaseClient
      * @param string $clientSecret The client secret to use for authentication.
      * @param string $code Authorization code received from Bol.com.
      * @param string $redirectUri The redirect URI used for the authorization code request.
-     * @return JWTToken The refresh token.
+     * @return AuthToken The refresh token.
      *
      * @throws ConnectException
      * @throws Exception
@@ -178,7 +178,7 @@ class BaseClient
      * @throws ResponseException
      * @throws UnauthorizedException
      */
-    public function authenticateByAuthorizationCode(string $clientId, string $clientSecret, string $code, string $redirectUri): JWTToken
+    public function authenticateByAuthorizationCode(string $clientId, string $clientSecret, string $code, string $redirectUri): AuthToken
     {
         $tokenRequest = TokenRequest::constructFromArray([
             'grant_type' => 'authorization_code',
@@ -188,7 +188,7 @@ class BaseClient
 
         $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
 
-        return new JWTToken($tokenResponse->refresh_token);
+        return $this->constructRefreshAuthToken($tokenResponse);
     }
 
     /**
@@ -196,8 +196,8 @@ class BaseClient
      *
      * @param string $clientId The client ID to use for authentication.
      * @param string $clientSecret The client secret to use for authentication.
-     * @param JWTToken $refreshToken The refresh token.
-     * @return JWTToken The refresh token to use next time. Whether this is the same or a new one depends on the
+     * @param AuthToken $refreshToken The refresh token.
+     * @return AuthToken The refresh token to use next time. Whether this is the same or a new one depends on the
      * authentication settings managed by Bol.com for your account.
      *
      * @throws ConnectException
@@ -206,7 +206,7 @@ class BaseClient
      * @throws ResponseException
      * @throws UnauthorizedException
      */
-    public function authenticateByRefreshToken(string $clientId, string $clientSecret, JWTToken $refreshToken): JWTToken
+    public function authenticateByRefreshToken(string $clientId, string $clientSecret, AuthToken $refreshToken): AuthToken
     {
         if ($refreshToken->isExpired()) {
             throw new Exception('The refresh token is expired.');
@@ -214,12 +214,12 @@ class BaseClient
 
         $tokenRequest = TokenRequest::constructFromArray([
             'grant_type' => 'refresh_token',
-            'refresh_token' => $refreshToken->encode(),
+            'refresh_token' => $refreshToken->getToken()
         ]);
 
         $tokenResponse = $this->requestToken($clientId, $clientSecret, $tokenRequest);
 
-        return new JWTToken($tokenResponse->refresh_token);
+        return $this->constructRefreshAuthToken($tokenResponse);
     }
 
     /**
@@ -254,7 +254,7 @@ class BaseClient
 
         $tokenResponse = $this->decodeResponse($response, $responseTypes, static::API_TOKEN_URI);
         $this->validateTokenResponse($tokenResponse, $expectedScope);
-        $this->accessToken = new JWTToken($tokenResponse->access_token);
+        $this->accessToken = new AuthToken($tokenResponse->access_token, time() + $tokenResponse->expires_in);
 
         return $tokenResponse;
     }
@@ -290,6 +290,19 @@ class BaseClient
     }
 
     /**
+     * Constructs a refresh token from the token response.
+     * @param TokenResponse $tokenResponse Token response.
+     * @return AuthToken Refresh token.
+     */
+    private function constructRefreshAuthToken(TokenResponse $tokenResponse): AuthToken
+    {
+        // Expiry date of the refresh token is not part of the token response. The API docs suggest to decode the token,
+        // but this is bad practise: the token should be handled as a raw string. The docs state that the refresh token
+        // is valid for a year. Testing shows that it's valid for 365 days, so it does not take leap years into account.
+        return new AuthToken($tokenResponse->refresh_token, time() + 365 * 24 * 60 * 60);
+    }
+
+    /**
      * @param string $method HTTP Method
      * @param string $url Url
      * @param array $options Request options to apply
@@ -310,7 +323,7 @@ class BaseClient
         $httpOptions = [];
         $httpOptions['headers'] = [
             'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
-            'Authorization' => sprintf('Bearer %s', $this->accessToken->encode()),
+            'Authorization' => sprintf('Bearer %s', $this->accessToken->getToken()),
         ];
 
         // encode the body if a model is supplied for it

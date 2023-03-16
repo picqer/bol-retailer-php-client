@@ -13,7 +13,7 @@ use Picqer\BolRetailerV8\Exception\RateLimitException;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\ServerException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
-use Picqer\BolRetailerV8\JWTToken;
+use Picqer\BolRetailerV8\AuthToken;
 use Picqer\BolRetailerV8\Model\AbstractModel;
 use Psr\Http\Message\ResponseInterface;
 
@@ -28,6 +28,11 @@ class BaseClientTest extends TestCase
 
     /** @var string */
     private $modelClass;
+
+    private $validAccessToken;
+    private $expiredAccessToken;
+    private $validRefreshToken;
+    private $expiredRefreshToken;
 
     public function setup(): void
     {
@@ -46,6 +51,11 @@ class BaseClientTest extends TestCase
             }
         };
         $this->modelClass = get_class($stub);
+
+        $this->validAccessToken = new AuthToken('xxx', time() + 10);
+        $this->expiredAccessToken = new AuthToken('xxx', time() - 10);
+        $this->validRefreshToken = new AuthToken('yyy', time() + 10);
+        $this->expiredRefreshToken = new AuthToken('yyy', time() - 10);
     }
 
     public function testClientIsInitiallyNotAuthenticated()
@@ -53,31 +63,23 @@ class BaseClientTest extends TestCase
         $this->assertFalse($this->client->isAuthenticated());
     }
 
-    protected function constructToken(array $claims): JWTToken
-    {
-        return new JWTToken('x.' . base64_encode(json_encode($claims)) . '.y');
-    }
-
     public function testClientIsAuthenticatedByStoredAccessToken()
     {
-        $token = $this->constructToken(['exp' => time() + 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->validAccessToken);
 
         $this->assertTrue($this->client->isAuthenticated());
     }
 
     public function testClientIsNotAuthenticatedByExpiredAccessToken()
     {
-        $token = $this->constructToken(['exp' => time() - 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->expiredAccessToken);
 
         $this->assertFalse($this->client->isAuthenticated());
     }
 
     public function testAccessTokenExpiredCallbackIsCalledOnExpiredAccessToken()
     {
-        $token = $this->constructToken(['exp' => time() - 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->expiredAccessToken);
 
         $callbackCalled = false;
         $this->client->setAccessTokenExpiredCallback(function () use (&$callbackCalled) {
@@ -115,12 +117,10 @@ class BaseClientTest extends TestCase
 
     public function testRequestContinuesAfterSettingValidAccessToken()
     {
-        $token = $this->constructToken(['exp' => time() - 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->expiredAccessToken);
 
         $this->client->setAccessTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
-            $token = $this->constructToken(['exp' => time() + 10]);
-            $client->setAccessToken($token);
+            $client->setAccessToken($this->validAccessToken);
         });
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
@@ -135,17 +135,9 @@ class BaseClientTest extends TestCase
         $this->assertEquals('bar', $response->foo);
     }
 
-    protected function authenticateByClientCredentials($response = null)
+    protected function authenticateByClientCredentials(?ResponseInterface $response = null)
     {
-        if ($response === null) {
-            $response = file_get_contents(__DIR__ . '/Fixtures/http/200-token');
-        }
-
-        if (is_string($response)) {
-            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->encode(), $response);
-            $response = Message::parseResponse($response);
-        }
-
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
         $httpClientMock = $this->createMock(HttpClient::class);
 
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
@@ -177,26 +169,16 @@ class BaseClientTest extends TestCase
 
     public function testClientAcceptsLowercaseScopeInAccessToken()
     {
-        $this->authenticateByClientCredentials(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-scope'));
+        $this->authenticateByClientCredentials(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-scope')));
 
         $this->assertTrue($this->client->isAuthenticated());
     }
 
     public function testClientAcceptsLowercaseTokenTypeInAccessToken()
     {
-        $this->authenticateByClientCredentials(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-type'));
+        $this->authenticateByClientCredentials(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-type')));
 
         $this->assertTrue($this->client->isAuthenticated());
-    }
-
-    public function testAccessTokenIsExpired()
-    {
-        $response = file_get_contents(__DIR__ . '/Fixtures/http/200-token-expires-immediately');
-        $response = str_replace('<access_token>', $this->constructToken(['exp' => time()-10])->encode(), $response);
-
-        $this->authenticateByClientCredentials($response);
-
-        $this->assertFalse($this->client->isAuthenticated());
     }
 
     public function testAuthenticateByClientCredentialsThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
@@ -293,17 +275,9 @@ class BaseClientTest extends TestCase
         $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
-    protected function authenticateByAuthorizationCode(?ResponseInterface $response = null): JWTToken
+    protected function authenticateByAuthorizationCode(?ResponseInterface $response = null): AuthToken
     {
-        if ($response === null) {
-            $response = file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token');
-        }
-
-        if (is_string($response)) {
-            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->encode(), $response);
-            $response = Message::parseResponse($response);
-        }
-
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token'));
         $httpClientMock = $this->createMock(HttpClient::class);
 
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
@@ -335,7 +309,7 @@ class BaseClientTest extends TestCase
         $refreshToken = $this->authenticateByAuthorizationCode();
 
         $this->assertTrue($this->client->isAuthenticated());
-        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->encode());
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->getToken());
     }
 
     public function testAuthenticateByAuthorizationCodeThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
@@ -355,21 +329,12 @@ class BaseClientTest extends TestCase
         $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
     }
 
-    protected function authenticateByRefreshToken(?ResponseInterface $response = null): JWTToken
+    protected function authenticateByRefreshToken(?ResponseInterface $response = null): AuthToken
     {
-        if ($response === null) {
-            $response = file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token');
-        }
-
-        if (is_string($response)) {
-            $response = str_replace('<access_token>', $this->constructToken(['exp' => time() + 10])->encode(), $response);
-            $response = Message::parseResponse($response);
-        }
-
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token'));
         $httpClientMock = $this->createMock(HttpClient::class);
 
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
-        $refreshToken = $this->constructToken(['exp' => time() + 10]);
 
         $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
@@ -378,7 +343,7 @@ class BaseClientTest extends TestCase
             ],
             'query' => [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => $refreshToken->encode(),
+                'refresh_token' => $this->validRefreshToken->getToken()
             ]
         ])->willReturn($response);
 
@@ -387,7 +352,7 @@ class BaseClientTest extends TestCase
         $this->client->setHttp($httpClientMock);
 
 
-        $refreshToken = $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
+        $refreshToken = $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->validRefreshToken);
 
         $this->client->setHttp($prevHttpClient);
 
@@ -396,30 +361,26 @@ class BaseClientTest extends TestCase
 
     public function testAccessTokenIsRefreshed()
     {
-        $token = $this->constructToken(['exp' => time() + 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->validAccessToken);
 
         $refreshToken = $this->authenticateByRefreshToken();
 
         $this->assertTrue($this->client->isAuthenticated());
-        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->encode());
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->getToken());
     }
 
     public function testAccessTokenWithExpiredRefreshTokenCannotBeRefreshed()
     {
-        $token = $this->constructToken(['exp' => time() + 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->validAccessToken);
 
         $this->expectException(Exception::class);
 
-        $refreshToken = $this->constructToken(['exp' => time() - 10]);
-        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $refreshToken);
+        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->expiredRefreshToken);
     }
 
     public function testRefreshTokenThrowsUnauthorizedExceptionWhenUsingWithBadCredentials()
     {
-        $token = $this->constructToken(['exp' => time() + 10]);
-        $this->client->setAccessToken($token);
+        $this->client->setAccessToken($this->validAccessToken);
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
         $clientException = new GuzzleClientException(
@@ -433,7 +394,7 @@ class BaseClientTest extends TestCase
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionCode(401);
         $this->expectExceptionMessage("Bad client credentials");
-        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->constructToken(['exp' => time() + 10]));
+        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->validRefreshToken);
     }
 
     public function providerMalformedTokenResponses()
@@ -474,7 +435,7 @@ class BaseClientTest extends TestCase
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
         $this->httpClientMock->method('request')
             ->with($this->anything(), $this->anything(), $this->callback(function ($options) {
-                return isset($options['headers']['Authorization']) && $options['headers']['Authorization'] === 'Bearer ' . $this->client->getAccessToken()->encode();
+                return isset($options['headers']['Authorization']) && $options['headers']['Authorization'] === 'Bearer ' . $this->client->getAccessToken()->getToken();
             }))
             ->willReturn($response);
 

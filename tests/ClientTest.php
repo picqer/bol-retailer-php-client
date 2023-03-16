@@ -8,7 +8,6 @@ use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV8\Client;
 use GuzzleHttp\Client as HttpClient;
-use Picqer\BolRetailerV8\JWTToken;
 use Picqer\BolRetailerV8\Model\AbstractModel;
 use Picqer\BolRetailerV8\Model\OrderItem;
 
@@ -33,8 +32,6 @@ class ClientTest extends TestCase
     protected function authenticateByClientCredentials()
     {
         $rawResponse = file_get_contents(__DIR__ . '/Fixtures/http/200-token');
-        $accessToken = new JWTToken('x.' . base64_encode(json_encode(['exp' => time() + 10])) . '.y');
-        $rawResponse = str_replace('<access_token>', $accessToken->encode(), $rawResponse);
 
         $response = Message::parseResponse($rawResponse);
 
