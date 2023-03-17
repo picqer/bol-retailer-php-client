@@ -338,7 +338,7 @@ class BaseClient
                 ($this->accessTokenExpiredCallback)($this);
             }
 
-            if ($this->accessToken !== $oldAccessToken) {
+            if ($this->isAuthenticated() && $this->accessToken !== $oldAccessToken) {
                 $response = $this->prepareAndExecuteRequest($method, $url, $options);
             } else {
                 throw $e;
