@@ -32,10 +32,11 @@ $client = new \Picqer\BolRetailerV8\Client();
 $client->setAccessToken($accessToken);
 
 $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) {
-  // Called at the beginning of a request to the Retailer API when the access token was expired or non-existent and
-  // after a request that resulted in an error about an expired access token.
+  // Called at the beginning of a request to the Retailer API when the access token was expired or
+  // non-existent and after a request that resulted in an error about an expired access token.
   
-  $client->authenticateByClientCredentials('your-client-id', 'your-client-secret'); // retrieves a new access token
+  // Authenticate and fetch the new access token
+  $client->authenticateByClientCredentials('{your-client-id}', '{your-client-secret}');
   $accessToken = $client->getAccessToken();
   ... // store $accessToken for future use
 });
@@ -47,7 +48,12 @@ When authenticating using the [Code flow](https://api.bol.com/retailer/public/Re
 ```php
 $client = new \Picqer\BolRetailerV8\Client();
 
-$refreshToken = $client->authenticateByAuthorizationCode('your-client-id', 'your-client-secret', 'received-shortcode', 'callback-uri');
+$refreshToken = $client->authenticateByAuthorizationCode(
+    '{your-client-id}',
+    '{your-client-secret}',
+    '{received-shortcode}',
+    '{callback-uri}'
+);
 $accessToken = $client->getAccessToken();
 ... // store $accessToken and $refreshToken for future use
 
@@ -73,14 +79,15 @@ $client = new \Picqer\BolRetailerV8\Client();
 $accessToken = ... // your implementation of getting the access token from the storage
 $client->setAccessToken($accessToken);
 $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) {
-  // Called at the beginning of a request to the Retailer API when the access token was expired or non-existent and
-  // after a request that resulted in an error about an expired access token.
+  // Called at the beginning of a request to the Retailer API when the access token was expired or
+  // non-existent and after a request that resulted in an error about an expired access token.
   
-  // This callback can attempt to refresh the access token. If after this callback the Client has a valid access token,
-  // the request will continue or retried once. Otherwise, it will be aborted with an Exception.
+  // This callback can attempt to refresh the access token. If after this callback the Client has
+  // a valid access token, the request will continue or retried once. Otherwise, it will be
+  // aborted with an Exception.
   
   $refreshToken = ... // your implementation of getting the refresh token from the storage
-  $client->authenticateByRefreshToken('your-client-id', 'your-client-secret', $refreshToken);
+  $client->authenticateByRefreshToken('{your-client-id}', '{your-client-secret}', $refreshToken);
   $accessToken = $client->getAccessToken();
   ... // store $accessToken for future use
 });
@@ -99,22 +106,29 @@ $accessToken = ... // your implementation of getting the access token from the s
 $client->setAccessToken($accessToken);
 
 $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) use ($mutex) {
-  // Called at the beginning of a request to the Retailer API when the access token was expired or non-existent and
-  // after a request that resulted in an error about an expired access token.
+  // Called at the beginning of a request to the Retailer API when the access token was expired or
+  // non-existent and after a request that resulted in an error about an expired access token.
   
-  // Ensure only 1 process can be in the critical section, others are blocked and one is let in when that process leaves
-  // the critical section
+  // Ensure only 1 process can be in the critical section, others are blocked and one is let in
+  // when that process leaves the critical section
   $mutex->withLock(function () use ($client) {
-    $accessToken = ... // your implementation of getting the latest access token from the storage (it might be refreshed by another process)
+    // your implementation of getting the latest access token from the storage (it might be
+    // refreshed by another process)
+    $accessToken = ... 
     
     if (! $accessToken->isExpired()) {
-      // No need to refresh the token, as it was already refreshed by another proces. Make sure the client uses it.
+      // No need to refresh the token, as it was already refreshed by another proces. Make sure the
+      // client uses it.
       $client->setAccessToken($accessToken);
       return;
     }
   
     $refreshToken = ... // your implementation of getting the refresh token from the storage
-    $newRefreshToken = $client->authenticateByRefreshToken('your-client-id', 'your-client-secret', $refreshToken);
+    $newRefreshToken = $client->authenticateByRefreshToken(
+        '{your-client-id}',
+        '{your-client-secret}',
+        $refreshToken
+    );
     $accessToken = $client->getAccessToken();
     
     ... // store $accessToken and $newRefreshToken for future use
