@@ -8,10 +8,12 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV8\BaseClient;
+use Picqer\BolRetailerV8\Exception\Exception;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\ServerException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
+use Picqer\BolRetailerV8\AuthToken;
 use Picqer\BolRetailerV8\Model\AbstractModel;
 use Psr\Http\Message\ResponseInterface;
 
@@ -26,6 +28,11 @@ class BaseClientTest extends TestCase
 
     /** @var string */
     private $modelClass;
+
+    private $validAccessToken;
+    private $expiredAccessToken;
+    private $validRefreshToken;
+    private $expiredRefreshToken;
 
     public function setup(): void
     {
@@ -44,6 +51,11 @@ class BaseClientTest extends TestCase
             }
         };
         $this->modelClass = get_class($stub);
+
+        $this->validAccessToken = new AuthToken('xxx', time() + 10);
+        $this->expiredAccessToken = new AuthToken('xxx', time() - 10);
+        $this->validRefreshToken = new AuthToken('yyy', time() + 10);
+        $this->expiredRefreshToken = new AuthToken('yyy', time() - 10);
     }
 
     public function testClientIsInitiallyNotAuthenticated()
@@ -51,10 +63,169 @@ class BaseClientTest extends TestCase
         $this->assertFalse($this->client->isAuthenticated());
     }
 
-    protected function authenticate(?ResponseInterface $response = null)
+    public function testClientIsAuthenticatedByStoredAccessToken()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $this->assertTrue($this->client->isAuthenticated());
+    }
+
+    public function testClientIsNotAuthenticatedByExpiredAccessToken()
+    {
+        $this->client->setAccessToken($this->expiredAccessToken);
+
+        $this->assertFalse($this->client->isAuthenticated());
+    }
+
+    public function testAccessTokenExpiredCallbackIsCalledOnExpiredAccessToken()
+    {
+        $this->client->setAccessToken($this->expiredAccessToken);
+
+        $callbackCalled = false;
+        $this->client->setAccessTokenExpiredCallback(function () use (&$callbackCalled) {
+            $callbackCalled = true;
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should be aborted, as the callback does not set a valid token
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+        $this->assertTrue($callbackCalled);
+    }
+
+    public function testAccessTokenExpiredCallbackIsCalledOnNoAccessToken()
+    {
+        $callbackCalled = false;
+        $this->client->setAccessTokenExpiredCallback(function () use (&$callbackCalled) {
+            $callbackCalled = true;
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should be aborted, as the callback does not set a valid token
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+        $this->assertTrue($callbackCalled);
+    }
+
+    public function testRequestContinuesAfterSettingValidAccessTokenAfter()
+    {
+        $this->client->setAccessToken($this->expiredAccessToken);
+
+        $this->client->setAccessTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
+            $client->setAccessToken($this->validAccessToken);
+        });
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
+        $this->httpClientMock->method('request')
+            ->willReturn($response);
+
+        $response = $this->client->request('GET', 'foobar', [], [
+            '200' => $this->modelClass
+        ]);
+
+        $this->assertInstanceOf($this->modelClass, $response);
+        $this->assertEquals('bar', $response->foo);
+    }
+
+    public function testAccessTokenExpiredCallbackIsCalledOnUnauthorizedExpiredTokenResponse()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-jwt-expired'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+        $this->httpClientMock
+            ->expects($this->once()) // once, as the access token will not be refreshed by the callback
+            ->method('request')->willThrowException($clientException);
+
+        $callbackCalled = false;
+        $this->client->setAccessTokenExpiredCallback(function () use (&$callbackCalled) {
+            $callbackCalled = true;
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should throw the UnauthorizedException, as a new token was not set
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+        $this->assertTrue($callbackCalled);
+    }
+
+    public function testRequestIsRetriedAfterSettingNewAccessToken()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-jwt-expired'))
+        );
+
+        $this->httpClientMock->method('request')->will(
+            $this->onConsecutiveCalls(
+                $this->throwException($clientException),
+                Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'))
+            )
+        );
+
+        $this->client->setAccessTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
+            $client->setAccessToken(new AuthToken('zzz', time() + 10));
+        });
+
+        $response = $this->client->request('GET', 'foobar', [], [
+            '200' => $this->modelClass
+        ]);
+
+        $this->assertInstanceOf($this->modelClass, $response);
+        $this->assertEquals('bar', $response->foo);
+    }
+
+    public function testInvalidAccessTokenInExpiredCallBackDoesNotRetryRequest()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-jwt-expired'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+        $this->httpClientMock
+            ->expects($this->once()) // once, as the access token will be unset
+            ->method('request')->willThrowException($clientException);
+
+        $this->client->setAccessTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
+            $client->setAccessToken(null);
+        });
+
+        $caughtException = null;
+        try {
+            $this->client->request('GET', 'dummy', [], []);
+        } catch (\Exception $caughtException) {
+            // request should throw the UnauthorizedException, as a new token was not set
+        }
+
+        $this->assertInstanceOf(UnauthorizedException::class, $caughtException);
+    }
+
+
+    protected function authenticateByClientCredentials(?ResponseInterface $response = null)
     {
         $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token'));
-
         $httpClientMock = $this->createMock(HttpClient::class);
 
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
@@ -72,33 +243,34 @@ class BaseClientTest extends TestCase
         $prevHttpClient = $this->client->getHttp();
         $this->client->setHttp($httpClientMock);
 
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
 
         $this->client->setHttp($prevHttpClient);
     }
 
     public function testClientIsAuthenticatedAfterSuccessfulAuthentication()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('sometoken', $this->client->getAccessToken()->getToken());
     }
 
     public function testClientAcceptsLowercaseScopeInAccessToken()
     {
-        $this->authenticate(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-scope')));
+        $this->authenticateByClientCredentials(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-scope')));
 
         $this->assertTrue($this->client->isAuthenticated());
     }
 
     public function testClientAcceptsLowercaseTokenTypeInAccessToken()
     {
-        $this->authenticate(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-type')));
+        $this->authenticateByClientCredentials(Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-token-lowercase-type')));
 
         $this->assertTrue($this->client->isAuthenticated());
     }
 
-    public function testAuthenticateThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
+    public function testAuthenticateByClientCredentialsThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
         $clientException = new GuzzleClientException(
@@ -112,10 +284,10 @@ class BaseClientTest extends TestCase
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionCode(401);
         $this->expectExceptionMessage("Bad client credentials");
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
-    public function testAuthenticateThrowsRateLimitExceptionWhenTooManyRequests()
+    public function testAuthenticateByClientCredentialsThrowsRateLimitExceptionWhenTooManyRequests()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/429-too-many-requests'));
         $clientException = new GuzzleClientException(
@@ -128,7 +300,7 @@ class BaseClientTest extends TestCase
 
         $actualException = null;
         try {
-            $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+            $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
         } catch (RateLimitException $actualException) {
         }
 
@@ -150,7 +322,7 @@ class BaseClientTest extends TestCase
 
         $actualException = null;
         try {
-            $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+            $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
         } catch (RateLimitException $actualException) {
         }
 
@@ -159,7 +331,7 @@ class BaseClientTest extends TestCase
         $this->assertNull($actualException->getRetryAfter());
     }
 
-    public function testAuthenticateThrowsResponseExceptionAtForbidden()
+    public function testAuthenticateByClientCredentialsThrowsResponseExceptionAtForbidden()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/403-forbidden-account_is_not_active'));
         $clientException = new GuzzleClientException(
@@ -173,10 +345,10 @@ class BaseClientTest extends TestCase
         $this->expectException(ResponseException::class);
         $this->expectExceptionCode(403);
         $this->expectExceptionMessage("Account is not active, access denied. Please contact partnerservice if this is unexpected.");
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
-    public function testAuthenticateThrowsServerExceptionAtInternalServerError()
+    public function testAuthenticateByClientCredentialsThrowsServerExceptionAtInternalServerError()
     {
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/500-internal-server-error'));
         $clientException = new GuzzleClientException(
@@ -189,7 +361,129 @@ class BaseClientTest extends TestCase
 
         $this->expectException(ServerException::class);
         $this->expectExceptionCode(500);
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+    }
+
+    protected function authenticateByAuthorizationCode(?ResponseInterface $response = null): AuthToken
+    {
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token'));
+        $httpClientMock = $this->createMock(HttpClient::class);
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+        $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'authorization_code',
+                'code' => '123456',
+                'redirect_uri' => 'http://someserver.xxx/redirect',
+            ]
+        ])->willReturn($response);
+
+        // use the HttpClient mock created in this method for authentication, put the original one back afterwards
+        $prevHttpClient = $this->client->getHttp();
+        $this->client->setHttp($httpClientMock);
+
+        $refreshToken = $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
+
+        $this->client->setHttp($prevHttpClient);
+
+        return $refreshToken;
+    }
+
+    public function testClientIsAuthenticatedAfterSuccessfulAuthenticationByAuthorizationCode()
+    {
+        $refreshToken = $this->authenticateByAuthorizationCode();
+
+        $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->getToken());
+    }
+
+    public function testAuthenticateByAuthorizationCodeThrowsUnauthorizedExceptionWhenAuthenticatingWithBadCredentials()
+    {
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $this->httpClientMock->method('request')->willThrowException($clientException);
+
+        $this->expectException(UnauthorizedException::class);
+        $this->expectExceptionCode(401);
+        $this->expectExceptionMessage("Bad client credentials");
+        $this->client->authenticateByAuthorizationCode('secret_id', 'somesupersecretvaluethatshouldnotbeshared', '123456', 'http://someserver.xxx/redirect');
+    }
+
+    protected function authenticateByRefreshToken(?ResponseInterface $response = null): AuthToken
+    {
+        $response = $response ?? Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-authorization-code-token'));
+        $httpClientMock = $this->createMock(HttpClient::class);
+
+        $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
+
+        $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $credentials
+            ],
+            'query' => [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $this->validRefreshToken->getToken()
+            ]
+        ])->willReturn($response);
+
+        // use the HttpClient mock created in this method for authentication, put the original one back afterwards
+        $prevHttpClient = $this->client->getHttp();
+        $this->client->setHttp($httpClientMock);
+
+
+        $refreshToken = $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->validRefreshToken);
+
+        $this->client->setHttp($prevHttpClient);
+
+        return $refreshToken;
+    }
+
+    public function testAccessTokenIsRefreshed()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $refreshToken = $this->authenticateByRefreshToken();
+
+        $this->assertTrue($this->client->isAuthenticated());
+        $this->assertEquals('eyJhbGciOiJub25lIn0.eyJleHAiOjE1NTM5MzY4MTQsImp0aSI6IjZhYmQ1NWNiLWFhOWQtNGM1Zi04OTczLWU5OTYwYjc4MmMyYiJ9.', $refreshToken->getToken());
+    }
+
+    public function testAccessTokenWithExpiredRefreshTokenCannotBeRefreshed()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $this->expectException(Exception::class);
+
+        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->expiredRefreshToken);
+    }
+
+    public function testRefreshTokenThrowsUnauthorizedExceptionWhenUsingWithBadCredentials()
+    {
+        $this->client->setAccessToken($this->validAccessToken);
+
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-unauthorized'));
+        $clientException = new GuzzleClientException(
+            'BaseClient error',
+            new Request('POST', 'dummy'),
+            $response
+        );
+
+        $this->httpClientMock->method('request')->willThrowException($clientException);
+
+        $this->expectException(UnauthorizedException::class);
+        $this->expectExceptionCode(401);
+        $this->expectExceptionMessage("Bad client credentials");
+        $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->validRefreshToken);
     }
 
     public function providerMalformedTokenResponses()
@@ -214,21 +508,25 @@ class BaseClientTest extends TestCase
     /**
      * @dataProvider providerMalformedTokenResponses
      */
-    public function testAuthenticateThrowsResponseExceptionWhenTokenIsMalformed($response)
+    public function testAuthenticateByClientCredentialsThrowsResponseExceptionWhenTokenIsMalformed($response)
     {
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');
         $this->httpClientMock->method('request')->willReturn($response);
 
         $this->expectException(ResponseException::class);
-        $this->client->authenticate('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
+        $this->client->authenticateByClientCredentials('secret_id', 'somesupersecretvaluethatshouldnotbeshared');
     }
 
     public function testRequestReturnsModel()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'));
-        $this->httpClientMock->method('request')->willReturn($response);
+        $this->httpClientMock->method('request')
+            ->with($this->anything(), $this->anything(), $this->callback(function ($options) {
+                return isset($options['headers']['Authorization']) && $options['headers']['Authorization'] === 'Bearer ' . $this->client->getAccessToken()->getToken();
+            }))
+            ->willReturn($response);
 
         $response = $this->client->request('GET', 'foobar', [], [
             '200' => $this->modelClass
@@ -240,7 +538,7 @@ class BaseClientTest extends TestCase
 
     public function testRequestReturnsString()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpClientMock->method('request')->willReturn($response);
@@ -254,7 +552,7 @@ class BaseClientTest extends TestCase
 
     public function testRequestReturnsNullAt404()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/404-not-found'));
         $this->httpClientMock->method('request')->willReturn($response);
@@ -268,7 +566,7 @@ class BaseClientTest extends TestCase
 
     public function testRequestThrowsResponseExceptionAtUnknownResponseType()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpClientMock->method('request')->willReturn($response);
@@ -279,7 +577,7 @@ class BaseClientTest extends TestCase
 
     public function testRequestAddsProducesAsAcceptHeader()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
@@ -304,7 +602,7 @@ class BaseClientTest extends TestCase
 
     public function testRequestJsonEncodesBodyModelIntoBody()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $model = new $this->modelClass();
         $model->foo = 'bar';
@@ -345,7 +643,7 @@ class BaseClientTest extends TestCase
         };
         $modelClass = get_class($stub);
 
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $model = new $modelClass();
         $model->foo = 'bar';
@@ -372,7 +670,7 @@ class BaseClientTest extends TestCase
 
     public function testRequestConstructsEndpoint()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpClientMock
@@ -389,7 +687,7 @@ class BaseClientTest extends TestCase
     public function testDemoModeConstructsDemoEndpoint()
     {
         $this->client->setDemoMode(true);
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
         $this->httpClientMock
@@ -419,7 +717,7 @@ class BaseClientTest extends TestCase
 
     public function testQueryParameterIsSentInRequest()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
@@ -445,7 +743,7 @@ class BaseClientTest extends TestCase
 
     public function testQueryParameterWithValueNullIsNotSentInRequest()
     {
-        $this->authenticate();
+        $this->authenticateByClientCredentials();
 
         $actualOptions = null;
         $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));

@@ -9,10 +9,10 @@ composer require picqer/bol-retailer-php-client "^8"
 ```
 
 ## Usage
-Create an instance of the client and authenticate
+Create an instance of the client and authenticate using the [Client Credentials flow](https://api.bol.com/retailer/public/Retailer-API/authentication.html#_client_credentials_flow)
 ```php
 $client = new \Picqer\BolRetailerV8\Client();
-$client->authenticate('your-client-id', 'your-client-secret');
+$client->authenticateByClientCredentials('your-client-id', 'your-client-secret');
 ```
 
 Then you can get the first page of open orders by calling the getOrders() method on the client
@@ -22,6 +22,120 @@ $reducedOrders = $client->getOrders();
 foreach ($reducedOrders as $reducedOrder) {
     echo 'hello, I am order ' . $reducedOrder->orderId . PHP_EOL;
 }
+```
+
+To save requests to Bol.com, you may reuse the access token:
+```php
+$accessToken = ... // your implementation of getting the access token from the storage
+
+$client = new \Picqer\BolRetailerV8\Client();
+$client->setAccessToken($accessToken);
+
+$client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) {
+  // Called at the beginning of a request to the Retailer API when the access token was expired (or
+  // non-existent) and after a request that resulted in an error about an expired access token.
+  
+  // Authenticate and fetch the new access token
+  $client->authenticateByClientCredentials('{your-client-id}', '{your-client-secret}');
+  $accessToken = $client->getAccessToken();
+  ... // store $accessToken for future use
+});
+```
+
+### Code flow Authentication
+When authenticating using the [Code flow](https://api.bol.com/retailer/public/Retailer-API/intermediary-authorization.html), after receiving and validating the shortcode on your callback uri, you need to retrieve the first access and refresh token:
+
+```php
+$client = new \Picqer\BolRetailerV8\Client();
+
+$refreshToken = $client->authenticateByAuthorizationCode(
+    '{your-client-id}',
+    '{your-client-secret}',
+    '{received-shortcode}',
+    '{callback-uri}'
+);
+$accessToken = $client->getAccessToken();
+... // store $accessToken and $refreshToken for future use
+
+$orders = $client->getOrders();
+```
+
+The access token needs to be (re)used to make requests to the Retailer API.
+```php
+$client = new \Picqer\BolRetailerV8\Client();
+
+$accessToken = ... // your implementation of getting the access token from the storage
+$client->setAccessToken($accessToken);
+
+$orders = $client->getOrders();
+```
+
+The access token code is valid for a limited amount of time (600 seconds at time of writing), so it needs to be refreshed regularly using the refresh token:
+
+```php
+
+$client = new \Picqer\BolRetailerV8\Client();
+
+$accessToken = ... // your implementation of getting the access token from the storage
+$client->setAccessToken($accessToken);
+$client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) {
+  // Called at the beginning of a request to the Retailer API when the access token was expired or
+  // non-existent and after a request that resulted in an error about an expired access token.
+  
+  // This callback can attempt to refresh the access token. If after this callback the Client has
+  // a valid access token, the request will continue or retried once. Otherwise, it will be
+  // aborted with an Exception.
+  
+  $refreshToken = ... // your implementation of getting the refresh token from the storage
+  $client->authenticateByRefreshToken('{your-client-id}', '{your-client-secret}', $refreshToken);
+  $accessToken = $client->getAccessToken();
+  ... // store $accessToken for future use
+});
+
+$orders = $client->getOrders();
+```
+
+The example above assumed your Bol.com integration account uses a refresh token that does not change after use (named 'Method 1' by Bol.com).
+
+If your refresh token changes after each use ('Method 2'), then you need to store the new refresh token after refreshing. In this case a refresh token can only be used once. When multiple processes are refreshing simultaneously, there is a risk that due to race conditions a used refresh token is stored last. This means that from then on it's impossible to refresh and the user needs to manually log in again. To prevent this, you need to work with locks, in such a way that it guarantees that only the latest refresh token is stored and used. The example below uses a blocking mutex.
+
+```php
+$client = new \Picqer\BolRetailerV8\Client();
+
+$accessToken = ... // your implementation of getting the access token from the storage
+$client->setAccessToken($accessToken);
+
+$client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) use ($mutex) {
+  // Called at the beginning of a request to the Retailer API when the access token was expired or
+  // non-existent and after a request that resulted in an error about an expired access token.
+  
+  // Ensure only 1 process can be in the critical section, others are blocked and one is let in
+  // when that process leaves the critical section
+  $mutex->withLock(function () use ($client) {
+    // your implementation of getting the latest access token from the storage (it might be
+    // refreshed by another process)
+    $accessToken = ... 
+    
+    if (! $accessToken->isExpired()) {
+      // No need to refresh the token, as it was already refreshed by another proces. Make sure the
+      // client uses it.
+      $client->setAccessToken($accessToken);
+      return;
+    }
+  
+    $refreshToken = ... // your implementation of getting the refresh token from the storage
+    $newRefreshToken = $client->authenticateByRefreshToken(
+        '{your-client-id}',
+        '{your-client-secret}',
+        $refreshToken
+    );
+    $accessToken = $client->getAccessToken();
+    
+    ... // store $accessToken and $newRefreshToken for future use
+  }
+});
+
+$orders = $client->getOrders();
 ```
 
 ## Exceptions
@@ -107,3 +221,4 @@ composer run-script generate-models
   ``` 
 - Operation 'get-invoices' is specified to have a string as response, while there is clearly some data model returned in JSON or XML.
 - The description of the operation 'get-invoices' contains a weird space marked as 'ENSP'.
+- If your application is an intermediary, you want to make sure that migrating from the client credentials authentication to the code flow authentication for a certain connection happens for the same Bol.com webshop. There is no endpoint to identify the webshop, but the JWT access tokens do contain the Seller (id). So the suggested method is to compare the Sellers from the old and new access tokens. Keep in mind that the (decoded) content of these access tokens for both authentication methods have different formats. Also, this method should be replaced when Bol.com adds an endpoint to identify the Seller, as the contents of the JWT tokens are undocumented and may change at any point in time. They could even be replaced by non-JWT tokens by Bol.com. 
