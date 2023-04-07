@@ -32,8 +32,8 @@ $client = new \Picqer\BolRetailerV8\Client();
 $client->setAccessToken($accessToken);
 
 $client->setAccessTokenExpiredCallback(function(\Picqer\BolRetailerV8\Client $client) {
-  // Called at the beginning of a request to the Retailer API when the access token was expired or
-  // non-existent and after a request that resulted in an error about an expired access token.
+  // Called at the beginning of a request to the Retailer API when the access token was expired (or
+  // non-existent) and after a request that resulted in an error about an expired access token.
   
   // Authenticate and fetch the new access token
   $client->authenticateByClientCredentials('{your-client-id}', '{your-client-secret}');
@@ -97,7 +97,7 @@ $orders = $client->getOrders();
 
 The example above assumed your Bol.com integration account uses a refresh token that does not change after use (named 'Method 1' by Bol.com).
 
-If your refresh code changes after each use ('Method 2') then you need to store the new refresh token after refreshing. In this case a refresh token can only be used once. When multiple processes are refreshing simultaneously, there is a risk that due to race conditions a used refresh token is stored last. This means that from then on it's impossible to refresh and the client needs to manually log in again. To prevent this, you need to work with locks, in such a way that it guarantees that only the latest refresh token is stored and used. The example below uses a blocking mutex.
+If your refresh token changes after each use ('Method 2'), then you need to store the new refresh token after refreshing. In this case a refresh token can only be used once. When multiple processes are refreshing simultaneously, there is a risk that due to race conditions a used refresh token is stored last. This means that from then on it's impossible to refresh and the user needs to manually log in again. To prevent this, you need to work with locks, in such a way that it guarantees that only the latest refresh token is stored and used. The example below uses a blocking mutex.
 
 ```php
 $client = new \Picqer\BolRetailerV8\Client();
@@ -221,3 +221,4 @@ composer run-script generate-models
   ``` 
 - Operation 'get-invoices' is specified to have a string as response, while there is clearly some data model returned in JSON or XML.
 - The description of the operation 'get-invoices' contains a weird space marked as 'ENSP'.
+- If you have Bol.com Retailer webshops not managed by you connected to your application, you want to make sure that migrating from the client credentials authentication to the code flow authentication for a certain connection happens for the same Bol.com webshop. There is no endpoint to identify the webshop, but the JWT access tokens do contain the Seller (id). So the suggested method is to compare the Sellers from the old and new access tokens. Keep in mind that the (decoded) content of these access tokens for both authentication methods have different formats. Also, this method should be replaced when Bol.com adds an endpoint to identify the Seller, as the contents of the JWT tokens are undocumented and may change at any point in time. They could even be replaced by non-JWT tokens by Bol.com. 
