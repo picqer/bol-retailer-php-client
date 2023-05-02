@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV8\OpenApi;
+namespace Picqer\BolRetailerV10\OpenApi;
 
 class ClientGenerator
 {
@@ -18,13 +18,16 @@ class ClientGenerator
         'boolean' => 'bool',
         'integer' => 'int',
         'float' => 'float',
-        'number' => 'float'
+        'number' => 'float',
+        'file' => 'string',
     ];
 
     public function __construct()
     {
         $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json')
-            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared.json'));
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/retailer-v10.json'))
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared.json'))
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared-v10.json'));
 
         $this->specs = $retailer->getSpecs();
     }
@@ -105,6 +108,7 @@ class ClientGenerator
         $code[] = '        $options = [';
         $this->addQueryParams($arguments, $code);
         $this->addBodyParam($arguments, $code);
+        $this->addFormData($arguments, $code);
         $code[] = sprintf('            \'produces\' => \'%s\',', $methodDefinition['produces'][0]);
         $code[] = '        ];';
         $options = '$options';
@@ -258,7 +262,7 @@ class ClientGenerator
 
                     if (isset($propDefinition['type']) && $propDefinition['type'] == 'array') {
                         $itemsType = $this->getType($propDefinition['items']['$ref']);
-                        $argument['doc'] = 'Model\\' . $itemsType . '[]';
+                        $argument['doc'] = 'Model\\'.$itemsType.'[]';
                         $argument['php'] = 'array';
                     } elseif (isset($propDefinition['type'])) {
                         $wrappingType = static::$paramTypeMapping[$propDefinition['type']];
@@ -266,19 +270,24 @@ class ClientGenerator
                         $argument['php'] = $wrappingType;
                     } else {
                         $wrappingType = $this->getType($propDefinition['$ref']);
-                        $argument['doc'] = 'Model\\' . $wrappingType;
-                        $argument['php'] = 'Model\\' . $wrappingType;
+                        $argument['doc'] = 'Model\\'.$wrappingType;
+                        $argument['php'] = 'Model\\'.$wrappingType;
                     }
                     $argument['property'] = $property;
                     $argument['name'] = $property;
-                    $argument['wrapperPhp'] = 'Model\\' . $type;
+                    $argument['wrapperPhp'] = 'Model\\'.$type;
                 }
 
-                if (! isset($argument['property'])) {
-                    $argument['php'] = 'Model\\' . $type;
+                if (!isset($argument['property'])) {
+                    $argument['php'] = 'Model\\'.$type;
                     $argument['doc'] = $argument['php'];
                     $argument['name'] = lcfirst($type);
                 }
+            } else if ($parameter['in'] == 'formData') {
+                $argument['php'] = static::$paramTypeMapping[$parameter['type']];
+                $argument['doc'] = $argument['php'];
+                $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
+                $argument['is_file'] = (bool)$parameter['type'];
             } else {
                 $argument['php'] = static::$paramTypeMapping[$parameter['type']];
                 $argument['doc'] = $argument['php'];
@@ -385,6 +394,43 @@ class ClientGenerator
 
 
             return;
+        }
+    }
+
+    protected function addFormData(array $arguments, array &$code): void
+    {
+        $formData = [];
+        $multipart = [];
+
+        foreach ($arguments as $argument) {
+            if ($argument['in'] != 'formData') {
+                continue;
+            }
+
+            if ($argument['is_file']) {
+                $multipart[] = '                [';
+                $multipart[] = sprintf('                    \'name\' => \'%s\',', $argument['name']);
+                $multipart[] = sprintf('                    \'contents\' => fopen($%s, \'r\'),', $argument['name']);
+                $multipart[] = '                ],';
+            } else {
+                $formData[] = sprintf('                \'%s\' => $%s,', $argument['name'], $argument['name']);
+            }
+        }
+
+        if ($formData) {
+            $code[] = '            \'form_params\' => [';
+            foreach ($formData as $argument) {
+                $code[] = $argument;
+            }
+            $code[] = '            ],';
+        }
+
+        if ($multipart) {
+            $code[] = '            \'multipart\' => [';
+            foreach ($multipart as $argument) {
+                $code[] = $argument;
+            }
+            $code[] = '            ],';
         }
     }
 

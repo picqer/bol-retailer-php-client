@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV8;
+namespace Picqer\BolRetailerV10;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
