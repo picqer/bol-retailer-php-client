@@ -1,5 +1,5 @@
 HTTP/1.1 401 Unauthorized
-Content-Type: application/vnd.retailer.v8+json
+Content-Type: application/vnd.retailer.v10+json
 
 {
   "title": "Expired JWT",

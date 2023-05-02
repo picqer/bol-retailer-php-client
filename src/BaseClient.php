@@ -6,22 +6,22 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
-use Picqer\BolRetailerV8\Exception\RateLimitException;
-use Picqer\BolRetailerV8\Exception\ServerException;
-use Picqer\BolRetailerV8\Model\AbstractModel;
-use Picqer\BolRetailerV8\Exception\ConnectException;
-use Picqer\BolRetailerV8\Exception\Exception;
-use Picqer\BolRetailerV8\Exception\ResponseException;
-use Picqer\BolRetailerV8\Exception\UnauthorizedException;
-use Picqer\BolRetailerV8\Model\Authentication\TokenResponse;
-use Picqer\BolRetailerV8\Model\Authentication\TokenRequest;
+use Picqer\BolRetailerV10\Exception\RateLimitException;
+use Picqer\BolRetailerV10\Exception\ServerException;
+use Picqer\BolRetailerV10\Model\AbstractModel;
+use Picqer\BolRetailerV10\Exception\ConnectException;
+use Picqer\BolRetailerV10\Exception\Exception;
+use Picqer\BolRetailerV10\Exception\ResponseException;
+use Picqer\BolRetailerV10\Exception\UnauthorizedException;
+use Picqer\BolRetailerV10\Model\Authentication\TokenResponse;
+use Picqer\BolRetailerV10\Model\Authentication\TokenRequest;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClient
 {
     protected const API_TOKEN_URI = 'https://login.bol.com/token';
     protected const API_ENDPOINT = 'https://api.bol.com/';
-    protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v8+json';
+    protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v10+json';
 
     /**
      * @var bool Whether request will be sent to the demo endpoint.
