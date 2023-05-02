@@ -287,7 +287,7 @@ class ClientGenerator
                 $argument['php'] = static::$paramTypeMapping[$parameter['type']];
                 $argument['doc'] = $argument['php'];
                 $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
-                $argument['is_file'] = (bool)$parameter['type'];
+                $argument['is_file'] = 'file' === $parameter['type'];
             } else {
                 $argument['php'] = static::$paramTypeMapping[$parameter['type']];
                 $argument['doc'] = $argument['php'];
