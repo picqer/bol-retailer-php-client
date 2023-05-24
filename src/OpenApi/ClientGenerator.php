@@ -262,7 +262,7 @@ class ClientGenerator
 
                     if (isset($propDefinition['type']) && $propDefinition['type'] == 'array') {
                         $itemsType = $this->getType($propDefinition['items']['$ref']);
-                        $argument['doc'] = 'Model\\'.$itemsType.'[]';
+                        $argument['doc'] = 'Model\\' . $itemsType . '[]';
                         $argument['php'] = 'array';
                     } elseif (isset($propDefinition['type'])) {
                         $wrappingType = static::$paramTypeMapping[$propDefinition['type']];
@@ -270,16 +270,16 @@ class ClientGenerator
                         $argument['php'] = $wrappingType;
                     } else {
                         $wrappingType = $this->getType($propDefinition['$ref']);
-                        $argument['doc'] = 'Model\\'.$wrappingType;
-                        $argument['php'] = 'Model\\'.$wrappingType;
+                        $argument['doc'] = 'Model\\' . $wrappingType;
+                        $argument['php'] = 'Model\\' . $wrappingType;
                     }
                     $argument['property'] = $property;
                     $argument['name'] = $property;
-                    $argument['wrapperPhp'] = 'Model\\'.$type;
+                    $argument['wrapperPhp'] = 'Model\\' . $type;
                 }
 
                 if (!isset($argument['property'])) {
-                    $argument['php'] = 'Model\\'.$type;
+                    $argument['php'] = 'Model\\' . $type;
                     $argument['doc'] = $argument['php'];
                     $argument['name'] = lcfirst($type);
                 }
@@ -399,35 +399,34 @@ class ClientGenerator
 
     protected function addFormData(array $arguments, array &$code): void
     {
+        $containsFileArgument = in_array(true, array_map(
+            static fn (array $argument): bool => $argument['is_file'] ?? false,
+            $arguments,
+        ));
         $formData = [];
-        $multipart = [];
 
         foreach ($arguments as $argument) {
             if ($argument['in'] != 'formData') {
                 continue;
             }
 
-            if ($argument['is_file']) {
-                $multipart[] = '                [';
-                $multipart[] = sprintf('                    \'name\' => \'%s\',', $argument['name']);
-                $multipart[] = sprintf('                    \'contents\' => fopen($%s, \'r\'),', $argument['name']);
-                $multipart[] = '                ],';
+            if ($containsFileArgument) {
+                $formData[] = '                [';
+                $formData[] = sprintf('                    \'name\' => \'%s\',', $argument['name']);
+                $formData[] = $argument['is_file']
+                    ? sprintf('                    \'contents\' => \GuzzleHttp\Psr7\Utils::tryFopen($%s, \'r\'),', $argument['name'])
+                    : sprintf('                    \'contents\' => $%s,', $argument['name']);
+                $formData[] = '                ],';
             } else {
                 $formData[] = sprintf('                \'%s\' => $%s,', $argument['name'], $argument['name']);
             }
         }
 
         if ($formData) {
-            $code[] = '            \'form_params\' => [';
+            $code[] = $containsFileArgument
+                ? '            \'multipart\' => ['
+                : '            \'form_params\' => [';
             foreach ($formData as $argument) {
-                $code[] = $argument;
-            }
-            $code[] = '            ],';
-        }
-
-        if ($multipart) {
-            $code[] = '            \'multipart\' => [';
-            foreach ($multipart as $argument) {
                 $code[] = $argument;
             }
             $code[] = '            ],';

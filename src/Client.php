@@ -1864,7 +1864,7 @@ class Client extends BaseClient
             'multipart' => [
                 [
                     'name' => 'invoice',
-                    'contents' => fopen($invoice, 'r'),
+                    'contents' => \GuzzleHttp\Psr7\Utils::tryFopen($invoice, 'r'),
                 ],
             ],
             'produces' => 'application/vnd.retailer.v10+json',

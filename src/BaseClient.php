@@ -407,6 +407,20 @@ class BaseClient
             });
         }
 
+        // pass through multipart parameters without null values
+        if (isset($options['multipart'])) {
+            $httpOptions['multipart'] = array_filter($options['multipart'], function ($value) {
+                return $value !== null;
+            });
+        }
+
+        // pass through form_params parameters without null values
+        if (isset($options['form_params'])) {
+            $httpOptions['form_params'] = array_filter($options['form_params'], function ($value) {
+                return $value !== null;
+            });
+        }
+
         return $this->rawRequest($method, $url, $httpOptions);
     }
 
