@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV8\OpenApi;
+namespace Picqer\BolRetailerV10\OpenApi;
 
 class SwaggerSpecs
 {

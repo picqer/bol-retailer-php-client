@@ -4,8 +4,8 @@
   "schemes": ["https"], 
   "info" : {
     "description" : "The bol.com API shared logic.",
-    "version" : "8.x",
-    "title" : "v8 - Shared API"
+    "version" : "9.x",
+    "title" : "v9 - Shared API"
   },
   "tags" : [ {
     "name" : "Process Status"
@@ -17,7 +17,7 @@
         "summary" : "Get the status of an asynchronous process by entity id and event type for a retailer",
         "description" : "Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests in descending order. You need to supply an entity id and event type. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.",
         "operationId" : "get-process-status-entity-id",
-        "produces" : [ "application/vnd.retailer.v8+json", "application/vnd.advertiser.v8+json" ],
+        "produces" : [ "application/vnd.retailer.v9+json", "application/vnd.advertiser.v9+json" ],
         "parameters" : [ {
           "name" : "entity-id",
           "in" : "query",
@@ -32,7 +32,7 @@
           "required" : true,
           "type" : "string",
           "x-example" : "CONFIRM_SHIPMENT",
-          "enum" : [ "CONFIRM_SHIPMENT", "CANCEL_ORDER", "CHANGE_TRANSPORT", "HANDLE_RETURN_ITEM", "CREATE_RETURN_ITEM", "CREATE_INBOUND", "DELETE_OFFER", "CREATE_OFFER", "UPDATE_OFFER", "UPDATE_OFFER_STOCK", "UPDATE_OFFER_PRICE", "CREATE_OFFER_EXPORT", "UNPUBLISHED_OFFER_REPORT", "CREATE_PRODUCT_CONTENT", "CREATE_SUBSCRIPTION", "UPDATE_SUBSCRIPTION", "DELETE_SUBSCRIPTION", "SEND_SUBSCRIPTION_TST_MSG", "CREATE_SHIPPING_LABEL", "CREATE_REPLENISHMENT", "UPDATE_REPLENISHMENT", "CREATE_CAMPAIGN", "UPDATE_CAMPAIGN", "CREATE_AD_GROUP", "UPDATE_AD_GROUP", "CREATE_TARGET_PRODUCT", "UPDATE_TARGET_PRODUCT", "CREATE_NEGATIVE_KEYWORD", "DELETE_NEGATIVE_KEYWORD", "CREATE_KEYWORD", "UPDATE_KEYWORD", "DELETE_KEYWORD", "REQUEST_PRODUCT_DESTINATIONS" ]
+          "enum" : [ "CONFIRM_SHIPMENT", "CANCEL_ORDER", "CHANGE_TRANSPORT", "HANDLE_RETURN_ITEM", "CREATE_RETURN_ITEM", "CREATE_INBOUND", "DELETE_OFFER", "CREATE_OFFER", "UPDATE_OFFER", "UPDATE_OFFER_STOCK", "UPDATE_OFFER_PRICE", "CREATE_OFFER_EXPORT", "UNPUBLISHED_OFFER_REPORT", "CREATE_PRODUCT_CONTENT", "CREATE_SUBSCRIPTION", "UPDATE_SUBSCRIPTION", "DELETE_SUBSCRIPTION", "SEND_SUBSCRIPTION_TST_MSG", "CREATE_SHIPPING_LABEL", "CREATE_REPLENISHMENT", "UPDATE_REPLENISHMENT", "CREATE_CAMPAIGN", "UPDATE_CAMPAIGN", "CREATE_AD_GROUP", "UPDATE_AD_GROUP", "CREATE_TARGET_PRODUCT", "UPDATE_TARGET_PRODUCT", "CREATE_NEGATIVE_KEYWORD", "DELETE_NEGATIVE_KEYWORD", "CREATE_KEYWORD", "UPDATE_KEYWORD", "DELETE_KEYWORD", "REQUEST_PRODUCT_DESTINATIONS", "CREATE_SOV_CATEGORY_REPORT", "CREATE_SOV_SEARCH_TERM_REPORT", "UPLOAD_INVOICE" ]
         }, {
           "name" : "page",
           "in" : "query",
@@ -63,8 +63,8 @@
         "summary" : "Get the status of multiple asynchronous processes by an array of process status ids for a retailer",
         "description" : "Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests. No more than 1000 process status id's can be sent in a single request. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.",
         "operationId" : "get-process-status-bulk",
-        "consumes" : [ "application/vnd.retailer.v8+json", "application/vnd.advertiser.v8+json" ],
-        "produces" : [ "application/vnd.retailer.v8+json", "application/vnd.advertiser.v8+json" ],
+        "consumes" : [ "application/vnd.retailer.v9+json", "application/vnd.advertiser.v9+json" ],
+        "produces" : [ "application/vnd.retailer.v9+json", "application/vnd.advertiser.v9+json" ],
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -95,7 +95,7 @@
         "summary" : "Get the status of an asynchronous process by process status id",
         "description" : "Retrieve a specific process status, which shows information regarding a previously executed PUT/POST/DELETE request. All PUT/POST/DELETE requests on the other endpoints will supply a process status id in the related response. You can use this id to retrieve a status by using the endpoint below. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these statuses.",
         "operationId" : "get-process-status",
-        "produces" : [ "application/vnd.retailer.v8+json", "application/vnd.advertiser.v8+json" ],
+        "produces" : [ "application/vnd.retailer.v9+json", "application/vnd.advertiser.v9+json" ],
         "parameters" : [ {
           "name" : "process-status-id",
           "in" : "path",

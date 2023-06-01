@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV8\OpenApi;
+namespace Picqer\BolRetailerV10\OpenApi;
 
 class ClientGenerator
 {
@@ -18,13 +18,16 @@ class ClientGenerator
         'boolean' => 'bool',
         'integer' => 'int',
         'float' => 'float',
-        'number' => 'float'
+        'number' => 'float',
+        'file' => 'string',
     ];
 
     public function __construct()
     {
         $retailer = (new SwaggerSpecs())->load(__DIR__ . '/retailer.json')
-            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared.json'));
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/retailer-v10.json'))
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared.json'))
+            ->merge((new SwaggerSpecs())->load(__DIR__ . '/shared-v10.json'));
 
         $this->specs = $retailer->getSpecs();
     }
@@ -105,6 +108,7 @@ class ClientGenerator
         $code[] = '        $options = [';
         $this->addQueryParams($arguments, $code);
         $this->addBodyParam($arguments, $code);
+        $this->addFormData($arguments, $code);
         $code[] = sprintf('            \'produces\' => \'%s\',', $methodDefinition['produces'][0]);
         $code[] = '        ];';
         $options = '$options';
@@ -274,11 +278,16 @@ class ClientGenerator
                     $argument['wrapperPhp'] = 'Model\\' . $type;
                 }
 
-                if (! isset($argument['property'])) {
+                if (!isset($argument['property'])) {
                     $argument['php'] = 'Model\\' . $type;
                     $argument['doc'] = $argument['php'];
                     $argument['name'] = lcfirst($type);
                 }
+            } else if ($parameter['in'] == 'formData') {
+                $argument['php'] = static::$paramTypeMapping[$parameter['type']];
+                $argument['doc'] = $argument['php'];
+                $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
+                $argument['is_file'] = 'file' === $parameter['type'];
             } else {
                 $argument['php'] = static::$paramTypeMapping[$parameter['type']];
                 $argument['doc'] = $argument['php'];
@@ -385,6 +394,42 @@ class ClientGenerator
 
 
             return;
+        }
+    }
+
+    protected function addFormData(array $arguments, array &$code): void
+    {
+        $containsFileArgument = in_array(true, array_map(
+            static fn (array $argument): bool => $argument['is_file'] ?? false,
+            $arguments,
+        ));
+        $formData = [];
+
+        foreach ($arguments as $argument) {
+            if ($argument['in'] != 'formData') {
+                continue;
+            }
+
+            if ($containsFileArgument) {
+                $formData[] = '                [';
+                $formData[] = sprintf('                    \'name\' => \'%s\',', $argument['name']);
+                $formData[] = $argument['is_file']
+                    ? sprintf('                    \'contents\' => \GuzzleHttp\Psr7\Utils::tryFopen($%s, \'r\'),', $argument['name'])
+                    : sprintf('                    \'contents\' => $%s,', $argument['name']);
+                $formData[] = '                ],';
+            } else {
+                $formData[] = sprintf('                \'%s\' => $%s,', $argument['name'], $argument['name']);
+            }
+        }
+
+        if ($formData) {
+            $code[] = $containsFileArgument
+                ? '            \'multipart\' => ['
+                : '            \'form_params\' => [';
+            foreach ($formData as $argument) {
+                $code[] = $argument;
+            }
+            $code[] = '            ],';
         }
     }
 

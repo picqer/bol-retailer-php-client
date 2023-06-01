@@ -1,5 +1,5 @@
 HTTP/1.1 429 Too Many Requests
-Content-Type: application/vnd.retailer.v8+json
+Content-Type: application/vnd.retailer.v10+json
 Retry-After: 4
 
 {
