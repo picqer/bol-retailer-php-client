@@ -283,7 +283,7 @@ class ClientGenerator
                     $argument['doc'] = $argument['php'];
                     $argument['name'] = lcfirst($type);
                 }
-            } else if ($parameter['in'] == 'formData') {
+            } elseif ($parameter['in'] == 'formData') {
                 $argument['php'] = static::$paramTypeMapping[$parameter['type']];
                 $argument['doc'] = $argument['php'];
                 $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
