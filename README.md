@@ -149,11 +149,8 @@ Methods on the Client may throw Exceptions. All Exceptions have the parent class
 
 ## Migrate to v10
 If you're migrating to v10, please have a look at the official migration guides to find out what has changed:
-- [bol.com Retailer API migration guide from v9 to v10](https://api.bol.com/retailer/public/Retailer-API/v10/migrationguide/v9-v10/migrationguide.html)
 - [bol.com Retailer API migration guide from v8 to v9](https://api.bol.com/retailer/public/Retailer-API/v9/migrationguide/v8-v9/migrationguide.html)
 - [bol.com Retailer API migration guide from v7 to v8](https://api.bol.com/retailer/public/Retailer-API/v8/migrationguide/v7-v8/migrationguide.html)
-- [bol.com Retailer API migration guide from v6 to v7](https://api.bol.com/retailer/public/Retailer-API/v7/migrationguide/v6-v7/migrationguide.html)
-- [bol.com Retailer API migration guide from v5 to v7](https://api.bol.com/retailer/public/Retailer-API/v7/migrationguide/v5-v7/migrationguide.html)
 
 ### Gradual rollout
 It's easy to overlook changes when migrating to a new version, which could result in undesired behaviour. You may consider a gradual rollout to minimize impact on your business. You can achieve this by using two versions of the API client in your project and a way to test the new version with a small percentage of requests. To use different versions of this client through Composer, fork this project and use a specific version branch of that new temporary repository as dependency.
