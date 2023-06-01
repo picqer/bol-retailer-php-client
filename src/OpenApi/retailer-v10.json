@@ -1,0 +1,494 @@
+{
+  "swagger" : "2.0",
+  "host": "api.bol.com",
+  "schemes": ["https"],
+  "info" : {
+    "description" : "The bol.com API for retailers.",
+    "version" : "10.x",
+    "title" : "v10 - Retailer API"
+  },
+  "tags" : [ {
+    "name" : "Insights (BETA)"
+  }, {
+    "name" : "Shipments (BETA)"
+  } ],
+  "paths" : {
+    "/retailer/insights/price-star-boundaries/{ean}" : {
+      "get" : {
+        "tags" : [ "Insights (BETA)" ],
+        "summary" : "Get price star boundaries by EAN",
+        "description" : "Gets a list of all price star boundaries for a specific EAN.",
+        "operationId" : "get-price-star-boundaries",
+        "produces" : [ "application/vnd.retailer.v10+json", "application/vnd.retailer.v8+json", "application/vnd.retailer.v9+json" ],
+        "parameters" : [ {
+          "name" : "ean",
+          "in" : "path",
+          "description" : "The EAN number associated with this product.",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "0000007740404"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok: Successfully processed the request.",
+            "schema" : {
+              "$ref" : "#/definitions/PriceStarBoundaries"
+            }
+          },
+          "404" : {
+            "description" : "Not found: The requested item could not be found.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          }
+        }
+      }
+    },
+    "/retailer/shipments/invoices/requests" : {
+      "get" : {
+        "tags" : [ "Shipments (BETA)" ],
+        "summary" : "Get a list of invoice requests",
+        "description" : "Gets a list of paginated invoice requests initiated by customers.",
+        "operationId" : "get-invoice-requests",
+        "produces" : [ "application/vnd.retailer.v10+json" ],
+        "parameters" : [ {
+          "name" : "shipment-id",
+          "in" : "query",
+          "description" : "The id of the shipment.",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "541757635"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "The requested page number with a page size of 50 items.",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1,
+          "minimum" : 1,
+          "format" : "int32",
+          "x-example" : 1
+        }, {
+          "name" : "state",
+          "in" : "query",
+          "description" : "To filter on invoice request state. You can filter on all invoice requests regardless their statuses, open invoice requests requiring your action and invoice requests uploaded with possible errors.",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "OPEN", "UPLOAD_ERROR", "ALL" ],
+            "default" : "ALL"
+          },
+          "collectionFormat" : "multi",
+          "default" : "ALL",
+          "x-example" : "OPEN"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok: Successfully processed the request.",
+            "schema" : {
+              "$ref" : "#/definitions/InvoiceRequestsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          },
+          "404" : {
+            "description" : "Not found: The requested item could not be found.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          }
+        }
+      }
+    },
+    "/retailer/shipments/invoices/{shipment-id}" : {
+      "post" : {
+        "tags" : [ "Shipments (BETA)" ],
+        "summary" : "Upload an invoice for shipment id",
+        "description" : "Uploads an invoice associated with shipment id.",
+        "operationId" : "upload-invoice",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/vnd.retailer.v10+json" ],
+        "parameters" : [ {
+          "name" : "invoice",
+          "in" : "formData",
+          "description" : "The invoice file.",
+          "required" : true,
+          "type" : "file"
+        }, {
+          "name" : "shipment-id",
+          "in" : "path",
+          "description" : "The id of the shipment associated with the invoice.",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "541757635"
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Accepted: Successfully scheduled the request for processing.",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessStatus"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          },
+          "404" : {
+            "description" : "Not found: The requested item could not be found.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          },
+          "415" : {
+            "description" : "Unsupported Media Type: Content-Type header contains invalid value, allowed value is multipart/form-data.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "BillingDetails" : {
+      "type" : "object",
+      "properties" : {
+        "salutation" : {
+          "type" : "string",
+          "example" : "MALE",
+          "description" : "The salutation of the customer.",
+          "enum" : [ "MALE", "FEMALE", "UNKNOWN" ]
+        },
+        "firstName" : {
+          "type" : "string",
+          "example" : "Billie",
+          "description" : "The first name of the customer."
+        },
+        "surname" : {
+          "type" : "string",
+          "example" : "Jansen",
+          "description" : "The surname of the customer."
+        },
+        "streetName" : {
+          "type" : "string",
+          "example" : "Dorpstraat",
+          "description" : "The street name."
+        },
+        "houseNumber" : {
+          "type" : "string",
+          "example" : "1",
+          "description" : "The house number."
+        },
+        "houseNumberExtension" : {
+          "type" : "string",
+          "example" : "B",
+          "description" : "The extension on the house number."
+        },
+        "zipCode" : {
+          "type" : "string",
+          "example" : "1111ZZ",
+          "description" : "The ZIP code in '1234AB' format for NL orders and '0000' format for BE orders."
+        },
+        "city" : {
+          "type" : "string",
+          "example" : "Utrecht",
+          "description" : "The name of the city."
+        },
+        "countryCode" : {
+          "type" : "string",
+          "example" : "NL",
+          "description" : "The country code."
+        },
+        "company" : {
+          "type" : "string",
+          "example" : "bol.com",
+          "description" : "The company name."
+        },
+        "vatNumber" : {
+          "type" : "string",
+          "example" : "NL999999999B99",
+          "description" : "The Value Added Tax (VAT) / BTW number for business sellers situated in the Netherlands."
+        },
+        "kvkNumber" : {
+          "type" : "string",
+          "example" : "99887766",
+          "description" : "The Kamer van Koophandel (KvK) number for organizations situated in the Netherlands or ondernemingsnummer for organizations situated in Belgium."
+        }
+      }
+    },
+    "InvoiceRequests" : {
+      "type" : "object",
+      "required" : [ "shipmentId", "status", "statusTransitions" ],
+      "properties" : {
+        "shipmentId" : {
+          "type" : "string",
+          "example" : "987654",
+          "description" : "The id of the shipment associated with this invoice request."
+        },
+        "orderId" : {
+          "type" : "string",
+          "example" : "4691862037",
+          "description" : "The id of the order associated with this shipment."
+        },
+        "customerAccountNumber" : {
+          "type" : "string",
+          "example" : "3004850316",
+          "description" : "The account of the customer within bol.com associated with this shipment."
+        },
+        "billingDetails" : {
+          "description" : "The details of the customer that is responsible for the financial fulfillment of this shipment.",
+          "$ref" : "#/definitions/BillingDetails"
+        },
+        "products" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Products"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "INVOICE_REQUESTED",
+          "description" : "The current status of the invoice request."
+        },
+        "statusTransitions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StatusTransitions"
+          }
+        }
+      }
+    },
+    "InvoiceRequestsResponse" : {
+      "type" : "object",
+      "required" : [ "invoiceRequests" ],
+      "properties" : {
+        "invoiceRequests" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InvoiceRequests"
+          }
+        }
+      }
+    },
+    "Link" : {
+      "type" : "object",
+      "required" : [ "href", "method", "rel" ],
+      "properties" : {
+        "rel" : {
+          "type" : "string",
+          "example" : "self",
+          "description" : "The link relation."
+        },
+        "href" : {
+          "type" : "string",
+          "example" : "https://api.bol.com/shared/process-status/1234567",
+          "description" : "The URI for the resource linked to."
+        },
+        "method" : {
+          "type" : "string",
+          "example" : "GET",
+          "description" : "The HTTP method to use when accessing the link."
+        }
+      }
+    },
+    "PriceStarBoundaries" : {
+      "type" : "object",
+      "required" : [ "lastModifiedDateTime", "priceStarBoundaryLevels" ],
+      "properties" : {
+        "lastModifiedDateTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2022-01-07T03:18:38.228164+01:00",
+          "description" : "The date and time in ISO 8601 format when boundaries updated for the last time."
+        },
+        "priceStarBoundaryLevels" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PriceStarBoundaryLevels"
+          }
+        }
+      }
+    },
+    "PriceStarBoundaryLevels" : {
+      "type" : "object",
+      "required" : [ "boundaryPrice", "level" ],
+      "properties" : {
+        "level" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 5,
+          "description" : "The level of the price star boundary."
+        },
+        "boundaryPrice" : {
+          "type" : "number",
+          "example" : 41.0,
+          "description" : "The boundary price of the corresponding level."
+        }
+      }
+    },
+    "Problem" : {
+      "type" : "object",
+      "required" : [ "violations" ],
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://api.bol.com/problems",
+          "description" : "Type URI for this problem. Fixed value: https://api.bol.com/problems."
+        },
+        "title" : {
+          "type" : "string",
+          "example" : "Error validating request. Consult the bol.com API documentation for more information.",
+          "description" : "Title describing the nature of the problem."
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : "40X",
+          "description" : "HTTP status returned from the endpoint causing the problem."
+        },
+        "detail" : {
+          "type" : "string",
+          "example" : "Bad request",
+          "description" : "Detailed error message describing in additional detail what caused the service to return this problem."
+        },
+        "host" : {
+          "type" : "string",
+          "example" : "Instance-001",
+          "description" : "Host identifier describing the server instance that reported the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://api.bol.com//retailer/resource",
+          "description" : "Full URI path of the resource that reported the problem."
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "description" : "Describes a problem that occurred interacting with the API."
+    },
+    "ProcessStatus" : {
+      "type" : "object",
+      "required" : [ "createTimestamp", "description", "eventType", "links", "status" ],
+      "properties" : {
+        "processStatusId" : {
+          "type" : "string",
+          "example" : "1234567",
+          "description" : "The process status id."
+        },
+        "entityId" : {
+          "type" : "string",
+          "example" : "987654321",
+          "description" : "The id of the object being processed. For example, in case of a shipment process id, you will receive the id of the order item being processed."
+        },
+        "eventType" : {
+          "type" : "string",
+          "example" : "CONFIRM_SHIPMENT",
+          "description" : "Name of the requested action that is being processed."
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Example process status description for processing 987654321.",
+          "description" : "Describes the action that is being processed."
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "SUCCESS",
+          "description" : "Status of the action being processed.",
+          "enum" : [ "PENDING", "SUCCESS", "FAILURE", "TIMEOUT" ]
+        },
+        "errorMessage" : {
+          "type" : "string",
+          "example" : "Example process status error message.",
+          "description" : "Shows error message if applicable."
+        },
+        "createTimestamp" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2018-11-14T09:34:41+01:00",
+          "description" : "Time of creation of the response."
+        },
+        "links" : {
+          "type" : "array",
+          "description" : "Lists available actions applicable to this endpoint.",
+          "items" : {
+            "$ref" : "#/definitions/Link"
+          }
+        }
+      }
+    },
+    "Products" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string",
+          "example" : "Eucerin Hyaluron-filler",
+          "description" : "The description of the ordered product."
+        },
+        "quantity" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : "2.",
+          "description" : "Amount of the product being ordered."
+        },
+        "unitPrice" : {
+          "type" : "number",
+          "example" : 10.0,
+          "description" : "The selling price to the customer of a single unit including VAT."
+        }
+      }
+    },
+    "StatusTransitions" : {
+      "type" : "object",
+      "required" : [ "status", "statusDateTime" ],
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "example" : "INVOICE_REQUESTED",
+          "description" : "Indicates the status of this invoice request.",
+          "enum" : [ "INVOICE_REQUESTED", "INVOICE_UPLOADED", "INVOICE_INCORRECT", "INVOICE_VIRUS_DETECTED", "FINISHED" ]
+        },
+        "statusDateTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2020-12-09T12:34:56+01:00",
+          "description" : "The date and time in ISO 8601 format that indicates when this status was updated for this invoice request."
+        }
+      }
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "exampleValue",
+          "description" : "Describes the origin of the error, for instance a field or query parameter validation error."
+        },
+        "reason" : {
+          "type" : "string",
+          "example" : "Request contains invalid value(s): 'INVALID', allowed values: ALLOWED_VALUE1, ALLOWED_VALUE2.",
+          "description" : "Detailed description of the validation error that caused the problem."
+        }
+      },
+      "description" : "Describes a violation that occurred interacting with the API."
+    }
+  }
+}

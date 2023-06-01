@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Picqer\BolRetailerV8\Exception;
+namespace Picqer\BolRetailerV10\Exception;
 
 class RateLimitException extends RequestException
 {

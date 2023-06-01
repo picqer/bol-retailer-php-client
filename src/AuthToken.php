@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV8;
+namespace Picqer\BolRetailerV10;
 
 class AuthToken
 {

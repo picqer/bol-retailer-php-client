@@ -1,0 +1,294 @@
+{
+  "swagger" : "2.0",
+  "host": "api.bol.com",
+  "schemes": ["https"], 
+  "info" : {
+    "description" : "The bol.com API shared logic.",
+    "version" : "10.x",
+    "title" : "v10 - Shared API"
+  },
+  "tags" : [ {
+    "name" : "Process Status"
+  } ],
+  "paths" : {
+    "/shared/process-status" : {
+      "get" : {
+        "tags" : [ "Process Status" ],
+        "summary" : "Get the status of an asynchronous process by entity id and event type for a retailer",
+        "description" : "Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests in descending order. You need to supply an entity id and event type. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.",
+        "operationId" : "get-process-status-entity-id",
+        "produces" : [ "application/vnd.retailer.v10+json", "application/vnd.advertiser.v10+json" ],
+        "parameters" : [ {
+          "name" : "entity-id",
+          "in" : "query",
+          "description" : "The entity id is not unique, so you will need to provide an event type. For example, an entity id can be an order item id, transport id, return number, replenishment id, campaign id, and keyword id.",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "987654321"
+        }, {
+          "name" : "event-type",
+          "in" : "query",
+          "description" : "The event type can only be used in combination with the entity id.",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "CONFIRM_SHIPMENT",
+          "enum" : [ "CONFIRM_SHIPMENT", "CANCEL_ORDER", "CHANGE_TRANSPORT", "HANDLE_RETURN_ITEM", "CREATE_RETURN_ITEM", "CREATE_INBOUND", "DELETE_OFFER", "CREATE_OFFER", "UPDATE_OFFER", "UPDATE_OFFER_STOCK", "UPDATE_OFFER_PRICE", "CREATE_OFFER_EXPORT", "UNPUBLISHED_OFFER_REPORT", "CREATE_PRODUCT_CONTENT", "CREATE_SUBSCRIPTION", "UPDATE_SUBSCRIPTION", "DELETE_SUBSCRIPTION", "SEND_SUBSCRIPTION_TST_MSG", "CREATE_SHIPPING_LABEL", "CREATE_REPLENISHMENT", "UPDATE_REPLENISHMENT", "CREATE_CAMPAIGN", "UPDATE_CAMPAIGN", "CREATE_AD_GROUP", "UPDATE_AD_GROUP", "CREATE_TARGET_PRODUCT", "UPDATE_TARGET_PRODUCT", "CREATE_NEGATIVE_KEYWORD", "DELETE_NEGATIVE_KEYWORD", "CREATE_KEYWORD", "UPDATE_KEYWORD", "DELETE_KEYWORD", "REQUEST_PRODUCT_DESTINATIONS", "CREATE_SOV_SEARCH_TERM_REPORT", "CREATE_SOV_CATEGORY_REPORT" ]
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "The requested page number with a page size of 50 items.",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1,
+          "minimum" : 1,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok: Successfully processed the request.",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessStatusResponse"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Process Status" ],
+        "summary" : "Get the status of multiple asynchronous processes by an array of process status ids for a retailer",
+        "description" : "Retrieve a list of process statuses, which shows information regarding previously executed PUT/POST/DELETE requests. No more than 1000 process status id's can be sent in a single request. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, deleted process statuses will no longer be returned. Please handle this accordingly, by stopping any active polling for these statuses.",
+        "operationId" : "get-process-status-bulk",
+        "consumes" : [ "application/vnd.retailer.v10+json", "application/vnd.advertiser.v10+json" ],
+        "produces" : [ "application/vnd.retailer.v10+json", "application/vnd.advertiser.v10+json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/BulkProcessStatusRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok: Successfully processed the request.",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessStatusResponse"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          }
+        }
+      }
+    },
+    "/shared/process-status/{process-status-id}" : {
+      "get" : {
+        "tags" : [ "Process Status" ],
+        "summary" : "Get the status of an asynchronous process by process status id",
+        "description" : "Retrieve a specific process status, which shows information regarding a previously executed PUT/POST/DELETE request. All PUT/POST/DELETE requests on the other endpoints will supply a process status id in the related response. You can use this id to retrieve a status by using the endpoint below. Please note: process status instances are only retained for a limited period of time after completion. Outside of this period, a 404 will be returned for missing process statuses. Please handle this accordingly, by stopping any active polling for these statuses.",
+        "operationId" : "get-process-status",
+        "produces" : [ "application/vnd.retailer.v10+json", "application/vnd.advertiser.v10+json" ],
+        "parameters" : [ {
+          "name" : "process-status-id",
+          "in" : "path",
+          "description" : "The id of the process status being requested. This id is supplied in every response to a PUT/POST/DELETE request on the other endpoints.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok: Successfully processed the request.",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessStatus"
+            }
+          },
+          "404" : {
+            "description" : "Not found: The requested item could not be found.",
+            "schema" : {
+              "$ref" : "#/definitions/Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "BulkProcessStatusRequest" : {
+      "type" : "object",
+      "required" : [ "processStatusQueries" ],
+      "properties" : {
+        "processStatusQueries" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ProcessStatusId"
+          },
+          "maxItems" : 1000,
+          "minItems" : 1
+        }
+      }
+    },
+    "Link" : {
+      "type" : "object",
+      "required" : [ "href", "method", "rel" ],
+      "properties" : {
+        "rel" : {
+          "type" : "string",
+          "example" : "self",
+          "description" : "The link relation."
+        },
+        "href" : {
+          "type" : "string",
+          "example" : "https://api.bol.com/shared/process-status/1234567",
+          "description" : "The URI for the resource linked to."
+        },
+        "method" : {
+          "type" : "string",
+          "example" : "GET",
+          "description" : "The HTTP method to use when accessing the link."
+        }
+      }
+    },
+    "Problem" : {
+      "type" : "object",
+      "required" : [ "violations" ],
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://api.bol.com/problems",
+          "description" : "Type URI for this problem. Fixed value: https://api.bol.com/problems."
+        },
+        "title" : {
+          "type" : "string",
+          "example" : "Error validating request. Consult the bol.com API documentation for more information.",
+          "description" : "Title describing the nature of the problem."
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : "40X",
+          "description" : "HTTP status returned from the endpoint causing the problem."
+        },
+        "detail" : {
+          "type" : "string",
+          "example" : "Bad request",
+          "description" : "Detailed error message describing in additional detail what caused the service to return this problem."
+        },
+        "host" : {
+          "type" : "string",
+          "example" : "Instance-001",
+          "description" : "Host identifier describing the server instance that reported the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://api.bol.com//retailer/resource",
+          "description" : "Full URI path of the resource that reported the problem."
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "description" : "Describes a problem that occurred interacting with the API."
+    },
+    "ProcessStatus" : {
+      "type" : "object",
+      "required" : [ "createTimestamp", "description", "eventType", "links", "status" ],
+      "properties" : {
+        "processStatusId" : {
+          "type" : "string",
+          "example" : "1234567",
+          "description" : "The process status id."
+        },
+        "entityId" : {
+          "type" : "string",
+          "example" : "987654321",
+          "description" : "The id of the object being processed. For example, in case of a shipment process id, you will receive the id of the order item being processed."
+        },
+        "eventType" : {
+          "type" : "string",
+          "example" : "CONFIRM_SHIPMENT",
+          "description" : "Name of the requested action that is being processed."
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Example process status description for processing 987654321.",
+          "description" : "Describes the action that is being processed."
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "SUCCESS",
+          "description" : "Status of the action being processed.",
+          "enum" : [ "PENDING", "SUCCESS", "FAILURE", "TIMEOUT" ]
+        },
+        "errorMessage" : {
+          "type" : "string",
+          "example" : "Example process status error message.",
+          "description" : "Shows error message if applicable."
+        },
+        "createTimestamp" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2018-11-14T09:34:41+01:00",
+          "description" : "Time of creation of the response."
+        },
+        "links" : {
+          "type" : "array",
+          "description" : "Lists available actions applicable to this endpoint.",
+          "items" : {
+            "$ref" : "#/definitions/Link"
+          }
+        }
+      }
+    },
+    "ProcessStatusId" : {
+      "type" : "object",
+      "properties" : {
+        "processStatusId" : {
+          "type" : "string",
+          "example" : "1234567",
+          "description" : "The process status id."
+        }
+      }
+    },
+    "ProcessStatusResponse" : {
+      "type" : "object",
+      "required" : [ "processStatuses" ],
+      "properties" : {
+        "processStatuses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ProcessStatus"
+          }
+        }
+      }
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "exampleValue",
+          "description" : "Describes the origin of the error, for instance a field or query parameter validation error."
+        },
+        "reason" : {
+          "type" : "string",
+          "example" : "Request contains invalid value(s): 'INVALID', allowed values: ALLOWED_VALUE1, ALLOWED_VALUE2.",
+          "description" : "Detailed description of the validation error that caused the problem."
+        }
+      },
+      "description" : "Describes a violation that occurred interacting with the API."
+    }
+  }
+}
