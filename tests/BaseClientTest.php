@@ -590,14 +590,14 @@ class BaseClientTest extends TestCase
             });
 
         $this->client->request('GET', 'foobar', [
-            'produces' => 'application/vnd.retailer.v8+pdf'
+            'produces' => 'application/vnd.retailer.v10+pdf'
         ], [
             '200' => 'string'
         ]);
 
         $this->assertArrayHasKey('headers', $actualOptions);
         $this->assertArrayHasKey('Accept', $actualOptions['headers']);
-        $this->assertEquals('application/vnd.retailer.v8+pdf', $actualOptions['headers']['Accept']);
+        $this->assertEquals('application/vnd.retailer.v10+pdf', $actualOptions['headers']['Accept']);
     }
 
     public function testRequestJsonEncodesBodyModelIntoBody()
