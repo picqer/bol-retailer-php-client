@@ -22,6 +22,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\BulkCommissionRequest::constructFromArray(['commissionQueries' => $commissionQueries]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '200' => Model\BulkCommissionResponse::class,
@@ -105,6 +106,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\ChunkRecommendationsRequest::constructFromArray(['productContents' => $productContents]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '200' => Model\ChunkRecommendationsResponse::class,
@@ -129,6 +131,7 @@ class Client extends BaseClient
         $options = [
             'body' => $createProductContentSingleRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -430,6 +433,7 @@ class Client extends BaseClient
         $options = [
             'body' => $createOfferRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -454,6 +458,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\CreateOfferExportRequest::constructFromArray(['format' => $format]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -502,6 +507,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\CreateUnpublishedOfferReportRequest::constructFromArray(['format' => $format]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -575,6 +581,7 @@ class Client extends BaseClient
         $options = [
             'body' => $updateOfferRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -623,6 +630,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\UpdateOfferPriceRequest::constructFromArray(['pricing' => $pricing]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -648,6 +656,7 @@ class Client extends BaseClient
         $options = [
             'body' => $updateOfferStockRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -711,6 +720,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\ContainerForTheOrderItemsThatHaveToBeCancelled::constructFromArray(['orderItems' => $orderItems]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -738,6 +748,7 @@ class Client extends BaseClient
         $options = [
             'body' => $shipmentRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1103,6 +1114,7 @@ class Client extends BaseClient
         $options = [
             'body' => $createReplenishmentRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1149,6 +1161,7 @@ class Client extends BaseClient
         $options = [
             'body' => $pickupTimeSlotsRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '200' => Model\PickupTimeSlotsResponse::class,
@@ -1173,6 +1186,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\RequestProductDestinationsRequest::constructFromArray(['eans' => $eans]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1222,6 +1236,7 @@ class Client extends BaseClient
         $options = [
             'body' => $productLabelsRequest,
             'produces' => 'application/vnd.retailer.v9+pdf',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -1272,6 +1287,7 @@ class Client extends BaseClient
         $options = [
             'body' => $updateReplenishmentRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1455,6 +1471,7 @@ class Client extends BaseClient
         $options = [
             'body' => $returnRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1536,6 +1553,7 @@ class Client extends BaseClient
         $options = [
             'body' => $shippingLabelRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1561,6 +1579,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\DeliveryOptionsRequest::constructFromArray(['orderItems' => $orderItems]),
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '200' => Model\DeliveryOptionsResponse::class,
@@ -1636,6 +1655,7 @@ class Client extends BaseClient
         $options = [
             'body' => $createSubscriptionRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1682,6 +1702,7 @@ class Client extends BaseClient
         $url = "retailer/subscriptions/test/${subscriptionId}";
         $options = [
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1732,6 +1753,7 @@ class Client extends BaseClient
         $options = [
             'body' => $updateSubscriptionRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1755,6 +1777,7 @@ class Client extends BaseClient
         $url = "retailer/subscriptions/${subscriptionId}";
         $options = [
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1781,6 +1804,7 @@ class Client extends BaseClient
         $options = [
             'body' => $changeTransportRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/vnd.retailer.v9+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1868,6 +1892,7 @@ class Client extends BaseClient
                 ],
             ],
             'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'multipart/form-data',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1932,6 +1957,7 @@ class Client extends BaseClient
         $options = [
             'body' => Model\BulkProcessStatusRequest::constructFromArray(['processStatusQueries' => $processStatusQueries]),
             'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProcessStatusResponse::class,
