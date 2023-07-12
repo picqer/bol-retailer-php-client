@@ -600,6 +600,35 @@ class BaseClientTest extends TestCase
         $this->assertEquals('application/vnd.retailer.v10+pdf', $actualOptions['headers']['Accept']);
     }
 
+    public function testRequestAddsConsumesAsContentTypeHeader()
+    {
+        $this->authenticateByClientCredentials();
+
+        $model = new $this->modelClass();
+        $model->foo = 'bar';
+
+        $actualOptions = null;
+        $response = Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-string'));
+        $this->httpClientMock
+            ->expects($this->once())
+            ->method('request')
+            ->willReturnCallback(function ($method, $uri, $options) use ($response, &$actualOptions) {
+                $actualOptions = $options;
+                return $response;
+            });
+
+        $this->client->request('POST', 'foobar', [
+            'body' => $model,
+            'consumes' => 'application/vnd.retailer.vxx+json'
+        ], [
+            '200' => 'string'
+        ]);
+
+        $this->assertArrayHasKey('headers', $actualOptions);
+        $this->assertArrayHasKey('Accept', $actualOptions['headers']);
+        $this->assertEquals('application/vnd.retailer.vxx+json', $actualOptions['headers']['Content-Type']);
+    }
+
     public function testRequestJsonEncodesBodyModelIntoBody()
     {
         $this->authenticateByClientCredentials();
