@@ -396,7 +396,7 @@ class BaseClient
 
         // encode the body if a model is supplied for it
         if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
-            $httpOptions['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
+            $httpOptions['headers']['Content-Type'] = $options['produces'] ?? static::API_CONTENT_TYPE_JSON;
             $httpOptions['body'] = json_encode($options['body']->toArray(true));
         }
 
