@@ -110,6 +110,11 @@ class ClientGenerator
         $this->addBodyParam($arguments, $code);
         $this->addFormData($arguments, $code);
         $code[] = sprintf('            \'produces\' => \'%s\',', $methodDefinition['produces'][0]);
+
+        if ($methodDefinition['consumes'] ?? false) {
+            $code[] = sprintf('            \'consumes\' => \'%s\',', $methodDefinition['consumes'][0]);
+        }
+
         $code[] = '        ];';
         $options = '$options';
 

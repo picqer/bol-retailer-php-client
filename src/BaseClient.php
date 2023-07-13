@@ -21,7 +21,8 @@ class BaseClient
 {
     protected const API_TOKEN_URI = 'https://login.bol.com/token';
     protected const API_ENDPOINT = 'https://api.bol.com/';
-    protected const API_CONTENT_TYPE_JSON = 'application/vnd.retailer.v10+json';
+    protected const API_CONTENT_TYPE_FALLBACK = 'application/vnd.retailer.v10+json';
+    protected const API_ACCEPT_FALLBACK = 'application/vnd.retailer.v10+json';
 
     /**
      * @var bool Whether request will be sent to the demo endpoint.
@@ -390,13 +391,13 @@ class BaseClient
 
         $httpOptions = [];
         $httpOptions['headers'] = [
-            'Accept' => $options['produces'] ?? static::API_CONTENT_TYPE_JSON,
+            'Accept' => $options['produces'] ?? static::API_ACCEPT_FALLBACK,
             'Authorization' => sprintf('Bearer %s', $this->accessToken->getToken()),
         ];
 
         // encode the body if a model is supplied for it
         if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
-            $httpOptions['headers']['Content-Type'] = static::API_CONTENT_TYPE_JSON;
+            $httpOptions['headers']['Content-Type'] = $options['consumes'] ?? static::API_CONTENT_TYPE_FALLBACK;
             $httpOptions['body'] = json_encode($options['body']->toArray(true));
         }
 
