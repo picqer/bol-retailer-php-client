@@ -6,6 +6,9 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use Picqer\BolRetailerV10\Exception\RateLimitException;
 use Picqer\BolRetailerV10\Exception\ServerException;
 use Picqer\BolRetailerV10\Model\AbstractModel;
@@ -15,6 +18,7 @@ use Picqer\BolRetailerV10\Exception\ResponseException;
 use Picqer\BolRetailerV10\Exception\UnauthorizedException;
 use Picqer\BolRetailerV10\Model\Authentication\TokenResponse;
 use Picqer\BolRetailerV10\Model\Authentication\TokenRequest;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClient
@@ -28,6 +32,11 @@ class BaseClient
      * @var bool Whether request will be sent to the demo endpoint.
      */
     protected $isDemoMode = false;
+
+    /**
+     * @var bool Whether to respect and wait for the rate limits.
+     */
+    protected $respectRateLimits = true;
 
     /** @var HttpClient|null */
     protected $http = null;
@@ -43,7 +52,16 @@ class BaseClient
      */
     public function __construct()
     {
-        $this->setHttp(new HttpClient());
+        $handlerStack = HandlerStack::create();
+
+        $handlerStack->push(Middleware::retry(
+            $this->retryDecider(),
+            $this->retryDelay()
+        ));
+
+        $this->setHttp(new HttpClient([
+            'handler' => $handlerStack,
+        ]));
     }
 
     /**
@@ -74,6 +92,16 @@ class BaseClient
     public function setDemoMode(bool $enabled): void
     {
         $this->isDemoMode = $enabled;
+    }
+
+    /**
+     * Configure whether to respect and wait for the rate limits.
+     *
+     * @param bool $enabled Set to `true` to respect and wait for rate limits, `false` otherwise.
+     */
+    public function respectRateLimits(bool $enabled): void
+    {
+        $this->respectRateLimits = $enabled;
     }
 
     /**
@@ -571,5 +599,31 @@ class BaseClient
         }
         echo "\n";
         echo $response->getBody() . "\n";
+    }
+
+    private function retryDecider()
+    {
+        return function (
+            $retries,
+            RequestInterface $request,
+            ?ResponseInterface $response = null,
+            ?RequestException $exception = null
+        ) {
+            return $this->respectRateLimits
+                && $response
+                && $response->getStatusCode() === 429
+                && (int)$response->getHeaderLine('Retry-After');
+        };
+    }
+
+    private function retryDelay()
+    {
+        return function (
+            $retries,
+            ?ResponseInterface $response = null,
+            RequestInterface $request
+        ) {
+            return (int)$response->getHeaderLine('Retry-After') * 1000;
+        };
     }
 }
