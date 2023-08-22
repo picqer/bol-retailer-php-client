@@ -19,7 +19,6 @@ class ClientGenerator
         'integer' => 'int',
         'float' => 'float',
         'number' => 'float',
-        'file' => 'string',
     ];
 
     public function __construct()
@@ -76,7 +75,7 @@ class ClientGenerator
         }
 
         $methodName = $this->getMethodName($methodDefinition['operationId']);
-        $arguments = $this->extractArguments($methodDefinition['parameters'] ?? []);
+        $arguments = $this->extractArguments($methodDefinition);
 
         $nullableReturnType = false;
         if (isset($methodDefinition['responses']['404'])) {
@@ -109,10 +108,12 @@ class ClientGenerator
         $this->addQueryParams($arguments, $code);
         $this->addBodyParam($arguments, $code);
         $this->addFormData($arguments, $code);
-        $code[] = sprintf('            \'produces\' => \'%s\',', $methodDefinition['produces'][0]);
 
-        if ($methodDefinition['consumes'] ?? false) {
-            $code[] = sprintf('            \'consumes\' => \'%s\',', $methodDefinition['consumes'][0]);
+        $responseContent = $methodDefinition['responses']['200']['content'] ?? $methodDefinition['responses']['202']['content'] ?? $methodDefinition['responses']['400']['content'] ?? null;
+        $code[] = sprintf('            \'produces\' => \'%s\',', array_key_first($responseContent));
+
+        if ($methodDefinition['requestBody']['content'] ?? false) {
+            $code[] = sprintf('            \'consumes\' => \'%s\',', array_key_first($methodDefinition['requestBody']['content']));
         }
 
         $code[] = '        ];';
@@ -154,7 +155,7 @@ class ClientGenerator
 
     protected function getType(string $ref): string
     {
-        //strip #/definitions/
+        //strip #/components/schemas/
         $type = substr($ref, strrpos($ref, '/') + 1);
 
         // There are some weird types like 'delivery windows for inbound shipments.', uppercase and concat
@@ -239,12 +240,12 @@ class ClientGenerator
         return $url;
     }
 
-    protected function extractArguments(array $parameters): array
+    protected function extractArguments(array $methodDefinition): array
     {
         $argsWithoutDefault = [];
         $argsWithDefault = [];
 
-        foreach ($parameters as $parameter) {
+        foreach ($methodDefinition['parameters'] ?? [] as $parameter) {
             $argument = [
                 'default' => null,
                 'description' => $parameter['description'] ?? null,
@@ -253,57 +254,20 @@ class ClientGenerator
                 'required' => $parameter['required']
             ];
 
-            if ($parameter['in'] == 'body') {
-                //strip #/definitions/
-                $ref = $parameter['schema']['$ref'];
-                $type = $this->getType($ref);
-                $apiType = substr($ref, strrpos($ref, '/') + 1);
-
-                // extract property if it's a model that wraps an array
-                $refDefinition = $this->specs['definitions'][$apiType];
-                if (count($refDefinition['properties']) == 1) {
-                    $property = array_keys($refDefinition['properties'])[0];
-                    $propDefinition = $refDefinition['properties'][$property];
-
-                    if (isset($propDefinition['type']) && $propDefinition['type'] == 'array') {
-                        $itemsType = $this->getType($propDefinition['items']['$ref']);
-                        $argument['doc'] = 'Model\\' . $itemsType . '[]';
-                        $argument['php'] = 'array';
-                    } elseif (isset($propDefinition['type'])) {
-                        $wrappingType = static::$paramTypeMapping[$propDefinition['type']];
-                        $argument['doc'] = $wrappingType;
-                        $argument['php'] = $wrappingType;
-                    } else {
-                        $wrappingType = $this->getType($propDefinition['$ref']);
-                        $argument['doc'] = 'Model\\' . $wrappingType;
-                        $argument['php'] = 'Model\\' . $wrappingType;
-                    }
-                    $argument['property'] = $property;
-                    $argument['name'] = $property;
-                    $argument['wrapperPhp'] = 'Model\\' . $type;
-                }
-
-                if (!isset($argument['property'])) {
-                    $argument['php'] = 'Model\\' . $type;
-                    $argument['doc'] = $argument['php'];
-                    $argument['name'] = lcfirst($type);
-                }
-            } elseif ($parameter['in'] == 'formData') {
-                $argument['php'] = static::$paramTypeMapping[$parameter['type']];
-                $argument['doc'] = $argument['php'];
-                $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
-                $argument['is_file'] = 'file' === $parameter['type'];
+            if ($parameter['in'] == 'query' && isset($parameter['schema']['$ref'])) {
+                continue;
             } else {
-                $argument['php'] = static::$paramTypeMapping[$parameter['type']];
+                $argument['php'] = static::$paramTypeMapping[$parameter['schema']['type']];
                 $argument['doc'] = $argument['php'];
                 $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
                 $argument['paramName'] = $parameter['name'];
-                if (isset($parameter['default'])) {
-                    if ($parameter['type'] == 'string') {
-                        $defaultValue = str_replace(['\''], ['\\\''], $parameter['default']);
+
+                if (isset($parameter['schema']['default'])) {
+                    if ($parameter['schema']['type'] == 'string') {
+                        $defaultValue = str_replace(['\''], ['\\\''], $parameter['schema']['default']);
                         $argument['default'] = sprintf('\'%s\'', $defaultValue);
                     } else {
-                        $argument['default'] = $parameter['default'];
+                        $argument['default'] = $parameter['schema']['default'];
                     }
                 }
             }
@@ -326,6 +290,72 @@ class ClientGenerator
                 $argsWithDefault[] = $argument;
             } else {
                 $argsWithoutDefault[] = $argument;
+            }
+        }
+
+        if (isset($methodDefinition['requestBody']['content']) && $requestBody = current($methodDefinition['requestBody']['content'])) {
+            if (isset($requestBody['schema']['$ref'])) {
+                $argument = [
+                    'default' => null,
+                    'description' => null,
+                    'in' => 'body',
+                    'paramName' => null,
+                    'required' => $methodDefinition['requestBody']['required']
+                ];
+
+                //strip #/components/schemas/
+                $ref = $requestBody['schema']['$ref'];
+                $type = $this->getType($ref);
+                $apiType = substr($ref, strrpos($ref, '/') + 1);
+
+                // extract property if it's a model that wraps an array
+                $refSchema = $this->specs['components']['schemas'][$apiType];
+                if (count($refSchema['properties']) == 1) {
+                    $property = array_keys($refSchema['properties'])[0];
+                    $propSchema = $refSchema['properties'][$property];
+
+                    if (isset($propSchema['type']) && $propSchema['type'] == 'array') {
+                        $itemsType = $this->getType($propSchema['items']['$ref']);
+                        $argument['doc'] = 'Model\\'.$itemsType.'[]';
+                        $argument['php'] = 'array';
+                    } elseif (isset($propSchema['type'])) {
+                        $wrappingType = static::$paramTypeMapping[$propSchema['type']];
+                        $argument['doc'] = $wrappingType;
+                        $argument['php'] = $wrappingType;
+                    } else {
+                        $wrappingType = $this->getType($propSchema['$ref']);
+                        $argument['doc'] = 'Model\\'.$wrappingType;
+                        $argument['php'] = 'Model\\'.$wrappingType;
+                    }
+                    $argument['property'] = $property;
+                    $argument['name'] = $property;
+                    $argument['wrapperPhp'] = 'Model\\'.$type;
+                }
+
+                if (!isset($argument['property'])) {
+                    $argument['php'] = 'Model\\'.$type;
+                    $argument['doc'] = $argument['php'];
+                    $argument['name'] = lcfirst($type);
+                }
+
+                $argsWithoutDefault[] = $argument;
+            } elseif (array_key_first($methodDefinition['requestBody']['content']) == 'multipart/form-data') {
+                foreach ($requestBody['schema']['properties'] as $propName => $property) {
+                    $argument = [
+                        'default' => null,
+                        'description' => null,
+                        'in' => 'formData',
+                        'paramName' => null,
+                        'required' => $methodDefinition['requestBody']['required']
+                    ];
+
+                    $argument['php'] = static::$paramTypeMapping[$property['type']];
+                    $argument['doc'] = $argument['php'];
+                    $argument['name'] = $this->kebabCaseToCamelCase($propName);
+                    $argument['is_file'] = 'binary' === $property['format'];
+
+                    $argsWithoutDefault[] = $argument;
+                }
             }
         }
 
@@ -444,6 +474,8 @@ class ClientGenerator
         foreach ($responses as $httpStatus => $response) {
             $type = null;
             if (in_array($httpStatus, ['200', '202'])) {
+                $response = current($response['content'] ?? []);
+
                 if (! isset($response['schema'])) {
                     // There are 2 methods that return a csv, but have no response type defined
                     $type = '\'string\'';
@@ -469,22 +501,24 @@ class ClientGenerator
             throw new \Exception('Could not fit responseType');
         }
 
+        $response = current($response['content'] ?? []);
+
         if (! isset($response['schema'])) {
             // There are 2 methods that return a csv, but have no response type defined
             return ['doc' => 'string', 'php' => 'string'];
         } elseif (isset($response['schema']['$ref'])) {
-            //strip #/definitions/
+            //strip #/components/schemas/
             $ref = $response['schema']['$ref'];
             $apiType = substr($ref, strrpos($ref, '/') + 1);
 
             // extract property if it's a model that wraps an array
-            $refDefinition = $this->specs['definitions'][$apiType];
-            if (count($refDefinition['properties']) == 1) {
-                $property = array_keys($refDefinition['properties'])[0];
-                if (isset($refDefinition['properties'][$property]['type'], $refDefinition['properties'][$property]['items']['$ref']) && $refDefinition['properties'][$property]['type'] == 'array') {
+            $refSchema = $this->specs['components']['schemas'][$apiType];
+            if (count($refSchema['properties']) == 1) {
+                $property = array_keys($refSchema['properties'])[0];
+                if (isset($refSchema['properties'][$property]['type'], $refSchema['properties'][$property]['items']['$ref']) && $refSchema['properties'][$property]['type'] == 'array') {
                     return [
                         'doc' => 'Model\\' . $this->getType(
-                            $refDefinition['properties'][$property]['items']['$ref']
+                            $refSchema['properties'][$property]['items']['$ref']
                         ) . '[]',
                         'php' => 'array',
                         'property' => $property
@@ -497,7 +531,7 @@ class ClientGenerator
         } else {
             // currently only array is support
 
-            if ($response['schema']['type'] != 'array' || $response['schema']['items']['format'] != 'byte') {
+            if ($response['schema']['type'] != 'string' || $response['schema']['format'] != 'byte') {
                 throw new \Exception("Only Models and raw bytes are supported as response type");
             }
             return ['doc' => 'string', 'php' => 'string', ''];

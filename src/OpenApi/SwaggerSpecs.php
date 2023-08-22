@@ -41,7 +41,7 @@ class SwaggerSpecs
         $otherSpecs = $specs->getSpecs();
 
         $resultSpecs['paths'] = array_merge($resultSpecs['paths'], $otherSpecs['paths']);
-        $resultSpecs['definitions'] = array_merge($resultSpecs['definitions'], $otherSpecs['definitions']);
+        $resultSpecs['components']['schemas'] = array_merge($resultSpecs['components']['schemas'], $otherSpecs['components']['schemas']);
 
         return new SwaggerSpecs($resultSpecs);
     }

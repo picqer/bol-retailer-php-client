@@ -47,7 +47,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCommission(string $ean, float $unitPrice, ?string $condition = 'NEW'): ?Model\Commission
+    public function getCommission(string $ean, float $unitPrice, ?string $condition = null): ?Model\Commission
     {
         $url = "retailer/commission/${ean}";
         $options = [
@@ -76,7 +76,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCatalogProduct(string $ean, ?string $AcceptLanguage = 'nl'): ?Model\CatalogProduct
+    public function getCatalogProduct(string $ean, ?string $AcceptLanguage = null): ?Model\CatalogProduct
     {
         $url = "retailer/content/catalog-products/${ean}";
         $options = [
@@ -170,7 +170,7 @@ class Client extends BaseClient
      * @param string $period The time unit in which the offer insights are grouped.
      * @param int $numberOfPeriods The number of periods for which the offer insights are requested back in time. The
      * maximum available periods are 24 for MONTH, 104 for WEEK, and 730 for DAY.
-     * @param array $name The name of the requested offer insight.
+     * @param string $name The name of the requested offer insight.
      * @return Model\OfferInsight[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -178,7 +178,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOfferInsights(string $offerId, string $period, int $numberOfPeriods, array $name): array
+    public function getOfferInsights(string $offerId, string $period, int $numberOfPeriods, string $name): array
     {
         $url = "retailer/insights/offer";
         $options = [
@@ -199,7 +199,7 @@ class Client extends BaseClient
 
     /**
      * Gets the measurements for your performance indicators per week.
-     * @param array $name The type of the performance indicator
+     * @param string $name The type of the performance indicator
      * @param string $year Year number in the ISO-8601 standard.
      * @param string $week Week number in the ISO-8601 standard. If you would like to get the relative scores from the
      * current week, please provide the current week number here. Be advised that measurements can change heavily over
@@ -211,7 +211,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getPerformanceIndicators(array $name, string $year, string $week): array
+    public function getPerformanceIndicators(string $name, string $year, string $week): array
     {
         $url = "retailer/insights/performance/indicator";
         $options = [
@@ -469,7 +469,7 @@ class Client extends BaseClient
 
     /**
      * Retrieve an offer export file containing all offers.
-     * @param string $reportId Unique identifier for an offer export report.
+     * @param string $reportId Unique identifier for an offer export file.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -683,7 +683,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOrders(?int $page = 1, ?string $fulfilmentMethod = 'FBR', ?string $status = 'OPEN', ?int $changeIntervalMinute = null, ?string $latestChangeDate = null): array
+    public function getOrders(?int $page = 1, ?string $fulfilmentMethod = null, ?string $status = null, ?int $changeIntervalMinute = null, ?string $latestChangeDate = null): array
     {
         $url = "retailer/orders";
         $options = [
@@ -718,7 +718,7 @@ class Client extends BaseClient
     {
         $url = "retailer/orders/cancellation";
         $options = [
-            'body' => Model\ContainerForTheOrderItemsThatHaveToBeCancelled::constructFromArray(['orderItems' => $orderItems]),
+            'body' => Model\CancellationRequest::constructFromArray(['orderItems' => $orderItems]),
             'produces' => 'application/vnd.retailer.v9+json',
             'consumes' => 'application/vnd.retailer.v9+json',
         ];
@@ -793,12 +793,13 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductList(Model\ProductListRequest $productListRequest, ?string $AcceptLanguage = 'nl'): ?Model\ProductListResponse
+    public function getProductList(Model\ProductListRequest $productListRequest, ?string $AcceptLanguage = null): ?Model\ProductListResponse
     {
         $url = "retailer/products/list";
         $options = [
             'body' => $productListRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/json',
         ];
         $responseTypes = [
             '200' => Model\ProductListResponse::class,
@@ -821,7 +822,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductListFilters(?string $countryCode = 'NL', ?string $searchTerm = null, ?string $categoryId = null, ?string $AcceptLanguage = 'nl'): ?Model\ProductListFiltersResponse
+    public function getProductListFilters(?string $countryCode = null, ?string $searchTerm = null, ?string $categoryId = null, ?string $AcceptLanguage = null): ?Model\ProductListFiltersResponse
     {
         $url = "retailer/products/list-filters";
         $options = [
@@ -851,7 +852,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductAssets(string $ean, ?string $usage = 'PRIMARY'): array
+    public function getProductAssets(string $ean, ?string $usage = null): array
     {
         $url = "retailer/products/${ean}/assets";
         $options = [
@@ -884,7 +885,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCompetingOffers(string $ean, ?int $page = 1, ?string $countryCode = 'NL', ?bool $bestOfferOnly = false, ?string $condition = 'NEW'): array
+    public function getCompetingOffers(string $ean, ?int $page = 1, ?string $countryCode = null, ?bool $bestOfferOnly = false, ?string $condition = null): array
     {
         $url = "retailer/products/${ean}/offers";
         $options = [
@@ -917,7 +918,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductPlacement(string $ean, ?string $countryCode = 'NL', ?string $AcceptLanguage = 'nl'): ?Model\ProductPlacementResponse
+    public function getProductPlacement(string $ean, ?string $countryCode = null, ?string $AcceptLanguage = null): ?Model\ProductPlacementResponse
     {
         $url = "retailer/products/${ean}/placement";
         $options = [
@@ -985,7 +986,7 @@ class Client extends BaseClient
 
     /**
      * Gets a paginated list of all promotions for a retailer.
-     * @param array $promotionType The type(s) of promotion to be retrieved.
+     * @param string $promotionType The type(s) of promotion to be retrieved.
      * @param int|null $page The requested page number with a page size of 50 items.
      * @return Model\ReducedPromotion[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -994,7 +995,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getPromotions(array $promotionType, ?int $page = 1): array
+    public function getPromotions(string $promotionType, ?int $page = 1): array
     {
         $url = "retailer/promotions";
         $options = [
@@ -1307,7 +1308,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getLoadCarrierLabels(string $replenishmentId, ?string $labelType = 'WAREHOUSE'): ?string
+    public function getLoadCarrierLabels(string $replenishmentId, ?string $labelType = null): ?string
     {
         $url = "retailer/replenishments/${replenishmentId}/load-carrier-labels";
         $options = [
@@ -1386,7 +1387,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getReturns(?int $page = 1, ?bool $handled = null, ?string $fulfilmentMethod = 'FBR'): array
+    public function getReturns(?int $page = 1, ?bool $handled = null, ?string $fulfilmentMethod = null): array
     {
         $url = "retailer/returns";
         $options = [
@@ -1421,6 +1422,7 @@ class Client extends BaseClient
         $options = [
             'body' => $createReturnRequest,
             'produces' => 'application/vnd.retailer.v9+json',
+            'consumes' => 'application/json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1457,7 +1459,7 @@ class Client extends BaseClient
      * Allows the user to handle a return. This can be to either handle an open return, or change the handlingResult of
      * an already handled return. Please refer to the Returns documentation for further details.
      * @param int $rmaId The RMA (Return Merchandise Authorization) identifier of the return.
-     * @param Model\ReturnRequest $returnRequest The handling result requested by the retailer.
+     * @param Model\ReturnRequest $returnRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1495,7 +1497,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getShipments(?int $page = 1, ?string $fulfilmentMethod = 'FBR', ?string $orderId = null): array
+    public function getShipments(?int $page = 1, ?string $fulfilmentMethod = null, ?string $orderId = null): array
     {
         $url = "retailer/shipments";
         $options = [
@@ -1617,7 +1619,8 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a list of all configured and active push notification subscriptions.
+     * Retrieves all event notification subscriptions for a given retailer. Each subscription may have different types
+     * of events and a destination, which could either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).
      * @return Model\SubscriptionResponse[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1629,7 +1632,7 @@ class Client extends BaseClient
     {
         $url = "retailer/subscriptions";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\SubscriptionsResponse::class,
@@ -1639,9 +1642,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Create a push notification subscription for one (or more) of the available resources. The configured URL has to
-     * support https scheme.
-     * @param Model\CreateSubscriptionRequest $createSubscriptionRequest
+     * Creates a new event notification subscription for a retailer. The subscription can be set up for one or more
+     * types of events and the destination can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).
+     * @param Model\SubscriptionRequest $subscriptionRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1649,13 +1652,13 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function postPushNotificationSubscription(Model\CreateSubscriptionRequest $createSubscriptionRequest): Model\ProcessStatus
+    public function postPushNotificationSubscription(Model\SubscriptionRequest $subscriptionRequest): Model\ProcessStatus
     {
         $url = "retailer/subscriptions";
         $options = [
-            'body' => $createSubscriptionRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'body' => $subscriptionRequest,
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1678,7 +1681,7 @@ class Client extends BaseClient
     {
         $url = "retailer/subscriptions/signature-keys";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\KeySetResponse::class,
@@ -1689,7 +1692,8 @@ class Client extends BaseClient
 
     /**
      * Send a test push notification to all subscriptions for the provided event.
-     * @param string $subscriptionId A unique identifier for the subscription.
+     * @param string $subscriptionId The unique identifier assigned to each event notification subscription. This ID is
+     * used for tracking and managing each subscription.
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1701,8 +1705,7 @@ class Client extends BaseClient
     {
         $url = "retailer/subscriptions/test/${subscriptionId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1712,8 +1715,10 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieve a configured and active push notification subscription with the provided id.
-     * @param string $subscriptionId A unique identifier for the subscription.
+     * Fetches the details of a specific event notification subscription for a retailer. The details include the types
+     * of events and the destination, which can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).
+     * @param string $subscriptionId The unique identifier assigned to each event notification subscription. This ID is
+     * used for tracking and managing each subscription.
      * @return Model\SubscriptionResponse|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1725,7 +1730,7 @@ class Client extends BaseClient
     {
         $url = "retailer/subscriptions/${subscriptionId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\SubscriptionResponse::class,
@@ -1736,10 +1741,11 @@ class Client extends BaseClient
     }
 
     /**
-     * Update an existing push notification subscription with the supplied id. The configured URL has to support https
-     * scheme.
-     * @param string $subscriptionId A unique identifier for the subscription.
-     * @param Model\UpdateSubscriptionRequest $updateSubscriptionRequest
+     * Updates the details of a specific event notification subscription for a retailer. The updates can be made to the
+     * types of events and/or the destination, which can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).
+     * @param string $subscriptionId The unique identifier assigned to each event notification subscription. This ID is
+     * used for tracking and managing each subscription.
+     * @param Model\SubscriptionRequest $subscriptionRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1747,13 +1753,13 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function putPushNotificationSubscription(string $subscriptionId, Model\UpdateSubscriptionRequest $updateSubscriptionRequest): Model\ProcessStatus
+    public function putPushNotificationSubscription(string $subscriptionId, Model\SubscriptionRequest $subscriptionRequest): Model\ProcessStatus
     {
         $url = "retailer/subscriptions/${subscriptionId}";
         $options = [
-            'body' => $updateSubscriptionRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'body' => $subscriptionRequest,
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1763,8 +1769,9 @@ class Client extends BaseClient
     }
 
     /**
-     * Delete a push notification subscription with the provided id.
-     * @param string $subscriptionId A unique identifier for the subscription.
+     * Deletes a specific event notification subscription associated with a retailer.
+     * @param string $subscriptionId The unique identifier assigned to each event notification subscription. This ID is
+     * used for tracking and managing each subscription.
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1776,8 +1783,7 @@ class Client extends BaseClient
     {
         $url = "retailer/subscriptions/${subscriptionId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1790,7 +1796,7 @@ class Client extends BaseClient
      * Add information to an existing transport. The transport id is part of the shipment. You can retrieve the
      * transport id through the GET shipment list request.
      * @param string $transportId The transport id.
-     * @param Model\ChangeTransportRequest $changeTransportRequest The change transport requested by the user.
+     * @param Model\ChangeTransportRequest $changeTransportRequest
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1841,8 +1847,8 @@ class Client extends BaseClient
      * Gets a list of paginated invoice requests initiated by customers.
      * @param string|null $shipmentId The id of the shipment.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @param array $state To filter on invoice request state. You can filter on all invoice requests regardless their
-     * statuses, open invoice requests requiring your action and invoice requests uploaded with possible errors.
+     * @param string|null $state To filter on invoice request state. You can filter on all invoice requests regardless
+     * their statuses, open invoice requests requiring your action and invoice requests uploaded with possible errors.
      * @return Model\InvoiceRequests[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1850,7 +1856,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, array $state = []): array
+    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, ?string $state = null): array
     {
         $url = "retailer/shipments/invoices/requests";
         $options = [
@@ -1872,8 +1878,8 @@ class Client extends BaseClient
 
     /**
      * Uploads an invoice associated with shipment id.
-     * @param string $invoice The invoice file.
      * @param string $shipmentId The id of the shipment associated with the invoice.
+     * @param string $invoice
      * @return Model\ProcessStatus|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1881,7 +1887,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function uploadInvoice(string $invoice, string $shipmentId): ?Model\ProcessStatus
+    public function uploadInvoice(string $shipmentId, string $invoice): ?Model\ProcessStatus
     {
         $url = "retailer/shipments/invoices/${shipmentId}";
         $options = [
