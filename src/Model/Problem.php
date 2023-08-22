@@ -15,49 +15,54 @@ class Problem extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
+            'instance' => [ 'model' => null, 'array' => false ],
             'type' => [ 'model' => null, 'array' => false ],
+            'host' => [ 'model' => null, 'array' => false ],
+            'causedBy' => [ 'model' => Problem::class, 'array' => false ],
             'title' => [ 'model' => null, 'array' => false ],
             'status' => [ 'model' => null, 'array' => false ],
-            'detail' => [ 'model' => null, 'array' => false ],
-            'host' => [ 'model' => null, 'array' => false ],
-            'instance' => [ 'model' => null, 'array' => false ],
             'violations' => [ 'model' => Violation::class, 'array' => true ],
+            'detail' => [ 'model' => null, 'array' => false ],
         ];
     }
 
     /**
-     * @var string Type URI for this problem. Fixed value: https://api.bol.com/problems.
+     * @var string
+     */
+    public $instance;
+
+    /**
+     * @var string
      */
     public $type;
 
     /**
-     * @var string Title describing the nature of the problem.
-     */
-    public $title;
-
-    /**
-     * @var int HTTP status returned from the endpoint causing the problem.
-     */
-    public $status;
-
-    /**
-     * @var string Detailed error message describing in additional detail what caused the service to return this
-     * problem.
-     */
-    public $detail;
-
-    /**
-     * @var string Host identifier describing the server instance that reported the problem.
+     * @var string
      */
     public $host;
 
     /**
-     * @var string Full URI path of the resource that reported the problem.
+     * @var Problem Describes a problem that occurred interacting with the API.
      */
-    public $instance;
+    public $causedBy;
+
+    /**
+     * @var string
+     */
+    public $title;
+
+    /**
+     * @var int
+     */
+    public $status;
 
     /**
      * @var Violation[]
      */
     public $violations = [];
+
+    /**
+     * @var string
+     */
+    public $detail;
 }

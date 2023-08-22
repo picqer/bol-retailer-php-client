@@ -56,7 +56,7 @@ class ReturnItem extends AbstractModel
     public $expectedQuantity;
 
     /**
-     * @var ReturnReason
+     * @var ReturnReason The reason why the customer returned this product.
      */
     public $returnReason;
 
@@ -81,7 +81,7 @@ class ReturnItem extends AbstractModel
     public $processingResults = [];
 
     /**
-     * @var CustomerDetails
+     * @var CustomerDetails Information related to the customer.
      */
     public $customerDetails;
 }

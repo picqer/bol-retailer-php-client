@@ -34,16 +34,15 @@ class ModelGenerator
 
     public function generateModels(): void
     {
-        foreach ($this->specs['definitions'] as $type => $modelDefinition) {
+        foreach ($this->specs['components']['schemas'] as $type => $modelSchema) {
             $this->generateModel($type);
         }
     }
 
     public function generateModel($type): void
     {
-
-        $modelDefinition = $this->specs['definitions'][$type];
-        $type = $this->getType('#/definitions/' . $type);
+        $modelSchema = $this->specs['components']['schemas'][$type];
+        $type = $this->getType('#/components/schemas/' . $type);
 
         echo $type . "...";
 
@@ -56,23 +55,19 @@ class ModelGenerator
         $code[] = sprintf('class %s extends AbstractModel', $type);
         $code[] = '{';
         // TODO Add enums
-        $this->generateDefinition($modelDefinition, $code);
-        $this->generateFields($modelDefinition, $code);
-        $this->generateDateTimeGetters($modelDefinition, $code);
-        $this->generateMonoFieldAccessors($modelDefinition, $code);
+        $this->generateSchema($modelSchema, $code);
+        $this->generateFields($modelSchema, $code);
+        $this->generateDateTimeGetters($modelSchema, $code);
+        $this->generateMonoFieldAccessors($modelSchema, $code);
         $code[] = '}';
         $code[] = '';
-
-        //print_r($modelDefinition);
-
-        //echo implode("\n", $code);
 
         file_put_contents(__DIR__ . '/../Model/' . $type . '.php', implode("\n", $code));
 
         echo "ok\n";
     }
 
-    protected function generateDefinition(array $modelDefinition, array &$code): void
+    protected function generateSchema(array $modelSchema, array &$code): void
     {
         $code[] = '    /**';
         $code[] = '     * Returns the definition of the model: an associative array with field names as key and';
@@ -85,7 +80,7 @@ class ModelGenerator
         $code[] = '    {';
         $code[] = '        return [';
 
-        foreach ($modelDefinition['properties'] as $name => $propDefinition) {
+        foreach ($modelSchema['properties'] as $name => $propDefinition) {
             $model = 'null';
             $array = 'false';
 
@@ -103,18 +98,16 @@ class ModelGenerator
                 throw new \Exception('Unknown property definition');
             }
 
-            $code[] = sprintf('            \'%s\' => [ \'model\' => %s, \'array\' => %s ],', $name, $model, $array);
+            $code[] = sprintf('            \'%s\' => [ \'model\' => %s, \'array\' => %s ],', $this->kebabCaseToCamelCase($name), $model, $array);
         }
 
         $code[] = '        ];';
         $code[] = '    }';
     }
 
-    protected function generateFields(array $modelDefinition, array &$code): void
+    protected function generateFields(array $modelSchema, array &$code): void
     {
-
-
-        foreach ($modelDefinition['properties'] as $name => $propDefinition) {
+        foreach ($modelSchema['properties'] as $name => $propDefinition) {
             if (isset($propDefinition['type'])) {
                 $propType = static::$propTypeMapping[$propDefinition['type']];
                 if ($propType == 'array' && isset($propDefinition['items']['$ref'])) {
@@ -130,8 +123,8 @@ class ModelGenerator
             $code[] = '';
             $code[] = '    /**';
 
-            if (isset($propDefinition['description'])) {
-                $code[] = $this->wrapComment(sprintf('@var %s %s', $propType, $propDefinition['description']), '     * ');
+            if (isset($propDefinition['description']) || isset($this->specs['components']['schemas'][$propType]['description'])) {
+                $code[] = $this->wrapComment(sprintf('@var %s %s', $propType, $propDefinition['description'] ?? $this->specs['components']['schemas'][$propType]['description']), '     * ');
             } else {
                 $code[] = sprintf('     * @var %s', $propType);
             }
@@ -139,16 +132,16 @@ class ModelGenerator
             $code[] = '     */';
 
             if (isset($propDefinition['type']) && $propDefinition['type'] == 'array') {
-                $code[] = sprintf('    public $%s = [];', $name);
+                $code[] = sprintf('    public $%s = [];', $this->kebabCaseToCamelCase($name));
             } else {
-                $code[] = sprintf('    public $%s;', $name);
+                $code[] = sprintf('    public $%s;', $this->kebabCaseToCamelCase($name));
             }
         }
     }
 
-    protected function generateDateTimeGetters(array $modelDefinition, array &$code): void
+    protected function generateDateTimeGetters(array $modelSchema, array &$code): void
     {
-        foreach ($modelDefinition['properties'] as $name => $propDefinition) {
+        foreach ($modelSchema['properties'] as $name => $propDefinition) {
             if (strpos($name, 'DateTime') === false) {
                 continue;
             }
@@ -165,9 +158,9 @@ class ModelGenerator
         }
     }
 
-    protected function generateMonoFieldAccessors(array $modelDefinition, array &$code): void
+    protected function generateMonoFieldAccessors(array $modelSchema, array &$code): void
     {
-        $monoFields = $this->getFieldsWithMonoFieldModelType($modelDefinition);
+        $monoFields = $this->getFieldsWithMonoFieldModelType($modelSchema);
 
         foreach ($monoFields as $fieldName => $fieldProps) {
             if ($fieldProps['monoFieldType'] == 'array') {
@@ -254,7 +247,7 @@ class ModelGenerator
 
     protected function getType(string $ref): string
     {
-        //strip #/definitions/
+        //strip #/components/schemas/
         $type = substr($ref, strrpos($ref, '/') + 1);
 
         // There are some weird types like 'delivery windows for inbound shipments.', uppercase and concat
@@ -279,11 +272,11 @@ class ModelGenerator
         return $namespace . '\Model';
     }
 
-    protected function getFieldsWithMonoFieldModelType(array $modelDefinition): array
+    protected function getFieldsWithMonoFieldModelType(array $modelSchema): array
     {
         $fields = [];
 
-        foreach ($modelDefinition['properties'] as $propName => $propDefinition) {
+        foreach ($modelSchema['properties'] as $propName => $propDefinition) {
             $isArray = null;
             if (isset($propDefinition['$ref'])) {
                 $propType = $this->getType($propDefinition['$ref']);
@@ -295,17 +288,17 @@ class ModelGenerator
                 $propType = $propDefinition['type'];
             }
 
-            if (!isset($this->specs['definitions'][$propType])) {
+            if (!isset($this->specs['components']['schemas'][$propType])) {
                 continue;
             }
 
-            if (count($this->specs['definitions'][$propType]['properties']) != 1) {
+            if (count($this->specs['components']['schemas'][$propType]['properties']) != 1) {
                 continue;
             }
 
-            $subPropName = array_keys($this->specs['definitions'][$propType]['properties'])[0];
+            $subPropName = array_keys($this->specs['components']['schemas'][$propType]['properties'])[0];
 
-            $subProp = $this->specs['definitions'][$propType]['properties'][$subPropName];
+            $subProp = $this->specs['components']['schemas'][$propType]['properties'][$subPropName];
             if (isset($subProp['type'])) {
                 $subPropType = $subProp['type'];
             } elseif (isset($subProp['$ref'])) {
@@ -323,6 +316,18 @@ class ModelGenerator
         }
 
         return $fields;
+    }
+
+    protected function kebabCaseToCamelCase(string $name): string
+    {
+        // Fix for bug in specs where name contains spaces (e.g. 'get packing list')
+        $name = str_replace(' ', '-', $name);
+
+        $nameElems = explode('-', $name);
+        for ($i=1; $i<count($nameElems); $i++) {
+            $nameElems[$i] = ucfirst($nameElems[$i]);
+        }
+        return implode('', $nameElems);
     }
 
     protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string

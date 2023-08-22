@@ -40,12 +40,14 @@ class Order extends AbstractModel
     public $orderPlacedDateTime;
 
     /**
-     * @var ShipmentDetails
+     * @var ShipmentDetails The address details where this order needs to be shipped to. This can be the customers' own
+     * address, a (company) business address or a Pick Up Point address.
      */
     public $shipmentDetails;
 
     /**
-     * @var BillingDetails
+     * @var BillingDetails The details of the customer that is responsible for the financial fulfillment of this
+     * shipment.
      */
     public $billingDetails;
 

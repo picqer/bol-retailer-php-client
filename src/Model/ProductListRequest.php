@@ -26,7 +26,7 @@ class ProductListRequest extends AbstractModel
     }
 
     /**
-     * @var string The country for which the products will be retrieved. Default value: NL
+     * @var string The country for which the products will be retrieved.
      */
     public $countryCode;
 

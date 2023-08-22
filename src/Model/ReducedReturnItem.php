@@ -47,7 +47,7 @@ class ReducedReturnItem extends AbstractModel
     public $expectedQuantity;
 
     /**
-     * @var ReturnReason
+     * @var ReturnReason The reason why the customer returned this product.
      */
     public $returnReason;
 
