@@ -9,10 +9,10 @@ class TokenRequest extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'grant_type' => [ 'model' => null, 'array' => false ],
-            'code' => [ 'model' => null, 'array' => true ],
-            'redirect_uri' => [ 'model' => null, 'array' => true ],
-            'refresh_token' => [ 'model' => null, 'array' => true ],
+            'grant_type' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'code' => [ 'model' => null, 'enum' => null, 'array' => true ],
+            'redirect_uri' => [ 'model' => null, 'enum' => null, 'array' => true ],
+            'refresh_token' => [ 'model' => null, 'enum' => null, 'array' => true ],
         ];
     }
 

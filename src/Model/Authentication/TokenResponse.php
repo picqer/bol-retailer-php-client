@@ -9,11 +9,11 @@ class TokenResponse extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'expires_in' => [ 'model' => null, 'array' => false ],
-            'refresh_token' => [ 'model' => null, 'array' => true ],
-            'token_type' => [ 'model' => null, 'array' => true ],
-            'scope' => [ 'model' => null, 'array' => true ],
-            'access_token' => [ 'model' => null, 'array' => true ],
+            'expires_in' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'refresh_token' => [ 'model' => null, 'enum' => null, 'array' => true ],
+            'token_type' => [ 'model' => null, 'enum' => null, 'array' => true ],
+            'scope' => [ 'model' => null, 'enum' => null, 'array' => true ],
+            'access_token' => [ 'model' => null, 'enum' => null, 'array' => true ],
         ];
     }
 
