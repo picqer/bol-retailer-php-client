@@ -15,7 +15,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -47,7 +47,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => true ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => true ]
                 ];
             }
         };
@@ -65,7 +65,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -85,7 +85,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'relation' => [ 'model' => $this->relationStubClass, 'array' => false ]
+                    'relation' => [ 'model' => $this->relationStubClass, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -122,7 +122,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -142,7 +142,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'relations' => [ 'model' => $this->relationStubClass, 'array' => true ]
+                    'relations' => [ 'model' => $this->relationStubClass, 'enum' => null, 'array' => true ]
                 ];
             }
         };
@@ -167,7 +167,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -185,7 +185,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -201,7 +201,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -217,7 +217,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -237,7 +237,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'relation' => [ 'model' => $this->relationStubClass, 'array' => false ]
+                    'relation' => [ 'model' => $this->relationStubClass, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -256,7 +256,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -276,7 +276,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'relations' => [ 'model' => $this->relationStubClass, 'array' => true ]
+                    'relations' => [ 'model' => $this->relationStubClass, 'enum' => null, 'array' => true ]
                 ];
             }
         };
@@ -300,7 +300,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -320,7 +320,7 @@ class AbstractModelTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'relations' => [ 'model' => $this->relationStubClass, 'array' => true ]
+                    'relations' => [ 'model' => $this->relationStubClass, 'enum' => null, 'array' => true ]
                 ];
             }
         };

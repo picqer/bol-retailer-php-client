@@ -46,7 +46,7 @@ class BaseClientTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
@@ -665,8 +665,8 @@ class BaseClientTest extends TestCase
             public function getModelDefinition(): array
             {
                 return [
-                    'foo' => [ 'model' => null, 'array' => false ],
-                    'foo2' => [ 'model' => null, 'array' => false ]
+                    'foo' => [ 'model' => null, 'enum' => null, 'array' => false ],
+                    'foo2' => [ 'model' => null, 'enum' => null, 'array' => false ]
                 ];
             }
         };
