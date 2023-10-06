@@ -1850,7 +1850,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, array $state = []): array
+    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, string $state = null): array
     {
         $url = "retailer/shipments/invoices/requests";
         $options = [
