@@ -1,5 +1,5 @@
 # Bol.com Retailer API client for PHP
-This is an open source PHP client for the [Bol.com Retailer API](https://api.bol.com/retailer/public/Retailer-API/v10/releasenotes.html) version 10.0 (BETA).
+This is an open source PHP client for the [Bol.com Retailer API](https://api.bol.com/retailer/public/Retailer-API/v10/releasenotes.html) version 10.4.
 
 ## Installation
 This project can easily be installed through Composer:
@@ -149,6 +149,7 @@ Methods on the Client may throw Exceptions. All Exceptions have the parent class
 
 ## Migrate to v10
 If you're migrating to v10, please have a look at the official migration guides to find out what has changed:
+- [bol.com Retailer API migration guide from v9 to v10](https://api.bol.com/retailer/public/Retailer-API/v10/migrationguide/v9-v10/migrationguide.html)
 - [bol.com Retailer API migration guide from v8 to v9](https://api.bol.com/retailer/public/Retailer-API/v9/migrationguide/v8-v9/migrationguide.html)
 - [bol.com Retailer API migration guide from v7 to v8](https://api.bol.com/retailer/public/Retailer-API/v8/migrationguide/v7-v8/migrationguide.html)
 

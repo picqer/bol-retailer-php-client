@@ -17,16 +17,21 @@ class Problem extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
+            'detail' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'instance' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'type' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'host' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'causedBy' => [ 'model' => Problem::class, 'enum' => null, 'array' => false ],
             'title' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'status' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'violations' => [ 'model' => Violation::class, 'enum' => null, 'array' => true ],
-            'detail' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'causedBy' => [ 'model' => Problem::class, 'enum' => null, 'array' => false ],
         ];
     }
+
+    /**
+     * @var string
+     */
+    public $detail;
 
     /**
      * @var string
@@ -44,11 +49,6 @@ class Problem extends AbstractModel
     public $host;
 
     /**
-     * @var Problem Describes a problem that occurred interacting with the API.
-     */
-    public $causedBy;
-
-    /**
      * @var string
      */
     public $title;
@@ -64,7 +64,7 @@ class Problem extends AbstractModel
     public $violations = [];
 
     /**
-     * @var string
+     * @var Problem Describes a problem that occurred interacting with the API.
      */
-    public $detail;
+    public $causedBy;
 }

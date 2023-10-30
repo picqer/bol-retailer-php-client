@@ -1,9 +1,18 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "v9 - Shared API",
-        "description": "The bol.com API shared logic.",
-        "version": "9.x"
+        "title": "v10 - Shared API",
+        "description": "The bol.com API shared logic.\n\n# Authentication\nOur API requires authentication via OAuth2. The detailed steps to authenticate are explained [here](https://api.bol.com/retailer/public/Retailer-API/authentication.html) \n\n# Demo scenarios\nOur API specification includes examples of the responses you can expect. For more information as well as more examples, we refer you to the following resources:  \n- [Demo environment](https://api.bol.com/retailer/public/Retailer-API/demo/demo.html)\n- [Demo scenarios](https://api.bol.com/retailer/public/Retailer-API/demo/v10-index.html)\n",
+        "termsOfService": "https://api.bol.com/retailer/public/Retailer-API/legal/terms-of-service.html",
+        "contact": {
+            "name": "developers.bol.com",
+            "url": "https://developers.bol.com"
+        },
+        "version": "10.x",
+        "x-logo": {
+            "url": "https://api.bol.com/retailer/public/Retailer-API/_images/bolcom_logo.png",
+            "altText": "bol.com logo"
+        }
     },
     "servers": [
         {
@@ -18,7 +27,7 @@
     "tags": [
         {
             "name": "Process Status",
-            "description": "Process status resource"
+            "description": "Process status resources"
         }
     ],
     "paths": {
@@ -50,6 +59,7 @@
                             "type": "string",
                             "enum": [
                                 "CONFIRM_SHIPMENT",
+                                "CREATE_SHIPMENT",
                                 "CANCEL_ORDER",
                                 "CHANGE_TRANSPORT",
                                 "HANDLE_RETURN_ITEM",
@@ -107,12 +117,12 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatusResponse"
                                 }
                             },
-                            "application/vnd.advertiser.v9+json": {
+                            "application/vnd.advertiser.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatusResponse"
                                 }
@@ -122,12 +132,12 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
                             },
-                            "application/vnd.advertiser.v9+json": {
+                            "application/vnd.advertiser.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -145,12 +155,12 @@
                 "operationId": "get-process-status-bulk",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/BulkProcessStatusRequest"
                             }
                         },
-                        "application/vnd.advertiser.v9+json": {
+                        "application/vnd.advertiser.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/BulkProcessStatusRequest"
                             }
@@ -162,12 +172,12 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatusResponse"
                                 }
                             },
-                            "application/vnd.advertiser.v9+json": {
+                            "application/vnd.advertiser.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatusResponse"
                                 }
@@ -177,12 +187,12 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
                             },
-                            "application/vnd.advertiser.v9+json": {
+                            "application/vnd.advertiser.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -215,12 +225,12 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
                             },
-                            "application/vnd.advertiser.v9+json": {
+                            "application/vnd.advertiser.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -230,12 +240,12 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
                             },
-                            "application/vnd.advertiser.v9+json": {
+                            "application/vnd.advertiser.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -349,30 +359,36 @@
                 }
             },
             "Link": {
-                "required": [
-                    "href",
-                    "method",
-                    "rel"
-                ],
                 "type": "object",
                 "properties": {
                     "rel": {
-                        "type": "string",
-                        "description": "The link relation.",
-                        "example": "self"
+                        "type": "string"
                     },
                     "href": {
-                        "type": "string",
-                        "description": "The URI for the resource linked to.",
-                        "example": "https://api.bol.com/shared/process-status/1234567"
+                        "type": "string"
                     },
-                    "method": {
-                        "type": "string",
-                        "description": "The HTTP method to use when accessing the link.",
-                        "example": "GET"
+                    "hreflang": {
+                        "type": "string"
+                    },
+                    "media": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "deprecation": {
+                        "type": "string"
+                    },
+                    "profile": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
                     }
-                },
-                "description": "Lists available actions applicable to this endpoint."
+                }
             },
             "ProcessStatus": {
                 "required": [

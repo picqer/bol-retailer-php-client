@@ -48,8 +48,7 @@ class Order extends AbstractModel
     public $shipmentDetails;
 
     /**
-     * @var BillingDetails The details of the customer that is responsible for the financial fulfillment of this
-     * shipment.
+     * @var BillingDetails The details of the customer that is responsible for the financial fulfillment of this order.
      */
     public $billingDetails;
 

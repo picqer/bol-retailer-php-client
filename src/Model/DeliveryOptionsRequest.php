@@ -25,35 +25,4 @@ class DeliveryOptionsRequest extends AbstractModel
      * @var DeliveryOptionsRequestOrderItem[] Order items for which the delivery options are requested.
      */
     public $orderItems = [];
-
-    /**
-     * Returns an array with the orderItemIds from orderItems.
-     * @return string[] OrderItemIds from orderItems.
-     */
-    public function getOrderItemIds(): array
-    {
-        return array_map(function ($model) {
-            return $model->orderItemId;
-        }, $this->orderItems);
-    }
-
-    /**
-     * Sets orderItems by an array of orderItemIds.
-     * @param string[] $orderItemIds OrderItemIds for orderItems.
-     */
-    public function setOrderItemIds(array $orderItemIds): void
-    {
-        $this->orderItems = array_map(function ($orderItemId) {
-            return DeliveryOptionsRequestOrderItem::constructFromArray(['orderItemId' => $orderItemId]);
-        }, $orderItemIds);
-    }
-
-    /**
-     * Adds a new DeliveryOptionsRequestOrderItem to orderItems by orderItemId.
-     * @param string $orderItemId OrderItemId for the DeliveryOptionsRequestOrderItem to add.
-     */
-    public function addOrderItemId(string $orderItemId): void
-    {
-        $this->orderItems[] = DeliveryOptionsRequestOrderItem::constructFromArray(['orderItemId' => $orderItemId]);
-    }
 }

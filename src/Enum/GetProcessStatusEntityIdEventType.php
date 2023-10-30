@@ -6,6 +6,7 @@ namespace Picqer\BolRetailerV10\Enum;
 enum GetProcessStatusEntityIdEventType: string
 {
     case CONFIRM_SHIPMENT = 'CONFIRM_SHIPMENT';
+    case CREATE_SHIPMENT = 'CREATE_SHIPMENT';
     case CANCEL_ORDER = 'CANCEL_ORDER';
     case CHANGE_TRANSPORT = 'CHANGE_TRANSPORT';
     case HANDLE_RETURN_ITEM = 'HANDLE_RETURN_ITEM';

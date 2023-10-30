@@ -21,8 +21,8 @@ class Client extends BaseClient
         $url = "retailer/commission";
         $options = [
             'body' => Model\BulkCommissionRequest::constructFromArray(['commissionQueries' => $commissionQueries]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\BulkCommissionResponse::class,
@@ -55,7 +55,7 @@ class Client extends BaseClient
                 'unit-price' => $unitPrice,
                 'condition' => $condition,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\Commission::class,
@@ -80,7 +80,7 @@ class Client extends BaseClient
     {
         $url = "retailer/content/catalog-products/${ean}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\CatalogProduct::class,
@@ -105,8 +105,8 @@ class Client extends BaseClient
         $url = "retailer/content/chunk-recommendations";
         $options = [
             'body' => Model\ChunkRecommendationsRequest::constructFromArray(['productContents' => $productContents]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ChunkRecommendationsResponse::class,
@@ -130,8 +130,8 @@ class Client extends BaseClient
         $url = "retailer/content/products";
         $options = [
             'body' => $createProductContentSingleRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -154,7 +154,7 @@ class Client extends BaseClient
     {
         $url = "retailer/content/upload-report/${uploadId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\UploadReportResponse::class,
@@ -188,7 +188,7 @@ class Client extends BaseClient
                 'number-of-periods' => $numberOfPeriods,
                 'name' => $name,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\OfferInsights::class,
@@ -220,7 +220,7 @@ class Client extends BaseClient
                 'year' => $year,
                 'week' => $week,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\PerformanceIndicators::class,
@@ -249,7 +249,7 @@ class Client extends BaseClient
                 'offer-id' => $offerId,
                 'weeks-ahead' => $weeksAhead,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\SalesForecastResponse::class,
@@ -283,7 +283,7 @@ class Client extends BaseClient
                 'number-of-periods' => $numberOfPeriods,
                 'related-search-terms' => $relatedSearchTerms,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\SearchTerms::class,
@@ -319,7 +319,7 @@ class Client extends BaseClient
                 'state' => $state,
                 'query' => $query,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\InventoryResponse::class,
@@ -352,7 +352,7 @@ class Client extends BaseClient
                 'period-start-date' => $periodStartDate,
                 'period-end-date' => $periodEndDate,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -377,7 +377,7 @@ class Client extends BaseClient
     {
         $url = "retailer/invoices/${invoiceId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -406,7 +406,7 @@ class Client extends BaseClient
             'query' => [
                 'page' => $page,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -432,8 +432,8 @@ class Client extends BaseClient
         $url = "retailer/offers";
         $options = [
             'body' => $createOfferRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -457,8 +457,8 @@ class Client extends BaseClient
         $url = "retailer/offers/export";
         $options = [
             'body' => Model\CreateOfferExportRequest::constructFromArray(['format' => $format]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -481,7 +481,7 @@ class Client extends BaseClient
     {
         $url = "retailer/offers/export/${reportId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+csv',
+            'produces' => 'application/vnd.retailer.v10+csv',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -506,8 +506,8 @@ class Client extends BaseClient
         $url = "retailer/offers/unpublished";
         $options = [
             'body' => Model\CreateUnpublishedOfferReportRequest::constructFromArray(['format' => $format]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -530,7 +530,7 @@ class Client extends BaseClient
     {
         $url = "retailer/offers/unpublished/${reportId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+csv',
+            'produces' => 'application/vnd.retailer.v10+csv',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -554,7 +554,7 @@ class Client extends BaseClient
     {
         $url = "retailer/offers/${offerId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\RetailerOffer::class,
@@ -580,8 +580,8 @@ class Client extends BaseClient
         $url = "retailer/offers/${offerId}";
         $options = [
             'body' => $updateOfferRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -604,7 +604,7 @@ class Client extends BaseClient
     {
         $url = "retailer/offers/${offerId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -629,8 +629,8 @@ class Client extends BaseClient
         $url = "retailer/offers/${offerId}/price";
         $options = [
             'body' => Model\UpdateOfferPriceRequest::constructFromArray(['pricing' => $pricing]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -655,8 +655,8 @@ class Client extends BaseClient
         $url = "retailer/offers/${offerId}/stock";
         $options = [
             'body' => $updateOfferStockRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -694,7 +694,7 @@ class Client extends BaseClient
                 'change-interval-minute' => $changeIntervalMinute,
                 'latest-change-date' => $latestChangeDate,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ReducedOrders::class,
@@ -719,36 +719,8 @@ class Client extends BaseClient
         $url = "retailer/orders/cancellation";
         $options = [
             'body' => Model\CancellationRequest::constructFromArray(['orderItems' => $orderItems]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-        ];
-
-        return $this->request('PUT', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Ship a single order item within a customer order by providing shipping information. If you purchased a shipping
-     * label you should add the shippingLabelId to this message and leave the transport element empty. If you will ship
-     * the item using your own transporter method you must omit the shippingLabelId entirely and fill in the transport
-     * element with the fields from GET shipping labels.
-     * @param Model\ShipmentRequest $shipmentRequest
-     * @return Model\ProcessStatus
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function shipOrderItem(Model\ShipmentRequest $shipmentRequest): Model\ProcessStatus
-    {
-        $url = "retailer/orders/shipment";
-        $options = [
-            'body' => $shipmentRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -772,7 +744,7 @@ class Client extends BaseClient
     {
         $url = "retailer/orders/${orderId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\Order::class,
@@ -798,7 +770,7 @@ class Client extends BaseClient
         $url = "retailer/products/list";
         $options = [
             'body' => $productListRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
             'consumes' => 'application/json',
         ];
         $responseTypes = [
@@ -832,7 +804,7 @@ class Client extends BaseClient
                 'search-term' => $searchTerm,
                 'category-id' => $categoryId,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProductListFiltersResponse::class,
@@ -860,7 +832,7 @@ class Client extends BaseClient
             'query' => [
                 'usage' => $usage,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProductAssetsResponse::class,
@@ -896,7 +868,7 @@ class Client extends BaseClient
                 'best-offer-only' => $bestOfferOnly,
                 'condition' => $condition,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\CompetingOffersResponse::class,
@@ -926,10 +898,34 @@ class Client extends BaseClient
             'query' => [
                 'country-code' => $countryCode,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProductPlacementResponse::class,
+            '404' => 'null',
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Gets a list of all price star boundaries for a specific EAN.
+     * @param string $ean The EAN number associated with this product.
+     * @return Model\PriceStarBoundaries|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getPriceStarBoundaries(string $ean): ?Model\PriceStarBoundaries
+    {
+        $url = "retailer/products/${ean}/price-star-boundaries";
+        $options = [
+            'produces' => 'application/vnd.retailer.v10+json',
+        ];
+        $responseTypes = [
+            '200' => Model\PriceStarBoundaries::class,
             '404' => 'null',
         ];
 
@@ -950,7 +946,7 @@ class Client extends BaseClient
     {
         $url = "retailer/products/${ean}/product-ids";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProductIdsResponse::class,
@@ -974,7 +970,7 @@ class Client extends BaseClient
     {
         $url = "retailer/products/${ean}/ratings";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProductRatingsResponse::class,
@@ -1004,7 +1000,7 @@ class Client extends BaseClient
                 'promotion-type' => $promotionType,
                 'page' => $page,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\Promotions::class,
@@ -1027,7 +1023,7 @@ class Client extends BaseClient
     {
         $url = "retailer/promotions/${promotionId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\Promotion::class,
@@ -1041,27 +1037,27 @@ class Client extends BaseClient
      * Gets a paginated list of all products that are present within a promotion.
      * @param string $promotionId The identifier of the promotion.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @return Model\Products
+     * @return Model\Product[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
      * @throws Exception\UnauthorizedException when the request was unauthorized.
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProducts(string $promotionId, ?int $page = 1): Model\Products
+    public function getProducts(string $promotionId, ?int $page = 1): array
     {
         $url = "retailer/promotions/${promotionId}/products";
         $options = [
             'query' => [
                 'page' => $page,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\Products::class,
         ];
 
-        return $this->request('GET', $url, $options, $responseTypes);
+        return $this->request('GET', $url, $options, $responseTypes)->products;
     }
 
     /**
@@ -1091,7 +1087,7 @@ class Client extends BaseClient
                 'state' => $state,
                 'page' => $page,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ReplenishmentsResponse::class,
@@ -1115,8 +1111,8 @@ class Client extends BaseClient
         $url = "retailer/replenishments";
         $options = [
             'body' => $createReplenishmentRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1138,7 +1134,7 @@ class Client extends BaseClient
     {
         $url = "retailer/replenishments/delivery-dates";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\DeliveryDatesResponse::class,
@@ -1162,8 +1158,8 @@ class Client extends BaseClient
         $url = "retailer/replenishments/pickup-time-slots";
         $options = [
             'body' => $pickupTimeSlotsRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\PickupTimeSlotsResponse::class,
@@ -1187,8 +1183,8 @@ class Client extends BaseClient
         $url = "retailer/replenishments/product-destinations";
         $options = [
             'body' => Model\RequestProductDestinationsRequest::constructFromArray(['eans' => $eans]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1211,7 +1207,7 @@ class Client extends BaseClient
     {
         $url = "retailer/replenishments/product-destinations/${productDestinationsId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ProductDestinationsResponse::class,
@@ -1237,8 +1233,8 @@ class Client extends BaseClient
         $url = "retailer/replenishments/product-labels";
         $options = [
             'body' => $productLabelsRequest,
-            'produces' => 'application/vnd.retailer.v9+pdf',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+pdf',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -1262,7 +1258,7 @@ class Client extends BaseClient
     {
         $url = "retailer/replenishments/${replenishmentId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ReplenishmentResponse::class,
@@ -1288,8 +1284,8 @@ class Client extends BaseClient
         $url = "retailer/replenishments/${replenishmentId}";
         $options = [
             'body' => $updateReplenishmentRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1316,7 +1312,7 @@ class Client extends BaseClient
             'query' => [
                 'label-type' => $labelType,
             ],
-            'produces' => 'application/vnd.retailer.v9+pdf',
+            'produces' => 'application/vnd.retailer.v10+pdf',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -1340,7 +1336,7 @@ class Client extends BaseClient
     {
         $url = "retailer/replenishments/${replenishmentId}/pick-list";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+pdf',
+            'produces' => 'application/vnd.retailer.v10+pdf',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -1364,7 +1360,7 @@ class Client extends BaseClient
     {
         $url = "retailer/retailers/${retailerId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\RetailerInformationResponse::class,
@@ -1397,7 +1393,7 @@ class Client extends BaseClient
                 'handled' => $handled,
                 'fulfilment-method' => $fulfilmentMethod,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ReturnsResponse::class,
@@ -1422,7 +1418,7 @@ class Client extends BaseClient
         $url = "retailer/returns";
         $options = [
             'body' => $createReturnRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
             'consumes' => 'application/json',
         ];
         $responseTypes = [
@@ -1446,7 +1442,7 @@ class Client extends BaseClient
     {
         $url = "retailer/returns/${returnId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ReturnObject::class,
@@ -1473,8 +1469,8 @@ class Client extends BaseClient
         $url = "retailer/returns/${rmaId}";
         $options = [
             'body' => $returnRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1507,13 +1503,107 @@ class Client extends BaseClient
                 'fulfilment-method' => $fulfilmentMethod,
                 'order-id' => $orderId,
             ],
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\ShipmentsResponse::class,
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->shipments;
+    }
+
+    /**
+     * Ship multiple single order items within a customer order by providing shipping information. If you purchased a
+     * shipping label you should add the shippingLabelId to this message and leave the transport element empty. If you
+     * will ship the item using your own transporter method you must omit the shippingLabelId entirely and fill in the
+     * transport element with the fields from GET shipping labels.
+     * @param Model\ShipmentRequest $shipmentRequest
+     * @return Model\ProcessStatus
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function createShipment(Model\ShipmentRequest $shipmentRequest): Model\ProcessStatus
+    {
+        $url = "retailer/shipments";
+        $options = [
+            'body' => $shipmentRequest,
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
+        ];
+        $responseTypes = [
+            '202' => Model\ProcessStatus::class,
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes);
+    }
+
+    /**
+     * Gets a list of paginated invoice requests initiated by customers.
+     * @param string|null $shipmentId The id of the shipment.
+     * @param int|null $page The requested page number with a page size of 50 items.
+     * @param Enum\GetInvoiceRequestsState|null $state To filter on invoice request state. You can filter on all invoice
+     * requests regardless their statuses, open invoice requests requiring your action and invoice requests uploaded
+     * with possible errors.
+     * @return Model\InvoiceRequests[]
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, ?Enum\GetInvoiceRequestsState $state = null): array
+    {
+        $url = "retailer/shipments/invoices/requests";
+        $options = [
+            'query' => [
+                'shipment-id' => $shipmentId,
+                'page' => $page,
+                'state' => $state,
+            ],
+            'produces' => 'application/vnd.retailer.v10+json',
+        ];
+        $responseTypes = [
+            '200' => Model\InvoiceRequestsResponse::class,
+            '404' => 'null',
+        ];
+
+        $result = $this->request('GET', $url, $options, $responseTypes);
+        return $result === null ? [] : $result->invoiceRequests;
+    }
+
+    /**
+     * Uploads an invoice associated with shipment id.
+     * @param string $shipmentId The id of the shipment associated with the invoice.
+     * @param string $invoice
+     * @return Model\ProcessStatus|null
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function uploadInvoice(string $shipmentId, string $invoice): ?Model\ProcessStatus
+    {
+        $url = "retailer/shipments/invoices/${shipmentId}";
+        $options = [
+            'multipart' => [
+                [
+                    'name' => 'invoice',
+                    'contents' => \GuzzleHttp\Psr7\Utils::tryFopen($invoice, 'r'),
+                ],
+            ],
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'multipart/form-data',
+        ];
+        $responseTypes = [
+            '202' => Model\ProcessStatus::class,
+            '404' => 'null',
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes);
     }
 
     /**
@@ -1530,7 +1620,7 @@ class Client extends BaseClient
     {
         $url = "retailer/shipments/${shipmentId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\Shipment::class,
@@ -1555,8 +1645,8 @@ class Client extends BaseClient
         $url = "retailer/shipping-labels";
         $options = [
             'body' => $shippingLabelRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
@@ -1581,8 +1671,8 @@ class Client extends BaseClient
         $url = "retailer/shipping-labels/delivery-options";
         $options = [
             'body' => Model\DeliveryOptionsRequest::constructFromArray(['orderItems' => $orderItems]),
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '200' => Model\DeliveryOptionsResponse::class,
@@ -1609,7 +1699,7 @@ class Client extends BaseClient
     {
         $url = "retailer/shipping-labels/${shippingLabelId}";
         $options = [
-            'produces' => 'application/vnd.retailer.v9+pdf',
+            'produces' => 'application/vnd.retailer.v10+pdf',
         ];
         $responseTypes = [
             '200' => 'string',
@@ -1810,104 +1900,14 @@ class Client extends BaseClient
         $url = "retailer/transports/${transportId}";
         $options = [
             'body' => $changeTransportRequest,
-            'produces' => 'application/vnd.retailer.v9+json',
-            'consumes' => 'application/vnd.retailer.v9+json',
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
         ];
 
         return $this->request('PUT', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Gets a list of all price star boundaries for a specific EAN.
-     * @param string $ean The EAN number associated with this product.
-     * @return Model\PriceStarBoundaries|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getPriceStarBoundaries(string $ean): ?Model\PriceStarBoundaries
-    {
-        $url = "retailer/insights/price-star-boundaries/${ean}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v10+json',
-        ];
-        $responseTypes = [
-            '200' => Model\PriceStarBoundaries::class,
-            '404' => 'null',
-        ];
-
-        return $this->request('GET', $url, $options, $responseTypes);
-    }
-
-    /**
-     * Gets a list of paginated invoice requests initiated by customers.
-     * @param string|null $shipmentId The id of the shipment.
-     * @param int|null $page The requested page number with a page size of 50 items.
-     * @param Enum\GetInvoiceRequestsState|null $state To filter on invoice request state. You can filter on all invoice
-     * requests regardless their statuses, open invoice requests requiring your action and invoice requests uploaded
-     * with possible errors.
-     * @return Model\InvoiceRequests[]
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, ?Enum\GetInvoiceRequestsState $state = null): array
-    {
-        $url = "retailer/shipments/invoices/requests";
-        $options = [
-            'query' => [
-                'shipment-id' => $shipmentId,
-                'page' => $page,
-                'state' => $state,
-            ],
-            'produces' => 'application/vnd.retailer.v10+json',
-        ];
-        $responseTypes = [
-            '200' => Model\InvoiceRequestsResponse::class,
-            '404' => 'null',
-        ];
-
-        $result = $this->request('GET', $url, $options, $responseTypes);
-        return $result === null ? [] : $result->invoiceRequests;
-    }
-
-    /**
-     * Uploads an invoice associated with shipment id.
-     * @param string $shipmentId The id of the shipment associated with the invoice.
-     * @param string $invoice
-     * @return Model\ProcessStatus|null
-     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
-     * @throws Exception\ResponseException when an unexpected response was received.
-     * @throws Exception\UnauthorizedException when the request was unauthorized.
-     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
-     * @throws Exception\Exception when something unexpected went wrong.
-     */
-    public function uploadInvoice(string $shipmentId, string $invoice): ?Model\ProcessStatus
-    {
-        $url = "retailer/shipments/invoices/${shipmentId}";
-        $options = [
-            'multipart' => [
-                [
-                    'name' => 'invoice',
-                    'contents' => \GuzzleHttp\Psr7\Utils::tryFopen($invoice, 'r'),
-                ],
-            ],
-            'produces' => 'application/vnd.retailer.v10+json',
-            'consumes' => 'multipart/form-data',
-        ];
-        $responseTypes = [
-            '202' => Model\ProcessStatus::class,
-            '404' => 'null',
-        ];
-
-        return $this->request('POST', $url, $options, $responseTypes);
     }
 
     /**

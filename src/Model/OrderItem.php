@@ -18,6 +18,7 @@ class OrderItem extends AbstractModel
     {
         return [
             'orderItemId' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'quantity' => [ 'model' => null, 'enum' => null, 'array' => false ],
         ];
     }
 
@@ -25,4 +26,10 @@ class OrderItem extends AbstractModel
      * @var string The order item being confirmed.
      */
     public $orderItemId;
+
+    /**
+     * @var int The quantity of the order items to ship. If omitted, will be interpreted as the full quantity that is
+     * still open for this order item.
+     */
+    public $quantity;
 }

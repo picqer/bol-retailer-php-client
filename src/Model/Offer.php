@@ -79,7 +79,7 @@ class Offer extends AbstractModel
 
     /**
      * @var string The date at which package can be delivered to customer latest. In case of pre-orders where a specific
-     * delivery date is not available, a placeholder date will be used.
+     * delivery date is not available, this field will not be present.
      */
     public $maxDeliveryDate;
 }

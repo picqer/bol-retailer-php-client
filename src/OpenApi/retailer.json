@@ -1,9 +1,18 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "v9 - Retailer API",
-        "description": "The bol.com API for retailers.",
-        "version": "9.x"
+        "title": "v10 - Retailer API",
+        "description": "The bol.com API for retailers.\n\n# Authentication\nOur API requires authentication via OAuth2. The detailed steps to authenticate are explained [here](https://api.bol.com/retailer/public/Retailer-API/authentication.html) \n\n# Demo scenarios\nOur API specification includes examples of the responses you can expect. For more information as well as more examples, we refer you to the following resources:  \n- [Demo environment](https://api.bol.com/retailer/public/Retailer-API/demo/demo.html)\n- [Demo scenarios](https://api.bol.com/retailer/public/Retailer-API/demo/v10-index.html)\n",
+        "termsOfService": "https://api.bol.com/retailer/public/Retailer-API/legal/terms-of-service.html",
+        "contact": {
+            "name": "developers.bol.com",
+            "url": "https://developers.bol.com"
+        },
+        "version": "10.x",
+        "x-logo": {
+            "url": "https://api.bol.com/retailer/public/Retailer-API/_images/bolcom_logo.png",
+            "altText": "bol.com logo"
+        }
     },
     "servers": [
         {
@@ -92,7 +101,7 @@
                 "operationId": "get-commissions",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/BulkCommissionRequest"
                             }
@@ -104,7 +113,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/BulkCommissionResponse"
                                 }
@@ -114,7 +123,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -124,7 +133,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -175,6 +184,8 @@
                         "description": "The price of the product with a period as a decimal separator. The price should always have two decimals precision.",
                         "required": true,
                         "schema": {
+                            "maximum": 9999,
+                            "minimum": 0,
                             "type": "number"
                         },
                         "example": 59
@@ -184,7 +195,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Commission"
                                 }
@@ -194,7 +205,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -204,7 +215,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -254,7 +265,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/CatalogProduct"
                                 }
@@ -264,7 +275,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -274,7 +285,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -284,7 +295,7 @@
                     "406": {
                         "description": "Not acceptable: The sent request header does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -304,7 +315,7 @@
                 "operationId": "get-chunk-recommendations",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/ChunkRecommendationsRequest"
                             }
@@ -316,7 +327,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ChunkRecommendationsResponse"
                                 }
@@ -326,7 +337,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -346,7 +357,7 @@
                 "operationId": "post-product-content",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CreateProductContentSingleRequest"
                             }
@@ -358,7 +369,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -368,7 +379,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -401,7 +412,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/UploadReportResponse"
                                 }
@@ -411,7 +422,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -481,7 +492,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/OfferInsights"
                                 }
@@ -491,7 +502,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -552,7 +563,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/PerformanceIndicators"
                                 }
@@ -562,7 +573,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -596,6 +607,8 @@
                         "description": "The number of weeks into the future, starting from today.",
                         "required": true,
                         "schema": {
+                            "maximum": 12,
+                            "minimum": 1,
                             "type": "integer",
                             "format": "int32"
                         }
@@ -605,7 +618,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SalesForecastResponse"
                                 }
@@ -615,7 +628,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -682,7 +695,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SearchTerms"
                                 }
@@ -692,7 +705,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -780,7 +793,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/InventoryResponse"
                                 }
@@ -790,7 +803,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -814,7 +827,7 @@
                         "in": "query",
                         "description": "Period start date in ISO 8601 standard.",
                         "required": false,
-                         "schema": {
+                        "schema": {
                             "type": "string"
                         },
                         "example": "2019-03-01"
@@ -834,7 +847,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -845,7 +858,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -878,13 +891,13 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
                                 }
                             },
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -895,12 +908,12 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
                             },
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -944,13 +957,13 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
                                 }
                             },
-                            "application/vnd.retailer.v9+openxmlformats-officedocument.spreadsheetml.sheet": {
+                            "application/vnd.retailer.v10+openxmlformats-officedocument.spreadsheetml.sheet": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -961,12 +974,12 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
                             },
-                            "application/vnd.retailer.v9+openxmlformats-officedocument.spreadsheetml.sheet": {
+                            "application/vnd.retailer.v10+openxmlformats-officedocument.spreadsheetml.sheet": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -976,12 +989,12 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
                             },
-                            "application/vnd.retailer.v9+openxmlformats-officedocument.spreadsheetml.sheet": {
+                            "application/vnd.retailer.v10+openxmlformats-officedocument.spreadsheetml.sheet": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1001,7 +1014,7 @@
                 "operationId": "post-offer",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CreateOfferRequest"
                             }
@@ -1013,7 +1026,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1023,7 +1036,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1043,7 +1056,7 @@
                 "operationId": "post-offer-export",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CreateOfferExportRequest"
                             }
@@ -1055,7 +1068,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1065,7 +1078,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1101,7 +1114,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+csv": {
+                            "application/vnd.retailer.v10+csv": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1111,7 +1124,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+csv": {
+                            "application/vnd.retailer.v10+csv": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1131,7 +1144,7 @@
                 "operationId": "post-unpublished-offer-report",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CreateUnpublishedOfferReportRequest"
                             }
@@ -1143,7 +1156,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1153,7 +1166,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1189,7 +1202,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+csv": {
+                            "application/vnd.retailer.v10+csv": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1199,7 +1212,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+csv": {
+                            "application/vnd.retailer.v10+csv": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1232,7 +1245,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/RetailerOffer"
                                 }
@@ -1242,7 +1255,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1271,7 +1284,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/UpdateOfferRequest"
                             }
@@ -1283,7 +1296,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1293,7 +1306,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1324,7 +1337,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1334,7 +1347,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1365,7 +1378,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/UpdateOfferPriceRequest"
                             }
@@ -1377,7 +1390,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1387,7 +1400,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1418,7 +1431,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/UpdateOfferStockRequest"
                             }
@@ -1430,7 +1443,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1440,7 +1453,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1524,7 +1537,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ReducedOrders"
                                 }
@@ -1544,7 +1557,7 @@
                 "operationId": "cancel-order-item",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CancellationRequest"
                             }
@@ -1556,7 +1569,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -1566,49 +1579,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Problem"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/retailer/orders/shipment": {
-            "put": {
-                "tags": [
-                    "Orders"
-                ],
-                "summary": "Ship order item",
-                "description": "Ship a single order item within a customer order by providing shipping information. If you purchased a shipping label you should add the shippingLabelId to this message and leave the transport element empty. If you will ship the item using your own transporter method you must omit the shippingLabelId entirely and fill in the transport element with the fields from GET shipping labels.",
-                "operationId": "ship-order-item",
-                "requestBody": {
-                    "content": {
-                        "application/vnd.retailer.v9+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ShipmentRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "202": {
-                        "description": "Accepted: Successfully scheduled the request for processing.",
-                        "content": {
-                            "application/vnd.retailer.v9+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ProcessStatus"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
-                        "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1641,7 +1612,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Order"
                                 }
@@ -1651,7 +1622,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1701,7 +1672,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductListResponse"
                                 }
@@ -1711,7 +1682,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1721,7 +1692,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1731,7 +1702,7 @@
                     "406": {
                         "description": "Not acceptable: The sent request header does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1817,7 +1788,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductListFiltersResponse"
                                 }
@@ -1827,7 +1798,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1837,7 +1808,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1847,7 +1818,7 @@
                     "406": {
                         "description": "Not acceptable: The sent request header does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1896,7 +1867,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductAssetsResponse"
                                 }
@@ -1906,7 +1877,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1916,7 +1887,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -1951,6 +1922,7 @@
                         "description": "The requested page number with a page size of 50 items.",
                         "required": false,
                         "schema": {
+                            "maximum": 200,
                             "minimum": 1,
                             "type": "integer",
                             "format": "int32",
@@ -2007,7 +1979,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/CompetingOffersResponse"
                                 }
@@ -2017,7 +1989,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2027,7 +1999,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2090,7 +2062,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductPlacementResponse"
                                 }
@@ -2100,7 +2072,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2110,7 +2082,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2120,7 +2092,61 @@
                     "406": {
                         "description": "Not acceptable: The sent request header does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/products/{ean}/price-star-boundaries": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get price star boundaries by EAN",
+                "description": "Gets a list of all price star boundaries for a specific EAN.",
+                "operationId": "get-price-star-boundaries",
+                "parameters": [
+                    {
+                        "name": "ean",
+                        "in": "path",
+                        "description": "The EAN number associated with this product.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "0000007740404"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok: Successfully processed the request.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PriceStarBoundaries"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2154,7 +2180,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductIdsResponse"
                                 }
@@ -2164,7 +2190,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2174,7 +2200,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2208,7 +2234,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductRatingsResponse"
                                 }
@@ -2218,7 +2244,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2228,7 +2254,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2278,7 +2304,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Promotions"
                                 }
@@ -2288,7 +2314,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2321,7 +2347,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Promotion"
                                 }
@@ -2331,7 +2357,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2341,7 +2367,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2387,7 +2413,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Products"
                                 }
@@ -2397,7 +2423,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2487,7 +2513,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ReplenishmentsResponse"
                                 }
@@ -2497,7 +2523,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2515,7 +2541,7 @@
                 "operationId": "post-replenishment",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/CreateReplenishmentRequest"
                             }
@@ -2527,7 +2553,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -2537,7 +2563,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2559,7 +2585,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/DeliveryDatesResponse"
                                 }
@@ -2569,7 +2595,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2589,7 +2615,7 @@
                 "operationId": "post-pickup-time-slots",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/PickupTimeSlotsRequest"
                             }
@@ -2601,7 +2627,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/PickupTimeSlotsResponse"
                                 }
@@ -2611,7 +2637,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2631,7 +2657,7 @@
                 "operationId": "post-request-product-destinations",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/RequestProductDestinationsRequest"
                             }
@@ -2643,7 +2669,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -2653,7 +2679,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2687,7 +2713,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProductDestinationsResponse"
                                 }
@@ -2697,7 +2723,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2707,7 +2733,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2727,7 +2753,7 @@
                 "operationId": "post-product-labels",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/ProductLabelsRequest"
                             }
@@ -2739,7 +2765,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -2750,7 +2776,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2760,7 +2786,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2794,7 +2820,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ReplenishmentResponse"
                                 }
@@ -2804,7 +2830,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2814,7 +2840,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2844,7 +2870,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/UpdateReplenishmentRequest"
                             }
@@ -2856,7 +2882,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -2866,7 +2892,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2914,7 +2940,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -2925,7 +2951,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2935,7 +2961,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2969,7 +2995,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -2980,7 +3006,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -2990,7 +3016,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3024,7 +3050,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/RetailerInformationResponse"
                                 }
@@ -3034,7 +3060,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3044,7 +3070,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3102,7 +3128,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ReturnsResponse"
                                 }
@@ -3112,7 +3138,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3142,7 +3168,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3152,7 +3178,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3185,7 +3211,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Return"
                                 }
@@ -3195,7 +3221,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3227,7 +3253,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/ReturnRequest"
                             }
@@ -3239,7 +3265,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3249,7 +3275,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3306,7 +3332,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ShipmentsResponse"
                                 }
@@ -3316,9 +3342,215 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "Create a shipment",
+                "description": "Ship multiple single order items within a customer order by providing shipping information. If you purchased a shipping label you should add the shippingLabelId to this message and leave the transport element empty. If you will ship the item using your own transporter method you must omit the shippingLabelId entirely and fill in the transport element with the fields from GET shipping labels.",
+                "operationId": "create-shipment",
+                "requestBody": {
+                    "content": {
+                        "application/vnd.retailer.v10+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShipmentRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted: Successfully scheduled the request for processing.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProcessStatus"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/shipments/invoices/requests": {
+            "get": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "Get a list of invoice requests",
+                "description": "Gets a list of paginated invoice requests initiated by customers.",
+                "operationId": "get-invoice-requests",
+                "parameters": [
+                    {
+                        "name": "shipment-id",
+                        "in": "query",
+                        "description": "The id of the shipment.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 541757635
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The requested page number with a page size of 50 items.",
+                        "required": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "To filter on invoice request state. You can filter on all invoice requests regardless their statuses, open invoice requests requiring your action and invoice requests uploaded with possible errors.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "OPEN",
+                                "UPLOAD_ERROR",
+                                "ALL"
+                            ]
+                        },
+                        "example": "OPEN"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok: Successfully processed the request.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvoiceRequestsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/shipments/invoices/{shipment-id}": {
+            "post": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "Upload an invoice for shipment id",
+                "description": "Uploads an invoice associated with shipment id.",
+                "operationId": "upload-invoice",
+                "parameters": [
+                    {
+                        "name": "shipment-id",
+                        "in": "path",
+                        "description": "The id of the shipment associated with the invoice.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 541757635
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "invoice"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "invoice": {
+                                        "type": "string",
+                                        "description": "The invoice file.",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted: Successfully scheduled the request for processing.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProcessStatus"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type: Content-Type header contains invalid value, allowed value is multipart/form-data.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
                                 }
                             }
                         }
@@ -3349,7 +3581,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Shipment"
                                 }
@@ -3359,7 +3591,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/problem"
                                 }
@@ -3379,7 +3611,7 @@
                 "operationId": "post-shipping-label",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/ShippingLabelRequest"
                             }
@@ -3391,7 +3623,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3401,7 +3633,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3421,7 +3653,7 @@
                 "operationId": "get-delivery-options",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/DeliveryOptionsRequest"
                             }
@@ -3433,7 +3665,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/DeliveryOptionsResponse"
                                 }
@@ -3443,7 +3675,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3453,7 +3685,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3503,7 +3735,7 @@
                             }
                         },
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "type": "string",
                                     "format": "byte"
@@ -3514,7 +3746,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3524,7 +3756,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+pdf": {
+                            "application/vnd.retailer.v10+pdf": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3539,14 +3771,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Get push notification subscriptions",
-                "description": "Retrieve a list of all configured and active push notification subscriptions.",
+                "summary": "Retrieve Event Notification Subscriptions (BETA)",
+                "description": "Retrieves all event notification subscriptions for a given retailer. Each subscription may have different types of events and a destination, which could either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "get-push-notification-subscriptions",
                 "responses": {
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SubscriptionsResponse"
                                 }
@@ -3556,7 +3788,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3569,14 +3801,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Create push notification subscription",
-                "description": "Create a push notification subscription for one (or more) of the available resources. The configured URL has to support https scheme.",
+                "summary": "Create Event Notification Subscription (BETA)",
+                "description": "Creates a new event notification subscription for a retailer. The subscription can be set up for one or more types of events and the destination can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "post-push-notification-subscription",
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateSubscriptionRequest"
+                                "$ref": "#/components/schemas/SubscriptionRequest"
                             }
                         }
                     },
@@ -3586,7 +3818,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3596,7 +3828,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3611,14 +3843,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Retrieve public keys for push notification signature validation.",
+                "summary": "Retrieve public keys for push notification signature validation. (BETA)",
                 "description": "Retrieve a list of public keys that should be used to validate the signature header for push notifications received from bol.com.",
                 "operationId": "get-subscription-keys",
                 "responses": {
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/KeySetResponse"
                                 }
@@ -3633,14 +3865,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Send test push notification for subscriptions",
+                "summary": "Send test push notification for subscriptions (BETA)",
                 "description": "Send a test push notification to all subscriptions for the provided event.",
                 "operationId": "post-test-push-notification",
                 "parameters": [
                     {
                         "name": "subscription-id",
                         "in": "path",
-                        "description": "A unique identifier for the subscription.",
+                        "description": "The unique identifier assigned to each event notification subscription. This ID is used for tracking and managing each subscription.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3652,7 +3884,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3662,7 +3894,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3677,14 +3909,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Get push notification subscription by id",
-                "description": "Retrieve a configured and active push notification subscription with the provided id.",
+                "summary": "Retrieve Specific Event Notification Subscription (BETA)",
+                "description": "Fetches the details of a specific event notification subscription for a retailer. The details include the types of events and the destination, which can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "get-push-notification-subscription",
                 "parameters": [
                     {
                         "name": "subscription-id",
                         "in": "path",
-                        "description": "A unique identifier for the subscription.",
+                        "description": "The unique identifier assigned to each event notification subscription. This ID is used for tracking and managing each subscription.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3696,7 +3928,7 @@
                     "200": {
                         "description": "Ok: Successfully processed the request.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SubscriptionResponse"
                                 }
@@ -3706,7 +3938,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3716,7 +3948,7 @@
                     "404": {
                         "description": "Not found: The requested item could not be found.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3729,14 +3961,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Update push notification subscription",
-                "description": "Update an existing push notification subscription with the supplied id. The configured URL has to support https scheme.",
+                "summary": "Update Event Notification Subscription (BETA)",
+                "description": "Updates the details of a specific event notification subscription for a retailer. The updates can be made to the types of events and/or the destination, which can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "put-push-notification-subscription",
                 "parameters": [
                     {
                         "name": "subscription-id",
                         "in": "path",
-                        "description": "A unique identifier for the subscription.",
+                        "description": "The unique identifier assigned to each event notification subscription. This ID is used for tracking and managing each subscription.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3746,9 +3978,9 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+                                "$ref": "#/components/schemas/SubscriptionRequest"
                             }
                         }
                     },
@@ -3758,7 +3990,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3768,7 +4000,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3781,14 +4013,14 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Delete push notification subscription",
-                "description": "Delete a push notification subscription with the provided id.",
+                "summary": "Remove Event Notification Subscription (BETA)",
+                "description": "Deletes a specific event notification subscription associated with a retailer.",
                 "operationId": "delete-push-notification-subscription",
                 "parameters": [
                     {
                         "name": "subscription-id",
                         "in": "path",
-                        "description": "A unique identifier for the subscription.",
+                        "description": "The unique identifier assigned to each event notification subscription. This ID is used for tracking and managing each subscription.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3800,7 +4032,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3810,7 +4042,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3841,7 +4073,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/vnd.retailer.v9+json": {
+                        "application/vnd.retailer.v10+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/ChangeTransportRequest"
                             }
@@ -3853,7 +4085,7 @@
                     "202": {
                         "description": "Accepted: Successfully scheduled the request for processing.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ProcessStatus"
                                 }
@@ -3863,7 +4095,7 @@
                     "400": {
                         "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
-                            "application/vnd.retailer.v9+json": {
+                            "application/vnd.retailer.v10+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem"
                                 }
@@ -3957,34 +4189,36 @@
                         "type": "string",
                         "example": "TNT",
                         "enum": [
-                            "BRIEFPOST",
-                            "UPS",
-                            "TNT",
-                            "TNT-EXTRA",
-                            "TNT_BRIEF",
-                            "TNT-EXPRESS",
-                            "DYL",
-                            "DPD-NL",
-                            "DPD-BE",
+                            "AMPERE",
                             "BPOST_BE",
                             "BPOST_BRIEF",
-                            "DHLFORYOU",
-                            "GLS",
-                            "FEDEX_NL",
-                            "FEDEX_BE",
-                            "OTHER",
-                            "DHL",
-                            "DHL_DE",
-                            "DHL-GLOBAL-MAIL",
-                            "TSN",
-                            "FIEGE",
-                            "TRANSMISSION",
-                            "PARCEL-NL",
-                            "LOGOIX",
-                            "PACKS",
+                            "BRIEFPOST",
+                            "BUDBEE",
                             "COURIER",
+                            "CYCLOON",
+                            "DHL",
+                            "DHL-GLOBAL-MAIL",
+                            "DHL-SD",
+                            "DHLFORYOU",
+                            "DHL_DE",
+                            "DPD-BE",
+                            "DPD-NL",
+                            "DYL",
+                            "FEDEX_BE",
+                            "FEDEX_NL",
+                            "GLS",
+                            "OTHER",
+                            "PACKS",
+                            "PARCEL-NL",
+                            "PES",
+                            "TNT",
+                            "TNT-EXPRESS",
+                            "TNT-EXTRA",
+                            "TNT_BRIEF",
+                            "TRANSMISSION",
                             "TRUNKRS",
-                            "CYCLOON"
+                            "TSN",
+                            "UPS"
                         ]
                     },
                     "trackAndTrace": {
@@ -3996,30 +4230,36 @@
                 "description": "The change transport requested by the user."
             },
             "Link": {
-                "required": [
-                    "href",
-                    "method",
-                    "rel"
-                ],
                 "type": "object",
                 "properties": {
                     "rel": {
-                        "type": "string",
-                        "description": "The link relation.",
-                        "example": "self"
+                        "type": "string"
                     },
                     "href": {
-                        "type": "string",
-                        "description": "The URI for the resource linked to.",
-                        "example": "https://api.bol.com/shared/process-status/1234567"
+                        "type": "string"
                     },
-                    "method": {
-                        "type": "string",
-                        "description": "The HTTP method to use when accessing the link.",
-                        "example": "GET"
+                    "hreflang": {
+                        "type": "string"
+                    },
+                    "media": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "deprecation": {
+                        "type": "string"
+                    },
+                    "profile": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
                     }
-                },
-                "description": "Lists available actions applicable to this endpoint."
+                }
             },
             "ProcessStatus": {
                 "required": [
@@ -4082,31 +4322,42 @@
                     }
                 }
             },
-            "UpdateSubscriptionRequest": {
+            "SubscriptionRequest": {
                 "required": [
                     "resources",
+                    "subscriptionType",
                     "url"
                 ],
                 "type": "object",
                 "properties": {
                     "resources": {
                         "type": "array",
-                        "description": "Type of event.",
+                        "description": "Array of event types for which the subscription is set. Note that some event types are only available for certain subscription types.",
                         "items": {
                             "type": "string",
-                            "description": "Type of event.",
+                            "description": "Array of event types for which the subscription is set. Note that some event types are only available for certain subscription types.",
                             "enum": [
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
-                                "OFFER"
+                                "OFFER",
+                                "PRICE_STAR_BOUNDARY",
+                                "COMPETING_OFFER"
                             ]
                         }
                     },
                     "url": {
-                        "pattern": "^https.*",
                         "type": "string",
-                        "description": "URL to receive this WebHook notification.",
+                        "description": "The destination for event notifications. For WEBHOOK subscription types, this is the URL where messages are posted to. For GCP_PUBSUB, this is the topic name.",
                         "example": "https://www.bol.com/webhook"
+                    },
+                    "subscriptionType": {
+                        "type": "string",
+                        "description": "The type of subscription. It indicates the platform where the events will be subscribed to. Be aware that certain event types are only available for specific types.",
+                        "example": "WEBHOOK",
+                        "enum": [
+                            "WEBHOOK",
+                            "GCP_PUBSUB"
+                        ]
                     }
                 }
             },
@@ -4131,6 +4382,8 @@
                         ]
                     },
                     "quantityReturned": {
+                        "maximum": 9999,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The quantity of items returned.",
                         "format": "int32",
@@ -4180,6 +4433,8 @@
                         "$ref": "#/components/schemas/UpdateDeliveryInfo"
                     },
                     "numberOfLoadCarriers": {
+                        "maximum": 66,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The number of parcels in this replenishment. Note: if you are using the bol.com pickup service, the maximum number is 20.",
                         "format": "int32",
@@ -4192,70 +4447,6 @@
                         "items": {
                             "$ref": "#/components/schemas/UpdateLoadCarrier"
                         }
-                    }
-                }
-            },
-            "OrderItem": {
-                "required": [
-                    "orderItemId"
-                ],
-                "type": "object",
-                "properties": {
-                    "orderItemId": {
-                        "type": "string",
-                        "description": "The order item being confirmed.",
-                        "example": "2012345678"
-                    }
-                },
-                "description": "Single element list with the order item to ship."
-            },
-            "ShipmentRequest": {
-                "required": [
-                    "orderItems"
-                ],
-                "type": "object",
-                "properties": {
-                    "orderItems": {
-                        "maxItems": 1,
-                        "minItems": 1,
-                        "type": "array",
-                        "description": "Single element list with the order item to ship.",
-                        "items": {
-                            "$ref": "#/components/schemas/OrderItem"
-                        }
-                    },
-                    "shipmentReference": {
-                        "maxLength": 90,
-                        "minLength": 0,
-                        "type": "string",
-                        "description": "A user-defined reference that you can provide to add to the shipment. Can be used for own administration purposes. Only 'null' or non-empty strings accepted.",
-                        "example": "B321SR"
-                    },
-                    "shippingLabelId": {
-                        "type": "string",
-                        "description": "The identifier of the purchased shipping label.",
-                        "example": "d4c50077-0c19-435f-9bee-1b30b9f4ba1a"
-                    },
-                    "transport": {
-                        "$ref": "#/components/schemas/TransportInstruction"
-                    }
-                }
-            },
-            "TransportInstruction": {
-                "required": [
-                    "transporterCode"
-                ],
-                "type": "object",
-                "properties": {
-                    "transporterCode": {
-                        "type": "string",
-                        "description": "Specify the transporter that will carry out the shipment.",
-                        "example": "TNT"
-                    },
-                    "trackAndTrace": {
-                        "type": "string",
-                        "description": "The track and trace code that is associated with this transport.",
-                        "example": "3SBOL0987654321"
                     }
                 }
             },
@@ -4392,6 +4583,8 @@
                 "type": "object",
                 "properties": {
                     "amount": {
+                        "maximum": 999,
+                        "minimum": 0,
                         "type": "integer",
                         "description": "The amount of stock available for the specified product present in the retailers warehouse. Note: this should not be the FBB stock! Defaults to 0.",
                         "format": "int32",
@@ -4412,12 +4605,16 @@
                 "type": "object",
                 "properties": {
                     "quantity": {
+                        "maximum": 24,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The minimum quantity a customer must order in order to receive discount. The element with value 1 must at least be present. In case of using more elements, the respective quantities must be in increasing order.",
                         "format": "int32",
                         "example": 1
                     },
                     "unitPrice": {
+                        "maximum": 9999,
+                        "minimum": 1,
                         "type": "number",
                         "description": "The price per single unit including VAT in case the customer orders at least the quantity provided. When using more than 1 price, the respective prices must be in decreasing order using 2 decimal precision and dot separated.",
                         "example": 9.99
@@ -4453,34 +4650,6 @@
                     }
                 }
             },
-            "CreateSubscriptionRequest": {
-                "required": [
-                    "resources",
-                    "url"
-                ],
-                "type": "object",
-                "properties": {
-                    "resources": {
-                        "type": "array",
-                        "description": "Type of event.",
-                        "items": {
-                            "type": "string",
-                            "description": "Type of event.",
-                            "enum": [
-                                "PROCESS_STATUS",
-                                "SHIPMENT",
-                                "OFFER"
-                            ]
-                        }
-                    },
-                    "url": {
-                        "pattern": "^https.*",
-                        "type": "string",
-                        "description": "URL to receive this WebHook notification.",
-                        "example": "https://www.bol.com/webhook"
-                    }
-                }
-            },
             "DeliveryOptionsRequestOrderItem": {
                 "required": [
                     "orderItemId"
@@ -4491,6 +4660,12 @@
                         "type": "string",
                         "description": "The id for the order item (1 order can have multiple order items).",
                         "example": "2012345678"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "The quantity of the order item for which the shipping label creation is requested for. If omitted, will be interpreted as the full quantity that is still open for this order item.",
+                        "format": "int32",
+                        "example": 1
                     }
                 },
                 "description": "Order items for which the delivery options are requested."
@@ -4671,6 +4846,76 @@
                     }
                 }
             },
+            "OrderItem": {
+                "required": [
+                    "orderItemId"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderItemId": {
+                        "type": "string",
+                        "description": "The order item being confirmed.",
+                        "example": "2012345678"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "The quantity of the order items to ship. If omitted, will be interpreted as the full quantity that is still open for this order item.",
+                        "format": "int32",
+                        "example": 1
+                    }
+                },
+                "description": "List of order items to ship."
+            },
+            "ShipmentRequest": {
+                "required": [
+                    "orderItems"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderItems": {
+                        "maxItems": 100,
+                        "minItems": 1,
+                        "type": "array",
+                        "description": "List of order items to ship.",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "shipmentReference": {
+                        "maxLength": 90,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "A user-defined reference that you can provide to add to the shipment. Can be used for own administration purposes. Only 'null' or non-empty strings accepted.",
+                        "example": "B321SR"
+                    },
+                    "shippingLabelId": {
+                        "type": "string",
+                        "description": "The identifier of the purchased shipping label.",
+                        "example": "d4c50077-0c19-435f-9bee-1b30b9f4ba1a"
+                    },
+                    "transport": {
+                        "$ref": "#/components/schemas/TransportInstruction"
+                    }
+                }
+            },
+            "TransportInstruction": {
+                "required": [
+                    "transporterCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "transporterCode": {
+                        "type": "string",
+                        "description": "Specify the transporter that will carry out the shipment.",
+                        "example": "TNT"
+                    },
+                    "trackAndTrace": {
+                        "type": "string",
+                        "description": "The track and trace code that is associated with this transport.",
+                        "example": "3SBOL0987654321"
+                    }
+                }
+            },
             "CreateReturnRequest": {
                 "required": [
                     "handlingResult",
@@ -4685,6 +4930,8 @@
                         "example": "2012345678"
                     },
                     "quantityReturned": {
+                        "maximum": 9999,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The quantity of items returned.",
                         "format": "int32",
@@ -4831,6 +5078,8 @@
                         "example": "0000007740404"
                     },
                     "quantity": {
+                        "maximum": 9999,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The number of announced items.",
                         "format": "int32",
@@ -4861,6 +5110,8 @@
                         "example": false
                     },
                     "numberOfLoadCarriers": {
+                        "maximum": 66,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The number of parcels in this replenishment. Note: if you are using the bol.com pickup service, the maximum number is 20.",
                         "format": "int32",
@@ -4892,6 +5143,8 @@
                         "example": "0000007740404"
                     },
                     "quantity": {
+                        "maximum": 9999,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The number of products to generate labels for.",
                         "format": "int32",
@@ -5013,6 +5266,8 @@
                         "$ref": "#/components/schemas/PickupTimeSlotsAddress"
                     },
                     "numberOfLoadCarriers": {
+                        "maximum": 50,
+                        "minimum": 1,
                         "type": "integer",
                         "description": "The number of load carriers in this shipment.",
                         "format": "int32",
@@ -5154,6 +5409,7 @@
                         ]
                     },
                     "page": {
+                        "maximum": 200,
                         "minimum": 1,
                         "type": "integer",
                         "description": "The requested page number with a page size of 50 items.",
@@ -5319,6 +5575,8 @@
                 "type": "object",
                 "properties": {
                     "amount": {
+                        "maximum": 999,
+                        "minimum": 0,
                         "type": "integer",
                         "description": "The amount of stock available for the specified product present in the retailers warehouse. Note: this should not be the FBB stock! Defaults to 0.",
                         "format": "int32",
@@ -5384,6 +5642,8 @@
                             "FRONT"
                         ],
                         "items": {
+                            "maxLength": 2,
+                            "minLength": 1,
                             "type": "string",
                             "description": "The label(s) of the asset.",
                             "example": "[\"FRONT\"]"
@@ -5744,32 +6004,44 @@
                 "required": [
                     "id",
                     "resources",
+                    "subscriptionType",
                     "url"
                 ],
                 "type": "object",
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "A unique identifier for the subscription.",
+                        "description": "The unique identifier assigned to each event notification subscription. This ID is used for tracking and managing each subscription.",
                         "example": "1234"
                     },
                     "resources": {
                         "type": "array",
                         "items": {
                             "type": "string",
-                            "description": "Type of event.",
+                            "description": "Array of event types for which the subscription is set. Note that some event types are only available for certain subscription types.",
                             "enum": [
                                 "TEST",
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
-                                "OFFER"
+                                "OFFER",
+                                "PRICE_STAR_BOUNDARY",
+                                "COMPETING_OFFER"
                             ]
                         }
                     },
                     "url": {
                         "type": "string",
-                        "description": "URL to receive this WebHook notification.",
+                        "description": "The destination for event notifications. For WEBHOOK subscription types, this is the URL where messages are posted to. For GCP_PUBSUB, this is the topic name.",
                         "example": "https://www.bol.com/webhook"
+                    },
+                    "subscriptionType": {
+                        "type": "string",
+                        "description": "The type of subscription. It indicates the platform where the events will be subscribed to. Be aware that certain event types are only available for specific types.",
+                        "example": "WEBHOOK",
+                        "enum": [
+                            "WEBHOOK",
+                            "GCP_PUBSUB"
+                        ]
                     }
                 }
             },
@@ -5811,7 +6083,7 @@
                     "publicKey": {
                         "type": "string",
                         "description": "The Base64 encoded public key to use when verifying the signature.",
-                        "example": "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCDO7X3OGEqB6LU2ZQdznuYJX1KhCiJUB0+IwW9UjcgbU2Y/LzUIgGPT33s/+OqqMQOtXp2RV4JM6Zv5/YUZgZAqEIkvvrIYvJB8tXv73VQS2r4Ssy3Y/frJsqy8a3sDOoFeJygHYE6kVf3sOCdo4CO6PFUe7ZwsOSS2/7fNWAaMhY6tEuZwkA7ZLoSd3UHTdeKlV1TH5I3yFClMo1FwABsWzj9DhvEb6Q36j+QLJZAj0xvusJUsOjcSgyXRzVBFtwwNILzs9BO+GWRI4li+rjhaST2pNtvGfnQB5TUOO7Yegk/ucSiV1cFzy95gWQV2F0c9P1vBctETrYKxQBklBbjAgMBAAECggEAGISLVoi9/nA2x7VuqrLs/FvksItIV38UN4urgtddXT2OhcqSLL+9styTFjgofLXTCzx0iKwlCWsQ6U9Y9i6pdGL7GIplqBJ0WEXaGl2OeVXdwk2XOZv/sXsp24yzhapT/nmuKWvZvOtyl9//1vO5DPoQPExwpVUnHxji4SjDr6DuKVNDwh9Z4mVsdfdYVeLYGJ356IGWhTu/JDie4byl8B75UgbmyvfJRjQkoLpVZuhu+jkmhogpoSl6NtaKA+iFlGT9JLtGVHDn15kdEHb+dtzTzyJH40KGjQ7OiZcmA8GFft6zrNlOpyziH7fICtt0//7fR348/Z+XIYUFqfadQQKBgQDeVnqAlkt2Uab/1OjX9O8CRWqdoFLpUGDiHhkaXEylJtm1osFHGiyOi1eEQOy//lnJWKUp7c0b8D/QioP7kI38ES1mBx1KDzFgob4p/U+4R+z24SV/Q3CT6vHbfbe1XxWvE4SOdh4p7+Kuhxz1n6P0TWltvsTbpCJ9GM4wi2Z26QKBgQCXGiObkJI4Wv6RGxq76BHEDZdrLWppXh1+FYfyUaq6bfcSF86yAIRlleEJUh1v9KDw2DCX0rhO3BW0juEl5qz5RohLIxuak+2RbX6IQrVPwtCCeGQzKIRPktht+fi+eSaa5XNMLXURTzjVUdxzFwqDKp+7YQWL8DJ6qEfJGGYX6wKBgBXM8PIOypNtaiyHmdUjBRR57fxKrhaGdRl2zgtRpYpEBvDSZpUsMdZAP3KOUyh4LiGZ+Yfk80mcAwXVrx9Ji0J+BK+OXwbV+od5FIZVei2dj9SdOuoBmNZIITLeXtb/3cZu6X52gnqmNNncEbDb2F2qAX5rSC4pJ+CQQBduc7uRAoGAHzjxfqWi8S4sSAOXxJgxg5djYGwj/t3JrlH4o2OoqZkrYnu05CcjNHKB65EiKq3sM5gYgmayWukzOvoDH/fIakHey9fXTluezVwYt0NBf9e7ihoiakfG/0JSonbypTkXdw5OgsEp3YfHMJ0XtlhefbgDBY8IvF/HrnyzSKRYBD0CgYBlq6nIEZOIqngHdtskT8JOZBcniVPGjUjSiNcYQXfeMwKINUqDGC/YmpPgBOhO93ozeQTCBeeMD8nlbkTHPu7BxCCfpKj6/PPMfxmyFQyDg9ZjjHOIhUMddRw+mSq0zS212JbIr3O4eEtrXPqWfq5phxyE3dRvaX3A3wiEQN9WRA=="
+                        "example": "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCDO7X3OGEqB6LU2ZQdznuYJX1KhCiJUB0+IwW9UjcgbU2Y/LzUIgGPT33s/+OqqMQOtXp2RV4JM6Zv5/YUZgZAqEIkvvrIYvJB8tXv73VQS2r4Ssy3Y/frJsqy8a3sDOoFeJygHYE6kVf3sOCdo4CO6PFUe7ZwsOSS2/7fNWAaMhY6tEuZwkA7ZLoSd3UHTdeKlV1TH5I3yFClMo1FwABsWzj9DhvEb6Q36j+QLJZAj0xvusJUsOjcSgyXRzVBFtwwNILzs9BO+GWRI4li+rjhaST2pNtvGfnQB5TUOO7Yegk/ucSiV1cFzy95gWQV2F0c9P1vBctETrYKxQBklBbjAgMBAAECggEAGISLVoi9/nA2x7VuqrLs/FvksItIV38UN4urgtddXT2OhcqSLL+9styTFjgofLXTCzx0iKwlCWsQ6U9Y9i6pdGL7GIplqBJ0WEXaGl2OeVXdwk2XOZv/sXsp24yzhapT/nmuKWvZvOtyl9//1vO5DPoQPExwpVUnHxji4SjDr6DuKVNDwh9Z4mVsdfdYVeLYGJ356IGWhTu/JDie4byl8B75UgbmyvfJRjQkoLpVZuhu+jkmhogpoSl6NtaKA+iFlGT9JLtGVHDn15kdEHb+dtzTzyJH40KGjQ7OiZcmA8GFft6zrNlOpyziH7fICtt0//7fR348/Z+XIYUFqfadQQKBgQDeVnqAlkt2Uab/1OjX9O8CRWqdoFLpUGDiHhkaXEylJtm1osFHGiyOi1eEQOy//lnJWKUp7c0b8D/QioP7kI38ES1mBx1KDzFgob4p/U+4R+z24SV/Q3CT6vHbfbe1XxWvE4SOdh4p7+Kuhxz1n6P0TWltvsTbpCJ9GM4wi2Z26QKBgQCXGiObkJI4Wv6RGxq76BHEDZdrLWppXh1+FYfyUaq6bfcSF86yAIRlleEJUh1v10KDw2DCX0rhO3BW0juEl5qz5RohLIxuak+2RbX6IQrVPwtCCeGQzKIRPktht+fi+eSaa5XNMLXURTzjVUdxzFwqDKp+7YQWL8DJ6qEfJGGYX6wKBgBXM8PIOypNtaiyHmdUjBRR57fxKrhaGdRl2zgtRpYpEBvDSZpUsMdZAP3KOUyh4LiGZ+Yfk80mcAwXVrx9Ji0J+BK+OXwbV+od5FIZVei2dj9SdOuoBmNZIITLeXtb/3cZu6X52gnqmNNncEbDb2F2qAX5rSC4pJ+CQQBduc7uRAoGAHzjxfqWi8S4sSAOXxJgxg5djYGwj/t3JrlH4o2OoqZkrYnu05CcjNHKB65EiKq3sM5gYgmayWukzOvoDH/fIakHey9fXTluezVwYt0NBf9e7ihoiakfG/0JSonbypTkXdw5OgsEp3YfHMJ0XtlhefbgDBY8IvF/HrnyzSKRYBD0CgYBlq6nIEZOIqngHdtskT8JOZBcniVPGjUjSiNcYQXfeMwKINUqDGC/YmpPgBOhO93ozeQTCBeeMD8nlbkTHPu7BxCCfpKj6/PPMfxmyFQyDg9ZjjHOIhUMddRw+mSq0zS212JbIr3O4eEtrXPqWfq5phxyE3dRvaX3A3wiEQN9WRA=="
                     }
                 }
             },
@@ -5832,6 +6104,9 @@
             "problem": {
                 "type": "object",
                 "properties": {
+                    "detail": {
+                        "type": "string"
+                    },
                     "instance": {
                         "type": "string",
                         "format": "uri"
@@ -5842,9 +6117,6 @@
                     },
                     "host": {
                         "type": "string"
-                    },
-                    "causedBy": {
-                        "$ref": "#/components/schemas/problem"
                     },
                     "title": {
                         "type": "string"
@@ -5859,8 +6131,8 @@
                             "$ref": "#/components/schemas/violation"
                         }
                     },
-                    "detail": {
-                        "type": "string"
+                    "causedBy": {
+                        "$ref": "#/components/schemas/problem"
                     }
                 }
             },
@@ -6407,7 +6679,8 @@
                             "DELIVERED_AT_CUSTOMER",
                             "PICKED_UP_AT_PICK_UP_POINT",
                             "AT_PICK_UP_POINT",
-                            "RETURNED_TO_SENDER"
+                            "RETURNED_TO_SENDER",
+                            "INBOUND_COLLECT"
                         ]
                     },
                     "eventDateTime": {
@@ -6415,6 +6688,186 @@
                         "description": "The date time of the transport event.",
                         "format": "date-time",
                         "example": "2021-07-28T17:21:07+02:00"
+                    }
+                }
+            },
+            "InvoiceRequests": {
+                "required": [
+                    "shipmentId",
+                    "status",
+                    "statusTransitions"
+                ],
+                "type": "object",
+                "properties": {
+                    "shipmentId": {
+                        "type": "string",
+                        "description": "The id of the shipment associated with this invoice request.",
+                        "example": "987654"
+                    },
+                    "orderId": {
+                        "type": "string",
+                        "description": "The id of the order associated with this shipment.",
+                        "example": "4691862037"
+                    },
+                    "customerAccountNumber": {
+                        "type": "string",
+                        "description": "The account of the customer within bol.com associated with this shipment.",
+                        "example": "3004850316"
+                    },
+                    "billingDetails": {
+                        "$ref": "#/components/schemas/InvoiceRequestsBillingDetails"
+                    },
+                    "products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InvoiceRequestsProducts"
+                        }
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "The current status of the invoice request.",
+                        "example": "INVOICE_REQUESTED"
+                    },
+                    "statusTransitions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/StatusTransitions"
+                        }
+                    }
+                }
+            },
+            "InvoiceRequestsBillingDetails": {
+                "required": [
+                    "salutation"
+                ],
+                "type": "object",
+                "properties": {
+                    "salutation": {
+                        "type": "string",
+                        "description": "The salutation of the customer.",
+                        "example": "MALE",
+                        "enum": [
+                            "MALE",
+                            "FEMALE",
+                            "UNKNOWN"
+                        ]
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "description": "The first name of the customer.",
+                        "example": "Billie"
+                    },
+                    "surname": {
+                        "type": "string",
+                        "description": "The surname of the customer.",
+                        "example": "Jansen"
+                    },
+                    "streetName": {
+                        "type": "string",
+                        "description": "The street name.",
+                        "example": "Dorpstraat"
+                    },
+                    "houseNumber": {
+                        "type": "string",
+                        "description": "The house number.",
+                        "example": "1"
+                    },
+                    "houseNumberExtension": {
+                        "type": "string",
+                        "description": "The extension on the house number.",
+                        "example": "B"
+                    },
+                    "zipCode": {
+                        "type": "string",
+                        "description": "The ZIP code in '1234AB' format for NL orders and '0000' format for BE orders.",
+                        "example": "1111ZZ"
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "The name of the city.",
+                        "example": "Utrecht"
+                    },
+                    "countryCode": {
+                        "type": "string",
+                        "description": "The country code.",
+                        "example": "NL"
+                    },
+                    "company": {
+                        "type": "string",
+                        "description": "The company name.",
+                        "example": "bol.com"
+                    },
+                    "vatNumber": {
+                        "type": "string",
+                        "description": "The Value Added Tax (VAT) / BTW number for business sellers situated in the Netherlands.",
+                        "example": "NL999999999B99"
+                    },
+                    "kvkNumber": {
+                        "type": "string",
+                        "description": "The Kamer van Koophandel (KvK) number for organizations situated in the Netherlands or ondernemingsnummer for organizations situated in Belgium.",
+                        "example": "99887766"
+                    }
+                },
+                "description": "The details of the customer that is responsible for the financial fulfillment of this shipment."
+            },
+            "InvoiceRequestsProducts": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "The description of the ordered product.",
+                        "example": "Eucerin Hyaluron-filler"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "Amount of the product being ordered.",
+                        "format": "int32"
+                    },
+                    "unitPrice": {
+                        "type": "number",
+                        "description": "The selling price to the customer of a single unit including VAT.",
+                        "example": 10
+                    }
+                }
+            },
+            "InvoiceRequestsResponse": {
+                "required": [
+                    "invoiceRequests"
+                ],
+                "type": "object",
+                "properties": {
+                    "invoiceRequests": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InvoiceRequests"
+                        }
+                    }
+                }
+            },
+            "StatusTransitions": {
+                "required": [
+                    "status",
+                    "statusDateTime"
+                ],
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Indicates the status of this invoice request.",
+                        "example": "INVOICE_REQUESTED",
+                        "enum": [
+                            "INVOICE_REQUESTED",
+                            "INVOICE_UPLOADED",
+                            "INVOICE_INCORRECT",
+                            "INVOICE_VIRUS_DETECTED",
+                            "FINISHED"
+                        ]
+                    },
+                    "statusDateTime": {
+                        "type": "string",
+                        "description": "The date and time in ISO 8601 format that indicates when this status was updated for this invoice request.",
+                        "format": "date-time",
+                        "example": "2020-12-09T12:34:56+01:00"
                     }
                 }
             },
@@ -6810,30 +7263,40 @@
                 "type": "object",
                 "properties": {
                     "retailerRating": {
+                        "maximum": 10,
+                        "minimum": 1,
                         "type": "number",
                         "description": "General rating of the retailer.",
                         "format": "double",
                         "example": 9.1
                     },
                     "productInformationRating": {
+                        "maximum": 10,
+                        "minimum": 1,
                         "type": "number",
                         "description": "Product rating of the retailer.",
                         "format": "double",
                         "example": 9.6
                     },
                     "deliveryTimeRating": {
+                        "maximum": 10,
+                        "minimum": 1,
                         "type": "number",
                         "description": "Delivery rating of the retailer.",
                         "format": "double",
                         "example": 9.4
                     },
                     "shippingRating": {
+                        "maximum": 10,
+                        "minimum": 1,
                         "type": "number",
                         "description": "Shipping rating of the retailer.",
                         "format": "double",
                         "example": 9.4
                     },
                     "serviceRating": {
+                        "maximum": 10,
+                        "minimum": 1,
                         "type": "number",
                         "description": "Service rating of the retailer.",
                         "format": "double",
@@ -6859,6 +7322,8 @@
                         "example": 14
                     },
                     "approvalPercentage": {
+                        "maximum": 10,
+                        "minimum": 0,
                         "type": "integer",
                         "description": "The percentage of the amount of customer that rated the retailer either neutral or positive during the rating method period.",
                         "format": "int32",
@@ -7843,6 +8308,47 @@
                     }
                 }
             },
+            "PriceStarBoundaries": {
+                "required": [
+                    "lastModifiedDateTime",
+                    "priceStarBoundaryLevels"
+                ],
+                "type": "object",
+                "properties": {
+                    "lastModifiedDateTime": {
+                        "type": "string",
+                        "description": "The date and time in ISO 8601 format when boundaries updated for the last time.",
+                        "format": "date-time",
+                        "example": "2022-01-07T03:18:38.228164+01:00"
+                    },
+                    "priceStarBoundaryLevels": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PriceStarBoundaryLevels"
+                        }
+                    }
+                }
+            },
+            "PriceStarBoundaryLevels": {
+                "required": [
+                    "boundaryPrice",
+                    "level"
+                ],
+                "type": "object",
+                "properties": {
+                    "level": {
+                        "type": "integer",
+                        "description": "The level of the price star boundary.",
+                        "format": "int32",
+                        "example": 5
+                    },
+                    "boundaryPrice": {
+                        "type": "number",
+                        "description": "The boundary price of the corresponding level.",
+                        "example": 41
+                    }
+                }
+            },
             "Category": {
                 "required": [
                     "categoryId",
@@ -7922,7 +8428,6 @@
                     "bestOffer",
                     "countryCode",
                     "fulfilmentMethod",
-                    "maxDeliveryDate",
                     "offerId",
                     "price",
                     "retailerId"
@@ -7977,7 +8482,7 @@
                     },
                     "maxDeliveryDate": {
                         "type": "string",
-                        "description": "The date at which package can be delivered to customer latest. In case of pre-orders where a specific delivery date is not available, a placeholder date will be used.",
+                        "description": "The date at which package can be delivered to customer latest. In case of pre-orders where a specific delivery date is not available, this field will not be present.",
                         "format": "date",
                         "example": "2022-10-21"
                     }
