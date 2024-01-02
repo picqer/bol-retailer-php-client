@@ -17,7 +17,6 @@ class SubCategory extends AbstractModel
         return [
             'id' => [ 'model' => null, 'array' => false ],
             'name' => [ 'model' => null, 'array' => false ],
-            'subcategories' => [ 'model' => SubCategory::class, 'array' => true ],
         ];
     }
 
@@ -30,9 +29,4 @@ class SubCategory extends AbstractModel
      * @var string The name of the subcategory which the product belongs to.
      */
     public $name;
-
-    /**
-     * @var SubCategory[] The subcategories which the product belongs to.
-     */
-    public $subcategories = [];
 }

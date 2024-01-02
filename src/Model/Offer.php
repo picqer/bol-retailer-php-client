@@ -76,7 +76,8 @@ class Offer extends AbstractModel
     public $minDeliveryDate;
 
     /**
-     * @var string The date at which package can be delivered to customer latest.
+     * @var string The date at which package can be delivered to customer latest. In case of pre-orders where a specific
+     * delivery date is not available, a placeholder date will be used.
      */
     public $maxDeliveryDate;
 }
