@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Picqer\BolRetailerV10\OpenApi;
 
 class ClientGenerator
@@ -216,7 +215,7 @@ class ClientGenerator
         $name = str_replace(' ', '-', $name);
 
         $nameElems = explode('-', $name);
-        for ($i=1; $i<count($nameElems); $i++) {
+        for ($i = 1; $i < count($nameElems); $i++) {
             $nameElems[$i] = ucfirst($nameElems[$i]);
         }
         return implode('', $nameElems);
@@ -258,8 +257,8 @@ class ClientGenerator
             if ($parameter['in'] == 'query' && isset($parameter['schema']['$ref'])) {
                 continue;
             } elseif ($parameter['in'] == 'query' && isset($parameter['schema']['enum'])) {
-                $wrappingType = ucfirst($this->kebabCaseToCamelCase($methodDefinition['operationId'] .'-'. $parameter['name']));
-                $argument['php'] = 'Enum\\'.$wrappingType;
+                $wrappingType = ucfirst($this->kebabCaseToCamelCase($methodDefinition['operationId'] . '-' . $parameter['name']));
+                $argument['php'] = 'Enum\\' . $wrappingType;
                 $argument['doc'] = $argument['php'];
                 $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
                 $argument['paramName'] = $parameter['name'];
@@ -322,7 +321,7 @@ class ClientGenerator
 
                     if (isset($propSchema['type']) && $propSchema['type'] == 'array') {
                         $itemsType = $this->getType($propSchema['items']['$ref']);
-                        $argument['doc'] = 'Model\\'.$itemsType.'[]';
+                        $argument['doc'] = 'Model\\' . $itemsType . '[]';
                         $argument['php'] = 'array';
                     } elseif (isset($propSchema['type'])) {
                         $wrappingType = static::$paramTypeMapping[$propSchema['type']];
@@ -330,16 +329,16 @@ class ClientGenerator
                         $argument['php'] = $wrappingType;
                     } else {
                         $wrappingType = $this->getType($propSchema['$ref']);
-                        $argument['doc'] = 'Model\\'.$wrappingType;
-                        $argument['php'] = 'Model\\'.$wrappingType;
+                        $argument['doc'] = 'Model\\' . $wrappingType;
+                        $argument['php'] = 'Model\\' . $wrappingType;
                     }
                     $argument['property'] = $property;
                     $argument['name'] = $property;
-                    $argument['wrapperPhp'] = 'Model\\'.$type;
+                    $argument['wrapperPhp'] = 'Model\\' . $type;
                 }
 
-                if (!isset($argument['property'])) {
-                    $argument['php'] = 'Model\\'.$type;
+                if (! isset($argument['property'])) {
+                    $argument['php'] = 'Model\\' . $type;
                     $argument['doc'] = $argument['php'];
                     $argument['name'] = lcfirst($type);
                 }
@@ -397,7 +396,7 @@ class ClientGenerator
     protected function addQueryParams(array $arguments, array &$code): void
     {
         $amount = array_reduce($arguments, function ($amount, $argument) {
-            return $argument['in'] == 'query' ? $amount+1 : $amount;
+            return $argument['in'] == 'query' ? $amount + 1 : $amount;
         });
 
         if ($amount == 0) {
@@ -441,7 +440,7 @@ class ClientGenerator
     protected function addFormData(array $arguments, array &$code): void
     {
         $containsFileArgument = in_array(true, array_map(
-            static fn (array $argument): bool => $argument['is_file'] ?? false,
+            static fn(array $argument): bool => $argument['is_file'] ?? false,
             $arguments,
         ));
         $formData = [];
@@ -524,8 +523,8 @@ class ClientGenerator
                 if (isset($refSchema['properties'][$property]['type'], $refSchema['properties'][$property]['items']['$ref']) && $refSchema['properties'][$property]['type'] == 'array') {
                     return [
                         'doc' => 'Model\\' . $this->getType(
-                            $refSchema['properties'][$property]['items']['$ref']
-                        ) . '[]',
+                                $refSchema['properties'][$property]['items']['$ref']
+                            ) . '[]',
                         'php' => 'array',
                         'property' => $property
                     ];
@@ -555,7 +554,7 @@ class ClientGenerator
         // We add the first `_` for enums starting with a integer character
         $prefix = is_numeric($name[0]) ? '_' : '';
 
-        return $prefix.strtoupper($name);
+        return $prefix . strtoupper($name);
     }
 
     protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string

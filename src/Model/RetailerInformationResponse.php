@@ -19,6 +19,9 @@ class RetailerInformationResponse extends AbstractModel
         return [
             'retailerId' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'displayName' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'companyName' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'vatNumber' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'kvkNumber' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'registrationDate' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'topRetailer' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'ratingMethod' => [ 'model' => null, 'enum' => Enum\RetailerInformationResponseRatingMethod::class, 'array' => false ],
@@ -36,6 +39,21 @@ class RetailerInformationResponse extends AbstractModel
      * @var string The name of the retailer visible on bol.com
      */
     public $displayName;
+
+    /**
+     * @var string The company name of the retailer.
+     */
+    public $companyName;
+
+    /**
+     * @var string The VAT number of the retailer.
+     */
+    public $vatNumber;
+
+    /**
+     * @var string The KVK number of the retailer.
+     */
+    public $kvkNumber;
 
     /**
      * @var string A date representing the registration date for the retailer within bol.com

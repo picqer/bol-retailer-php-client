@@ -2133,8 +2133,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -2143,8 +2143,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -2354,8 +2354,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -2364,8 +2364,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -2773,8 +2773,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+pdf": {
                                 "schema": {
@@ -2783,8 +2783,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+pdf": {
                                 "schema": {
@@ -2827,8 +2827,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -2837,8 +2837,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -2948,8 +2948,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+pdf": {
                                 "schema": {
@@ -2958,8 +2958,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+pdf": {
                                 "schema": {
@@ -3003,8 +3003,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+pdf": {
                                 "schema": {
@@ -3013,8 +3013,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+pdf": {
                                 "schema": {
@@ -3496,7 +3496,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "required": [
                                     "invoice"
@@ -3843,7 +3843,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Retrieve public keys for push notification signature validation. (BETA)",
+                "summary": "Retrieve public keys for push notification signature validation.",
                 "description": "Retrieve a list of public keys that should be used to validate the signature header for push notifications received from bol.com.",
                 "operationId": "get-subscription-keys",
                 "responses": {
@@ -3865,7 +3865,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Send test push notification for subscriptions (BETA)",
+                "summary": "Send test push notification for subscriptions",
                 "description": "Send a test push notification to all subscriptions for the provided event.",
                 "operationId": "post-test-push-notification",
                 "parameters": [
@@ -3935,8 +3935,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                    "404": {
+                        "description": "Not found: The requested item could not be found.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -3945,8 +3945,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found: The requested item could not be found.",
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -4013,7 +4013,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Remove Event Notification Subscription (BETA)",
+                "summary": "Remove Event Notification Subscription",
                 "description": "Deletes a specific event notification subscription associated with a retailer.",
                 "operationId": "delete-push-notification-subscription",
                 "parameters": [
@@ -4333,9 +4333,11 @@
                     "resources": {
                         "type": "array",
                         "description": "Array of event types for which the subscription is set. Note that some event types are only available for certain subscription types.",
+                        "example": "['PROCESS_STATUS']",
                         "items": {
                             "type": "string",
                             "description": "Array of event types for which the subscription is set. Note that some event types are only available for certain subscription types.",
+                            "example": "['PROCESS_STATUS']",
                             "enum": [
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
@@ -4358,6 +4360,11 @@
                             "WEBHOOK",
                             "GCP_PUBSUB"
                         ]
+                    },
+                    "enabled": {
+                        "type": "boolean",
+                        "description": "Whether the subscription is enabled and will receive notifications or not. Defaults to true.",
+                        "example": true
                     }
                 }
             },
@@ -6019,6 +6026,7 @@
                         "items": {
                             "type": "string",
                             "description": "Array of event types for which the subscription is set. Note that some event types are only available for certain subscription types.",
+                            "example": "['PROCESS_STATUS']",
                             "enum": [
                                 "TEST",
                                 "PROCESS_STATUS",
@@ -6042,6 +6050,11 @@
                             "WEBHOOK",
                             "GCP_PUBSUB"
                         ]
+                    },
+                    "enabled": {
+                        "type": "boolean",
+                        "description": "Whether the subscription is enabled and will receive notifications or not. Defaults to true.",
+                        "example": true
                     }
                 }
             },
@@ -7213,9 +7226,12 @@
             },
             "RetailerInformationResponse": {
                 "required": [
+                    "companyName",
                     "displayName",
+                    "kvkNumber",
                     "registrationDate",
-                    "retailerId"
+                    "retailerId",
+                    "vatNumber"
                 ],
                 "type": "object",
                 "properties": {
@@ -7227,7 +7243,22 @@
                     "displayName": {
                         "type": "string",
                         "description": "The name of the retailer visible on bol.com",
-                        "example": "015E1DDD2EEB34009A616820E5429C"
+                        "example": "RETAILER123"
+                    },
+                    "companyName": {
+                        "type": "string",
+                        "description": "The company name of the retailer.",
+                        "example": "Fietsentuin"
+                    },
+                    "vatNumber": {
+                        "type": "string",
+                        "description": "The VAT number of the retailer.",
+                        "example": "NL123456789B01"
+                    },
+                    "kvkNumber": {
+                        "type": "string",
+                        "description": "The KVK number of the retailer.",
+                        "example": "90005414"
                     },
                     "registrationDate": {
                         "type": "string",

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Picqer\BolRetailerV10\OpenApi;
 
 class ModelGenerator
@@ -50,12 +49,12 @@ class ModelGenerator
         foreach ($this->specs['paths'] as $path => $methodsDef) {
             foreach ($methodsDef as $method => $methodDef) {
                 foreach ($methodDef['parameters'] ?? [] as $parameterDef) {
-                    if (!isset($parameterDef['schema']['enum']) || !array_values(array_filter($parameterDef['schema']['enum']))) {
+                    if (! isset($parameterDef['schema']['enum']) || ! array_values(array_filter($parameterDef['schema']['enum']))) {
                         continue;
                     }
 
                     $this->generateEnum(
-                        ucfirst($this->kebabCaseToCamelCase($methodDef['operationId'] .'-'. $parameterDef['name'])),
+                        ucfirst($this->kebabCaseToCamelCase($methodDef['operationId'] . '-' . $parameterDef['name'])),
                         static::$propTypeMapping[$parameterDef['schema']['type']],
                         $parameterDef['schema']['enum']
                     );
@@ -65,12 +64,12 @@ class ModelGenerator
 
         foreach ($this->specs['components']['schemas'] as $type => $modelSchema) {
             foreach ($modelSchema['properties'] as $property => $propertyDef) {
-                if (!isset($propertyDef['enum']) || !array_values(array_filter($propertyDef['enum']))) {
+                if (! isset($propertyDef['enum']) || ! array_values(array_filter($propertyDef['enum']))) {
                     continue;
                 }
 
                 $this->generateEnum(
-                    ucfirst($this->kebabCaseToCamelCase($type .'-'. $property)),
+                    ucfirst($this->kebabCaseToCamelCase($type . '-' . $property)),
                     static::$propTypeMapping[$propertyDef['type']],
                     $propertyDef['enum']
                 );
@@ -146,7 +145,7 @@ class ModelGenerator
             $enum = 'null';
             $array = 'false';
 
-            if (isset($propDefinition['type']) && !isset($propDefinition['enum'])) {
+            if (isset($propDefinition['type']) && ! isset($propDefinition['enum'])) {
                 if ($propDefinition['type'] == 'array') {
                     $array = 'true';
                     if (isset($propDefinition['items']['$ref'])) {
@@ -155,8 +154,8 @@ class ModelGenerator
                 }
             } elseif (isset($propDefinition['$ref'])) {
                 $model = $this->getType($propDefinition['$ref']) . '::class';
-            }  elseif (isset($propDefinition['enum'])) {
-                $enum = 'Enum\\' . ucfirst($this->kebabCaseToCamelCase($type .'-'. $name)) . '::class';
+            } elseif (isset($propDefinition['enum'])) {
+                $enum = 'Enum\\' . ucfirst($this->kebabCaseToCamelCase($type . '-' . $name)) . '::class';
             } else {
                 // TODO create exception class for this one
                 throw new \Exception('Unknown property definition');
@@ -172,7 +171,7 @@ class ModelGenerator
     protected function generateFields(string $type, array $modelSchema, array &$code): void
     {
         foreach ($modelSchema['properties'] as $name => $propDefinition) {
-            if (isset($propDefinition['type']) && !isset($propDefinition['enum'])) {
+            if (isset($propDefinition['type']) && ! isset($propDefinition['enum'])) {
                 $propType = static::$propTypeMapping[$propDefinition['type']];
                 if ($propType == 'array' && isset($propDefinition['items']['$ref'])) {
                     $propType = $this->getType($propDefinition['items']['$ref']) . '[]';
@@ -180,7 +179,7 @@ class ModelGenerator
             } elseif (isset($propDefinition['$ref'])) {
                 $propType = $this->getType($propDefinition['$ref']);
             } elseif (isset($propDefinition['enum'])) {
-                $propType = 'Enum\\' . ucfirst($this->kebabCaseToCamelCase($type .'-'. $name));
+                $propType = 'Enum\\' . ucfirst($this->kebabCaseToCamelCase($type . '-' . $name));
             } else {
                 // TODO create exception class for this one
                 throw new \Exception('Unknown property definition');
@@ -317,7 +316,6 @@ class ModelGenerator
     }
 
 
-
     protected function getType(string $ref): string
     {
         //strip #/components/schemas/
@@ -367,7 +365,7 @@ class ModelGenerator
                 $propType = $propDefinition['type'];
             }
 
-            if (!isset($this->specs['components']['schemas'][$propType])) {
+            if (! isset($this->specs['components']['schemas'][$propType])) {
                 continue;
             }
 
@@ -403,7 +401,7 @@ class ModelGenerator
         $name = str_replace(' ', '-', $name);
 
         $nameElems = explode('-', $name);
-        for ($i=1; $i<count($nameElems); $i++) {
+        for ($i = 1; $i < count($nameElems); $i++) {
             $nameElems[$i] = ucfirst($nameElems[$i]);
         }
         return implode('', $nameElems);
@@ -420,7 +418,7 @@ class ModelGenerator
         // We add the first `_` for enums starting with a integer character
         $prefix = is_numeric($name[0]) ? '_' : '';
 
-        return $prefix.strtoupper($name);
+        return $prefix . strtoupper($name);
     }
 
     protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string

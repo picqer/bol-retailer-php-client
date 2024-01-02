@@ -27,7 +27,7 @@
     "tags": [
         {
             "name": "Process Status",
-            "description": "Process status resources"
+            "description": "Process status resource"
         }
     ],
     "paths": {
