@@ -41,6 +41,7 @@
         "test": "phpunit",
         "check-style": "phpcs src tests",
         "fix-style": "phpcbf src tests",
+        "download-specs": "Picqer\\BolRetailerV10\\OpenApi\\SpecsDownloader::run",
         "generate-client": "Picqer\\BolRetailerV10\\OpenApi\\ClientGenerator::run",
         "generate-models": "Picqer\\BolRetailerV10\\OpenApi\\ModelGenerator::run"
     },

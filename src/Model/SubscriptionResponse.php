@@ -21,6 +21,7 @@ class SubscriptionResponse extends AbstractModel
             'resources' => [ 'model' => null, 'enum' => null, 'array' => true ],
             'url' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'subscriptionType' => [ 'model' => null, 'enum' => Enum\SubscriptionResponseSubscriptionType::class, 'array' => false ],
+            'enabled' => [ 'model' => null, 'enum' => null, 'array' => false ],
         ];
     }
 
@@ -46,4 +47,9 @@ class SubscriptionResponse extends AbstractModel
      * events will be subscribed to. Be aware that certain event types are only available for specific types.
      */
     public $subscriptionType;
+
+    /**
+     * @var bool Whether the subscription is enabled and will receive notifications or not. Defaults to true.
+     */
+    public $enabled;
 }

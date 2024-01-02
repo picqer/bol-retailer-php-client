@@ -1577,7 +1577,6 @@ class Client extends BaseClient
     /**
      * Uploads an invoice associated with shipment id.
      * @param string $shipmentId The id of the shipment associated with the invoice.
-     * @param string $invoice
      * @return Model\ProcessStatus|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1585,18 +1584,12 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function uploadInvoice(string $shipmentId, string $invoice): ?Model\ProcessStatus
+    public function uploadInvoice(string $shipmentId): ?Model\ProcessStatus
     {
         $url = "retailer/shipments/invoices/{$shipmentId}";
         $options = [
-            'multipart' => [
-                [
-                    'name' => 'invoice',
-                    'contents' => \GuzzleHttp\Psr7\Utils::tryFopen($invoice, 'r'),
-                ],
-            ],
             'produces' => 'application/vnd.retailer.v10+json',
-            'consumes' => 'multipart/form-data',
+            'consumes' => 'application/json',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
