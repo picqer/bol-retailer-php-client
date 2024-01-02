@@ -19,22 +19,58 @@ class Link extends AbstractModel
         return [
             'rel' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'href' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'method' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'hreflang' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'media' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'title' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'type' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'deprecation' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'profile' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'name' => [ 'model' => null, 'enum' => null, 'array' => false ],
         ];
     }
 
     /**
-     * @var string The link relation.
+     * @var string
      */
     public $rel;
 
     /**
-     * @var string The URI for the resource linked to.
+     * @var string
      */
     public $href;
 
     /**
-     * @var string The HTTP method to use when accessing the link.
+     * @var string
      */
-    public $method;
+    public $hreflang;
+
+    /**
+     * @var string
+     */
+    public $media;
+
+    /**
+     * @var string
+     */
+    public $title;
+
+    /**
+     * @var string
+     */
+    public $type;
+
+    /**
+     * @var string
+     */
+    public $deprecation;
+
+    /**
+     * @var string
+     */
+    public $profile;
+
+    /**
+     * @var string
+     */
+    public $name;
 }

@@ -13,4 +13,5 @@ enum TransportEventEventCode: string
     case PICKED_UP_AT_PICK_UP_POINT = 'PICKED_UP_AT_PICK_UP_POINT';
     case AT_PICK_UP_POINT = 'AT_PICK_UP_POINT';
     case RETURNED_TO_SENDER = 'RETURNED_TO_SENDER';
+    case INBOUND_COLLECT = 'INBOUND_COLLECT';
 }

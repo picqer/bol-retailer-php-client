@@ -17,24 +17,12 @@ class Products extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'description' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'quantity' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'unitPrice' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'products' => [ 'model' => Product::class, 'enum' => null, 'array' => true ],
         ];
     }
 
     /**
-     * @var string The description of the ordered product.
+     * @var Product[]
      */
-    public $description;
-
-    /**
-     * @var int Amount of the product being ordered.
-     */
-    public $quantity;
-
-    /**
-     * @var float The selling price to the customer of a single unit including VAT.
-     */
-    public $unitPrice;
+    public $products = [];
 }

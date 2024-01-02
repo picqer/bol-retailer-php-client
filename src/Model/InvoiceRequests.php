@@ -20,8 +20,8 @@ class InvoiceRequests extends AbstractModel
             'shipmentId' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'orderId' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'customerAccountNumber' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'billingDetails' => [ 'model' => BillingDetails::class, 'enum' => null, 'array' => false ],
-            'products' => [ 'model' => Products::class, 'enum' => null, 'array' => true ],
+            'billingDetails' => [ 'model' => InvoiceRequestsBillingDetails::class, 'enum' => null, 'array' => false ],
+            'products' => [ 'model' => InvoiceRequestsProducts::class, 'enum' => null, 'array' => true ],
             'status' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'statusTransitions' => [ 'model' => StatusTransitions::class, 'enum' => null, 'array' => true ],
         ];
@@ -43,13 +43,13 @@ class InvoiceRequests extends AbstractModel
     public $customerAccountNumber;
 
     /**
-     * @var BillingDetails The details of the customer that is responsible for the financial fulfillment of this
-     * shipment.
+     * @var InvoiceRequestsBillingDetails The details of the customer that is responsible for the financial fulfillment
+     * of this shipment.
      */
     public $billingDetails;
 
     /**
-     * @var Products[]
+     * @var InvoiceRequestsProducts[]
      */
     public $products = [];
 
