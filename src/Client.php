@@ -49,7 +49,7 @@ class Client extends BaseClient
      */
     public function getCommission(string $ean, float $unitPrice, ?Enum\GetCommissionCondition $condition = null): ?Model\Commission
     {
-        $url = "retailer/commission/${ean}";
+        $url = "retailer/commission/{$ean}";
         $options = [
             'query' => [
                 'unit-price' => $unitPrice,
@@ -78,7 +78,7 @@ class Client extends BaseClient
      */
     public function getCatalogProduct(string $ean, ?string $AcceptLanguage = null): ?Model\CatalogProduct
     {
-        $url = "retailer/content/catalog-products/${ean}";
+        $url = "retailer/content/catalog-products/{$ean}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -152,7 +152,7 @@ class Client extends BaseClient
      */
     public function getUploadReport(string $uploadId): ?Model\UploadReportResponse
     {
-        $url = "retailer/content/upload-report/${uploadId}";
+        $url = "retailer/content/upload-report/{$uploadId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -375,7 +375,7 @@ class Client extends BaseClient
      */
     public function getInvoice(string $invoiceId): string
     {
-        $url = "retailer/invoices/${invoiceId}";
+        $url = "retailer/invoices/{$invoiceId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -401,7 +401,7 @@ class Client extends BaseClient
      */
     public function getInvoiceSpecification(string $invoiceId, ?int $page = null): ?string
     {
-        $url = "retailer/invoices/${invoiceId}/specification";
+        $url = "retailer/invoices/{$invoiceId}/specification";
         $options = [
             'query' => [
                 'page' => $page,
@@ -479,7 +479,7 @@ class Client extends BaseClient
      */
     public function getOfferExport(string $reportId): ?string
     {
-        $url = "retailer/offers/export/${reportId}";
+        $url = "retailer/offers/export/{$reportId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+csv',
         ];
@@ -528,7 +528,7 @@ class Client extends BaseClient
      */
     public function getUnpublishedOfferReport(string $reportId): ?string
     {
-        $url = "retailer/offers/unpublished/${reportId}";
+        $url = "retailer/offers/unpublished/{$reportId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+csv',
         ];
@@ -552,7 +552,7 @@ class Client extends BaseClient
      */
     public function getOffer(string $offerId): ?Model\RetailerOffer
     {
-        $url = "retailer/offers/${offerId}";
+        $url = "retailer/offers/{$offerId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -577,7 +577,7 @@ class Client extends BaseClient
      */
     public function putOffer(string $offerId, Model\UpdateOfferRequest $updateOfferRequest): Model\ProcessStatus
     {
-        $url = "retailer/offers/${offerId}";
+        $url = "retailer/offers/{$offerId}";
         $options = [
             'body' => $updateOfferRequest,
             'produces' => 'application/vnd.retailer.v10+json',
@@ -602,7 +602,7 @@ class Client extends BaseClient
      */
     public function deleteOffer(string $offerId): Model\ProcessStatus
     {
-        $url = "retailer/offers/${offerId}";
+        $url = "retailer/offers/{$offerId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -626,7 +626,7 @@ class Client extends BaseClient
      */
     public function updateOfferPrice(string $offerId, Model\Pricing $pricing): Model\ProcessStatus
     {
-        $url = "retailer/offers/${offerId}/price";
+        $url = "retailer/offers/{$offerId}/price";
         $options = [
             'body' => Model\UpdateOfferPriceRequest::constructFromArray(['pricing' => $pricing]),
             'produces' => 'application/vnd.retailer.v10+json',
@@ -652,7 +652,7 @@ class Client extends BaseClient
      */
     public function updateOfferStock(string $offerId, Model\UpdateOfferStockRequest $updateOfferStockRequest): Model\ProcessStatus
     {
-        $url = "retailer/offers/${offerId}/stock";
+        $url = "retailer/offers/{$offerId}/stock";
         $options = [
             'body' => $updateOfferStockRequest,
             'produces' => 'application/vnd.retailer.v10+json',
@@ -742,7 +742,7 @@ class Client extends BaseClient
      */
     public function getOrder(string $orderId): ?Model\Order
     {
-        $url = "retailer/orders/${orderId}";
+        $url = "retailer/orders/{$orderId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -827,7 +827,7 @@ class Client extends BaseClient
      */
     public function getProductAssets(string $ean, ?Enum\GetProductAssetsUsage $usage = null): array
     {
-        $url = "retailer/products/${ean}/assets";
+        $url = "retailer/products/{$ean}/assets";
         $options = [
             'query' => [
                 'usage' => $usage,
@@ -860,7 +860,7 @@ class Client extends BaseClient
      */
     public function getCompetingOffers(string $ean, ?int $page = 1, ?Enum\GetCompetingOffersCountryCode $countryCode = null, ?bool $bestOfferOnly = false, ?Enum\GetCompetingOffersCondition $condition = null): array
     {
-        $url = "retailer/products/${ean}/offers";
+        $url = "retailer/products/{$ean}/offers";
         $options = [
             'query' => [
                 'page' => $page,
@@ -893,7 +893,7 @@ class Client extends BaseClient
      */
     public function getProductPlacement(string $ean, ?Enum\GetProductPlacementCountryCode $countryCode = null, ?string $AcceptLanguage = null): ?Model\ProductPlacementResponse
     {
-        $url = "retailer/products/${ean}/placement";
+        $url = "retailer/products/{$ean}/placement";
         $options = [
             'query' => [
                 'country-code' => $countryCode,
@@ -920,7 +920,7 @@ class Client extends BaseClient
      */
     public function getPriceStarBoundaries(string $ean): ?Model\PriceStarBoundaries
     {
-        $url = "retailer/products/${ean}/price-star-boundaries";
+        $url = "retailer/products/{$ean}/price-star-boundaries";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -944,7 +944,7 @@ class Client extends BaseClient
      */
     public function getProductIds(string $ean): ?Model\ProductIdsResponse
     {
-        $url = "retailer/products/${ean}/product-ids";
+        $url = "retailer/products/{$ean}/product-ids";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -968,7 +968,7 @@ class Client extends BaseClient
      */
     public function getProductRatings(string $ean): array
     {
-        $url = "retailer/products/${ean}/ratings";
+        $url = "retailer/products/{$ean}/ratings";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1021,7 +1021,7 @@ class Client extends BaseClient
      */
     public function getPromotion(string $promotionId): ?Model\Promotion
     {
-        $url = "retailer/promotions/${promotionId}";
+        $url = "retailer/promotions/{$promotionId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1046,7 +1046,7 @@ class Client extends BaseClient
      */
     public function getProducts(string $promotionId, ?int $page = 1): array
     {
-        $url = "retailer/promotions/${promotionId}/products";
+        $url = "retailer/promotions/{$promotionId}/products";
         $options = [
             'query' => [
                 'page' => $page,
@@ -1205,7 +1205,7 @@ class Client extends BaseClient
      */
     public function getProductDestinations(string $productDestinationsId): array
     {
-        $url = "retailer/replenishments/product-destinations/${productDestinationsId}";
+        $url = "retailer/replenishments/product-destinations/{$productDestinationsId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1256,7 +1256,7 @@ class Client extends BaseClient
      */
     public function getReplenishment(string $replenishmentId): ?Model\ReplenishmentResponse
     {
-        $url = "retailer/replenishments/${replenishmentId}";
+        $url = "retailer/replenishments/{$replenishmentId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1281,7 +1281,7 @@ class Client extends BaseClient
      */
     public function putReplenishment(string $replenishmentId, Model\UpdateReplenishmentRequest $updateReplenishmentRequest): Model\ProcessStatus
     {
-        $url = "retailer/replenishments/${replenishmentId}";
+        $url = "retailer/replenishments/{$replenishmentId}";
         $options = [
             'body' => $updateReplenishmentRequest,
             'produces' => 'application/vnd.retailer.v10+json',
@@ -1307,7 +1307,7 @@ class Client extends BaseClient
      */
     public function getLoadCarrierLabels(string $replenishmentId, ?Enum\GetLoadCarrierLabelsLabelType $labelType = null): ?string
     {
-        $url = "retailer/replenishments/${replenishmentId}/load-carrier-labels";
+        $url = "retailer/replenishments/{$replenishmentId}/load-carrier-labels";
         $options = [
             'query' => [
                 'label-type' => $labelType,
@@ -1334,7 +1334,7 @@ class Client extends BaseClient
      */
     public function getPickList(string $replenishmentId): ?string
     {
-        $url = "retailer/replenishments/${replenishmentId}/pick-list";
+        $url = "retailer/replenishments/{$replenishmentId}/pick-list";
         $options = [
             'produces' => 'application/vnd.retailer.v10+pdf',
         ];
@@ -1358,7 +1358,7 @@ class Client extends BaseClient
      */
     public function getRetailerInformation(string $retailerId): ?Model\RetailerInformationResponse
     {
-        $url = "retailer/retailers/${retailerId}";
+        $url = "retailer/retailers/{$retailerId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1440,7 +1440,7 @@ class Client extends BaseClient
      */
     public function getReturn(string $returnId): ?Model\ReturnObject
     {
-        $url = "retailer/returns/${returnId}";
+        $url = "retailer/returns/{$returnId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1466,7 +1466,7 @@ class Client extends BaseClient
      */
     public function handleReturn(int $rmaId, Model\ReturnRequest $returnRequest): Model\ProcessStatus
     {
-        $url = "retailer/returns/${rmaId}";
+        $url = "retailer/returns/{$rmaId}";
         $options = [
             'body' => $returnRequest,
             'produces' => 'application/vnd.retailer.v10+json',
@@ -1587,7 +1587,7 @@ class Client extends BaseClient
      */
     public function uploadInvoice(string $shipmentId, string $invoice): ?Model\ProcessStatus
     {
-        $url = "retailer/shipments/invoices/${shipmentId}";
+        $url = "retailer/shipments/invoices/{$shipmentId}";
         $options = [
             'multipart' => [
                 [
@@ -1618,7 +1618,7 @@ class Client extends BaseClient
      */
     public function getShipment(string $shipmentId): ?Model\Shipment
     {
-        $url = "retailer/shipments/${shipmentId}";
+        $url = "retailer/shipments/{$shipmentId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1697,7 +1697,7 @@ class Client extends BaseClient
      */
     public function getShippingLabel(string $shippingLabelId): ?string
     {
-        $url = "retailer/shipping-labels/${shippingLabelId}";
+        $url = "retailer/shipping-labels/{$shippingLabelId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+pdf',
         ];
@@ -1794,7 +1794,7 @@ class Client extends BaseClient
      */
     public function postTestPushNotification(string $subscriptionId): Model\ProcessStatus
     {
-        $url = "retailer/subscriptions/test/${subscriptionId}";
+        $url = "retailer/subscriptions/test/{$subscriptionId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1819,7 +1819,7 @@ class Client extends BaseClient
      */
     public function getPushNotificationSubscription(string $subscriptionId): ?Model\SubscriptionResponse
     {
-        $url = "retailer/subscriptions/${subscriptionId}";
+        $url = "retailer/subscriptions/{$subscriptionId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1846,7 +1846,7 @@ class Client extends BaseClient
      */
     public function putPushNotificationSubscription(string $subscriptionId, Model\SubscriptionRequest $subscriptionRequest): Model\ProcessStatus
     {
-        $url = "retailer/subscriptions/${subscriptionId}";
+        $url = "retailer/subscriptions/{$subscriptionId}";
         $options = [
             'body' => $subscriptionRequest,
             'produces' => 'application/vnd.retailer.v10+json',
@@ -1872,7 +1872,7 @@ class Client extends BaseClient
      */
     public function deletePushNotificationSubscription(string $subscriptionId): Model\ProcessStatus
     {
-        $url = "retailer/subscriptions/${subscriptionId}";
+        $url = "retailer/subscriptions/{$subscriptionId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1897,7 +1897,7 @@ class Client extends BaseClient
      */
     public function addTransportInformationByTransportId(string $transportId, Model\ChangeTransportRequest $changeTransportRequest): Model\ProcessStatus
     {
-        $url = "retailer/transports/${transportId}";
+        $url = "retailer/transports/{$transportId}";
         $options = [
             'body' => $changeTransportRequest,
             'produces' => 'application/vnd.retailer.v10+json',
@@ -1993,7 +1993,7 @@ class Client extends BaseClient
      */
     public function getProcessStatus(string $processStatusId): ?Model\ProcessStatus
     {
-        $url = "shared/process-status/${processStatusId}";
+        $url = "shared/process-status/{$processStatusId}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
         ];

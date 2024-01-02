@@ -233,7 +233,7 @@ class ClientGenerator
 
             $url = str_replace(
                 '{' . $argument['paramName'] . '}',
-                '${' . $argument['name'] . '}',
+                '{$' . $argument['name'] . '}',
                 $url
             );
         }
