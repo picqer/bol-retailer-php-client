@@ -1585,7 +1585,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function uploadInvoice(string $shipmentId, string $invoice): ?Model\ProcessStatus
+    public function uploadInvoice(string $invoice, string $shipmentId): ?Model\ProcessStatus
     {
         $url = "retailer/shipments/invoices/{$shipmentId}";
         $options = [
