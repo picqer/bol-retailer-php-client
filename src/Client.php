@@ -39,7 +39,7 @@ class Client extends BaseClient
      * @param string $ean The EAN number associated with this product.
      * @param float $unitPrice The price of the product with a period as a decimal separator. The price should always
      * have two decimals precision.
-     * @param string|null $condition The condition of the offer.
+     * @param Enum\GetCommissionCondition|null $condition The condition of the offer.
      * @return Model\Commission|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -47,7 +47,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCommission(string $ean, float $unitPrice, ?string $condition = null): ?Model\Commission
+    public function getCommission(string $ean, float $unitPrice, ?Enum\GetCommissionCondition $condition = null): ?Model\Commission
     {
         $url = "retailer/commission/${ean}";
         $options = [
@@ -167,10 +167,10 @@ class Client extends BaseClient
     /**
      * Get the product visits and the buy box percentage for an offer during a given period.
      * @param string $offerId Unique identifier for an offer.
-     * @param string $period The time unit in which the offer insights are grouped.
+     * @param Enum\GetOfferInsightsPeriod $period The time unit in which the offer insights are grouped.
      * @param int $numberOfPeriods The number of periods for which the offer insights are requested back in time. The
      * maximum available periods are 24 for MONTH, 104 for WEEK, and 730 for DAY.
-     * @param string $name The name of the requested offer insight.
+     * @param Enum\GetOfferInsightsName $name The name of the requested offer insight.
      * @return Model\OfferInsight[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -178,7 +178,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOfferInsights(string $offerId, string $period, int $numberOfPeriods, string $name): array
+    public function getOfferInsights(string $offerId, Enum\GetOfferInsightsPeriod $period, int $numberOfPeriods, Enum\GetOfferInsightsName $name): array
     {
         $url = "retailer/insights/offer";
         $options = [
@@ -199,7 +199,7 @@ class Client extends BaseClient
 
     /**
      * Gets the measurements for your performance indicators per week.
-     * @param string $name The type of the performance indicator
+     * @param Enum\GetPerformanceIndicatorsName $name The type of the performance indicator
      * @param string $year Year number in the ISO-8601 standard.
      * @param string $week Week number in the ISO-8601 standard. If you would like to get the relative scores from the
      * current week, please provide the current week number here. Be advised that measurements can change heavily over
@@ -211,7 +211,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getPerformanceIndicators(string $name, string $year, string $week): array
+    public function getPerformanceIndicators(Enum\GetPerformanceIndicatorsName $name, string $year, string $week): array
     {
         $url = "retailer/insights/performance/indicator";
         $options = [
@@ -263,7 +263,7 @@ class Client extends BaseClient
      * bol.com customers are searching for. Based on the search volume per search term you can optimize your product
      * content, or spot opportunities to extend your assortment, or analyzing trends for inventory management.
      * @param string $searchTerm The search term for which you want to request the search volume.
-     * @param string $period The time unit in which the offer insights are grouped.
+     * @param Enum\GetSearchTermsPeriod $period The time unit in which the offer insights are grouped.
      * @param int $numberOfPeriods The number of periods for which the offer insights are requested back in time.
      * @param bool|null $relatedSearchTerms Indicates whether or not you want to retrieve the related search terms.
      * @return Model\SearchTerms
@@ -273,7 +273,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getSearchTerms(string $searchTerm, string $period, int $numberOfPeriods, ?bool $relatedSearchTerms = false): Model\SearchTerms
+    public function getSearchTerms(string $searchTerm, Enum\GetSearchTermsPeriod $period, int $numberOfPeriods, ?bool $relatedSearchTerms = false): Model\SearchTerms
     {
         $url = "retailer/insights/search-terms";
         $options = [
@@ -298,8 +298,8 @@ class Client extends BaseClient
      * @param int|null $page The requested page number with a page size of 50 items.
      * @param array $quantity Filter inventory by providing a range of quantity (min-range)-(max-range). Note that if no
      * state query is submitted in the same request, then the quantity will be filtered on regularStock by default.
-     * @param string|null $stock Filter inventory by stock level.
-     * @param string|null $state Filter inventory by stock type.
+     * @param Enum\GetInventoryStock|null $stock Filter inventory by stock level.
+     * @param Enum\GetInventoryState|null $state Filter inventory by stock type.
      * @param string|null $query Filter inventory by EAN or product title.
      * @return Model\Inventory[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -308,7 +308,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInventory(?int $page = 1, array $quantity = [], ?string $stock = null, ?string $state = null, ?string $query = null): array
+    public function getInventory(?int $page = 1, array $quantity = [], ?Enum\GetInventoryStock $stock = null, ?Enum\GetInventoryState $state = null, ?string $query = null): array
     {
         $url = "retailer/inventory";
         $options = [
@@ -668,10 +668,10 @@ class Client extends BaseClient
     /**
      * Gets a paginated list of all orders for a retailer.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @param string|null $fulfilmentMethod Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB). In order to
-     * retrieve both FBR and FBB orders, ALL can be used as a parameter.
-     * @param string|null $status To filter on order status. You can filter on either all orders independent from their
-     * status, open orders (excluding shipped and cancelled orders), and shipped orders.
+     * @param Enum\GetOrdersFulfilmentMethod|null $fulfilmentMethod Fulfilled by the retailer (FBR) or fulfilled by
+     * bol.com (FBB). In order to retrieve both FBR and FBB orders, ALL can be used as a parameter.
+     * @param Enum\GetOrdersStatus|null $status To filter on order status. You can filter on either all orders
+     * independent from their status, open orders (excluding shipped and cancelled orders), and shipped orders.
      * @param int|null $changeIntervalMinute To filter on the period in minutes during which the latest change was
      * performed on an order item.
      * @param string|null $latestChangeDate To filter on the date on which the latest change was performed on an order
@@ -683,7 +683,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOrders(?int $page = 1, ?string $fulfilmentMethod = null, ?string $status = null, ?int $changeIntervalMinute = null, ?string $latestChangeDate = null): array
+    public function getOrders(?int $page = 1, ?Enum\GetOrdersFulfilmentMethod $fulfilmentMethod = null, ?Enum\GetOrdersStatus $status = null, ?int $changeIntervalMinute = null, ?string $latestChangeDate = null): array
     {
         $url = "retailer/orders";
         $options = [
@@ -811,7 +811,8 @@ class Client extends BaseClient
 
     /**
      * Gets the list of possible filters for products based on category or search term.
-     * @param string|null $countryCode The country for which the filters will be retrieved.
+     * @param Enum\GetProductListFiltersCountryCode|null $countryCode The country for which the filters will be
+     * retrieved.
      * @param string|null $searchTerm The search-term to get the associated categories and filters for.
      * @param string|null $categoryId The category to get the associated filters for.
      * @param string|null $AcceptLanguage The language in which the product list filters will be retrieved.
@@ -822,7 +823,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductListFilters(?string $countryCode = null, ?string $searchTerm = null, ?string $categoryId = null, ?string $AcceptLanguage = null): ?Model\ProductListFiltersResponse
+    public function getProductListFilters(?Enum\GetProductListFiltersCountryCode $countryCode = null, ?string $searchTerm = null, ?string $categoryId = null, ?string $AcceptLanguage = null): ?Model\ProductListFiltersResponse
     {
         $url = "retailer/products/list-filters";
         $options = [
@@ -844,7 +845,7 @@ class Client extends BaseClient
     /**
      * Gets the list of asset available for the product by EAN.
      * @param string $ean The EAN number associated with this product.
-     * @param string|null $usage Type of the asset being used for.
+     * @param Enum\GetProductAssetsUsage|null $usage Type of the asset being used for.
      * @return Model\ProductAssets[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -852,7 +853,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductAssets(string $ean, ?string $usage = null): array
+    public function getProductAssets(string $ean, ?Enum\GetProductAssetsUsage $usage = null): array
     {
         $url = "retailer/products/${ean}/assets";
         $options = [
@@ -874,10 +875,10 @@ class Client extends BaseClient
      * Use this endpoint to get a list of offers available in the webshop. The list includes offers for all retailers.
      * @param string $ean The EAN number associated with this product.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @param string|null $countryCode Countries in which this offer is currently on sale in the webshop, in ISO-3166-1
-     * format.
+     * @param Enum\GetCompetingOffersCountryCode|null $countryCode Countries in which this offer is currently on sale in
+     * the webshop, in ISO-3166-1 format.
      * @param bool|null $bestOfferOnly Indicator to request the best offer within the country for the requested EAN.
-     * @param string|null $condition The condition of the offered product.
+     * @param Enum\GetCompetingOffersCondition|null $condition The condition of the offered product.
      * @return Model\Offer[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -885,7 +886,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCompetingOffers(string $ean, ?int $page = 1, ?string $countryCode = null, ?bool $bestOfferOnly = false, ?string $condition = null): array
+    public function getCompetingOffers(string $ean, ?int $page = 1, ?Enum\GetCompetingOffersCountryCode $countryCode = null, ?bool $bestOfferOnly = false, ?Enum\GetCompetingOffersCondition $condition = null): array
     {
         $url = "retailer/products/${ean}/offers";
         $options = [
@@ -909,7 +910,7 @@ class Client extends BaseClient
     /**
      * Gets the list of categories and the URL where the product is placed in the webshop.
      * @param string $ean The EAN number associated with this product.
-     * @param string|null $countryCode The country of the product placed on the webshop.
+     * @param Enum\GetProductPlacementCountryCode|null $countryCode The country of the product placed on the webshop.
      * @param string|null $AcceptLanguage The language in which the product categories and URL will be retrieved.
      * @return Model\ProductPlacementResponse|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -918,7 +919,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductPlacement(string $ean, ?string $countryCode = null, ?string $AcceptLanguage = null): ?Model\ProductPlacementResponse
+    public function getProductPlacement(string $ean, ?Enum\GetProductPlacementCountryCode $countryCode = null, ?string $AcceptLanguage = null): ?Model\ProductPlacementResponse
     {
         $url = "retailer/products/${ean}/placement";
         $options = [
@@ -986,7 +987,7 @@ class Client extends BaseClient
 
     /**
      * Gets a paginated list of all promotions for a retailer.
-     * @param string $promotionType The type(s) of promotion to be retrieved.
+     * @param Enum\GetPromotionsPromotionType $promotionType The type(s) of promotion to be retrieved.
      * @param int|null $page The requested page number with a page size of 50 items.
      * @return Model\ReducedPromotion[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -995,7 +996,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getPromotions(string $promotionType, ?int $page = 1): array
+    public function getPromotions(Enum\GetPromotionsPromotionType $promotionType, ?int $page = 1): array
     {
         $url = "retailer/promotions";
         $options = [
@@ -1300,7 +1301,7 @@ class Client extends BaseClient
     /**
      * Retrieve the load carrier labels.
      * @param string $replenishmentId The unique identifier of the replenishment.
-     * @param string|null $labelType The type of label which you want to print.
+     * @param Enum\GetLoadCarrierLabelsLabelType|null $labelType The type of label which you want to print.
      * @return string|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1308,7 +1309,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getLoadCarrierLabels(string $replenishmentId, ?string $labelType = null): ?string
+    public function getLoadCarrierLabels(string $replenishmentId, ?Enum\GetLoadCarrierLabelsLabelType $labelType = null): ?string
     {
         $url = "retailer/replenishments/${replenishmentId}/load-carrier-labels";
         $options = [
@@ -1378,8 +1379,8 @@ class Client extends BaseClient
      * unhandled returns are sorted by date in ascending order.
      * @param int|null $page The page to get with a page size of 50.
      * @param bool|null $handled The status of the returns you wish to see, shows either handled or unhandled returns.
-     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
-     * bol.com (FBB).
+     * @param Enum\GetReturnsFulfilmentMethod|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer
+     * (FBR) or fulfilled by bol.com (FBB).
      * @return Model\ReducedReturn[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1387,7 +1388,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getReturns(?int $page = 1, ?bool $handled = null, ?string $fulfilmentMethod = null): array
+    public function getReturns(?int $page = 1, ?bool $handled = null, ?Enum\GetReturnsFulfilmentMethod $fulfilmentMethod = null): array
     {
         $url = "retailer/returns";
         $options = [
@@ -1486,8 +1487,8 @@ class Client extends BaseClient
      * A paginated list to retrieve all your shipments up to 3 months old. The shipments will be sorted by date in
      * descending order.
      * @param int|null $page The page to get with a page size of 50.
-     * @param string|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
-     * bol.com (FBB).
+     * @param Enum\GetShipmentsFulfilmentMethod|null $fulfilmentMethod The fulfilment method. Fulfilled by the retailer
+     * (FBR) or fulfilled by bol.com (FBB).
      * @param string|null $orderId The id of the order. Only valid without fulfilment-method. The default
      * fulfilment-method is ignored.
      * @return Model\ReducedShipment[]
@@ -1497,7 +1498,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getShipments(?int $page = 1, ?string $fulfilmentMethod = null, ?string $orderId = null): array
+    public function getShipments(?int $page = 1, ?Enum\GetShipmentsFulfilmentMethod $fulfilmentMethod = null, ?string $orderId = null): array
     {
         $url = "retailer/shipments";
         $options = [
@@ -1847,8 +1848,9 @@ class Client extends BaseClient
      * Gets a list of paginated invoice requests initiated by customers.
      * @param string|null $shipmentId The id of the shipment.
      * @param int|null $page The requested page number with a page size of 50 items.
-     * @param string|null $state To filter on invoice request state. You can filter on all invoice requests regardless
-     * their statuses, open invoice requests requiring your action and invoice requests uploaded with possible errors.
+     * @param Enum\GetInvoiceRequestsState|null $state To filter on invoice request state. You can filter on all invoice
+     * requests regardless their statuses, open invoice requests requiring your action and invoice requests uploaded
+     * with possible errors.
      * @return Model\InvoiceRequests[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1856,7 +1858,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, ?string $state = null): array
+    public function getInvoiceRequests(?string $shipmentId = null, ?int $page = 1, ?Enum\GetInvoiceRequestsState $state = null): array
     {
         $url = "retailer/shipments/invoices/requests";
         $options = [
@@ -1916,7 +1918,8 @@ class Client extends BaseClient
      * these statuses.
      * @param string $entityId The entity id is not unique, so you will need to provide an event type. For example, an
      * entity id can be an order item id, transport id, return number, replenishment id, campaign id, and keyword id.
-     * @param string $eventType The event type can only be used in combination with the entity id.
+     * @param Enum\GetProcessStatusEntityIdEventType $eventType The event type can only be used in combination with the
+     * entity id.
      * @param int|null $page The requested page number with a page size of 50 items.
      * @return Model\ProcessStatus[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -1925,7 +1928,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProcessStatusEntityId(string $entityId, string $eventType, ?int $page = 1): array
+    public function getProcessStatusEntityId(string $entityId, Enum\GetProcessStatusEntityIdEventType $eventType, ?int $page = 1): array
     {
         $url = "shared/process-status";
         $options = [

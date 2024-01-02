@@ -36,7 +36,7 @@ abstract class AbstractModel
                 continue;
             }
 
-            if ($definition['model'] == null) {
+            if ($definition['model'] == null && $definition['enum'] == null) {
                 $this->$field = $data[$field];
             } elseif ($definition['array']) {
                 $this->$field = array_map(function ($data) use ($definition) {
@@ -49,8 +49,12 @@ abstract class AbstractModel
             } else {
                 if ($data[$field] instanceof AbstractModel) {
                     $this->$field = $data[$field];
-                } else {
+                } elseif ($data[$field] instanceof \UnitEnum) {
+                    $this->$field = $data[$field];
+                } elseif ($definition['model']) {
                     $this->$field = $definition['model']::constructFromArray($data[$field]);
+                } elseif ($definition['enum']) {
+                    $this->$field = $definition['enum']::from($data[$field]);
                 }
             }
         }

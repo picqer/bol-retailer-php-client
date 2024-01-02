@@ -12,6 +12,13 @@ class ClientGenerator
         'postInbound' => 'createInbound'
     ];
 
+    protected static $overrideEnumNames = [
+        '>=' => 'GTE',
+        '<=' => 'LTE',
+        '>' => 'GT',
+        '<' => 'LT',
+    ];
+
     protected static $paramTypeMapping = [
         'array' => 'array',
         'string' => 'string',
@@ -55,8 +62,6 @@ class ClientGenerator
         }
         $code[] = '}';
         $code[] = '';
-
-        //echo implode("\n", $code);
 
         file_put_contents(__DIR__ . '/../Client.php', implode("\n", $code));
     }
@@ -150,7 +155,6 @@ class ClientGenerator
         $code[] = '    }';
 
         echo "ok\n";
-        //print_r($methodDefinition);
     }
 
     protected function getType(string $ref): string
@@ -256,6 +260,12 @@ class ClientGenerator
 
             if ($parameter['in'] == 'query' && isset($parameter['schema']['$ref'])) {
                 continue;
+            } elseif ($parameter['in'] == 'query' && isset($parameter['schema']['enum'])) {
+                $wrappingType = ucfirst($this->kebabCaseToCamelCase($methodDefinition['operationId'] .'-'. $parameter['name']));
+                $argument['php'] = 'Enum\\'.$wrappingType;
+                $argument['doc'] = $argument['php'];
+                $argument['name'] = $this->kebabCaseToCamelCase($parameter['name']);
+                $argument['paramName'] = $parameter['name'];
             } else {
                 $argument['php'] = static::$paramTypeMapping[$parameter['schema']['type']];
                 $argument['doc'] = $argument['php'];
@@ -271,7 +281,6 @@ class ClientGenerator
                     }
                 }
             }
-
 
             // body arguments are always required, even though specs claim not
             if (! $argument['required'] && $argument['in'] != 'body') {
@@ -536,6 +545,20 @@ class ClientGenerator
             }
             return ['doc' => 'string', 'php' => 'string', ''];
         }
+    }
+
+    protected function getEnumName(string $name): string
+    {
+        $name = preg_replace('/[\-\s\/]+/', '_', $name);
+
+        if (isset(static::$overrideEnumNames[$name])) {
+            $name = static::$overrideEnumNames[$name];
+        }
+
+        // We add the first `_` for enums starting with a integer character
+        $prefix = is_numeric($name[0]) ? '_' : '';
+
+        return $prefix.strtoupper($name);
     }
 
     protected function wrapComment(string $comment, string $linePrefix, int $maxLength = 120): string
