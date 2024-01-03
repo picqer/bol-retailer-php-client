@@ -344,7 +344,7 @@ class ClientGenerator
                 }
 
                 $argsWithoutDefault[] = $argument;
-            } elseif (array_key_first($methodDefinition['requestBody']['content']) == 'multipart/form-data') {
+            } else {
                 foreach ($requestBody['schema']['properties'] as $propName => $property) {
                     $argument = [
                         'default' => null,
