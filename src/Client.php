@@ -53,7 +53,7 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'unit-price' => $unitPrice,
-                'condition' => $condition,
+                'condition' => $condition?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -184,9 +184,9 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'offer-id' => $offerId,
-                'period' => $period,
+                'period' => $period->value,
                 'number-of-periods' => $numberOfPeriods,
-                'name' => $name,
+                'name' => $name->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -216,7 +216,7 @@ class Client extends BaseClient
         $url = "retailer/insights/performance/indicator";
         $options = [
             'query' => [
-                'name' => $name,
+                'name' => $name->value,
                 'year' => $year,
                 'week' => $week,
             ],
@@ -279,7 +279,7 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'search-term' => $searchTerm,
-                'period' => $period,
+                'period' => $period->value,
                 'number-of-periods' => $numberOfPeriods,
                 'related-search-terms' => $relatedSearchTerms,
             ],
@@ -315,8 +315,8 @@ class Client extends BaseClient
             'query' => [
                 'page' => $page,
                 'quantity' => $quantity,
-                'stock' => $stock,
-                'state' => $state,
+                'stock' => $stock?->value,
+                'state' => $state?->value,
                 'query' => $query,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
@@ -689,8 +689,8 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'page' => $page,
-                'fulfilment-method' => $fulfilmentMethod,
-                'status' => $status,
+                'fulfilment-method' => $fulfilmentMethod?->value,
+                'status' => $status?->value,
                 'change-interval-minute' => $changeIntervalMinute,
                 'latest-change-date' => $latestChangeDate,
             ],
@@ -800,7 +800,7 @@ class Client extends BaseClient
         $url = "retailer/products/list-filters";
         $options = [
             'query' => [
-                'country-code' => $countryCode,
+                'country-code' => $countryCode?->value,
                 'search-term' => $searchTerm,
                 'category-id' => $categoryId,
             ],
@@ -830,7 +830,7 @@ class Client extends BaseClient
         $url = "retailer/products/{$ean}/assets";
         $options = [
             'query' => [
-                'usage' => $usage,
+                'usage' => $usage?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -864,9 +864,9 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'page' => $page,
-                'country-code' => $countryCode,
+                'country-code' => $countryCode?->value,
                 'best-offer-only' => $bestOfferOnly,
-                'condition' => $condition,
+                'condition' => $condition?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -896,7 +896,7 @@ class Client extends BaseClient
         $url = "retailer/products/{$ean}/placement";
         $options = [
             'query' => [
-                'country-code' => $countryCode,
+                'country-code' => $countryCode?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -997,7 +997,7 @@ class Client extends BaseClient
         $url = "retailer/promotions";
         $options = [
             'query' => [
-                'promotion-type' => $promotionType,
+                'promotion-type' => $promotionType->value,
                 'page' => $page,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
@@ -1310,7 +1310,7 @@ class Client extends BaseClient
         $url = "retailer/replenishments/{$replenishmentId}/load-carrier-labels";
         $options = [
             'query' => [
-                'label-type' => $labelType,
+                'label-type' => $labelType?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+pdf',
         ];
@@ -1391,7 +1391,7 @@ class Client extends BaseClient
             'query' => [
                 'page' => $page,
                 'handled' => $handled,
-                'fulfilment-method' => $fulfilmentMethod,
+                'fulfilment-method' => $fulfilmentMethod?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1500,7 +1500,7 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'page' => $page,
-                'fulfilment-method' => $fulfilmentMethod,
+                'fulfilment-method' => $fulfilmentMethod?->value,
                 'order-id' => $orderId,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
@@ -1561,7 +1561,7 @@ class Client extends BaseClient
             'query' => [
                 'shipment-id' => $shipmentId,
                 'page' => $page,
-                'state' => $state,
+                'state' => $state?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -1934,7 +1934,7 @@ class Client extends BaseClient
         $options = [
             'query' => [
                 'entity-id' => $entityId,
-                'event-type' => $eventType,
+                'event-type' => $eventType->value,
                 'page' => $page,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
