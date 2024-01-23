@@ -409,7 +409,7 @@ class ClientGenerator
             if ($argument['in'] != 'query') {
                 continue;
             }
-            $code[] = sprintf('                \'%s\' => $%s,', $argument['paramName'], $argument['name']);
+            $code[] = sprintf('                \'%s\' => $%s%s,', $argument['paramName'], $argument['name'], str_starts_with($argument['php'], 'Enum') ? '->value' : (str_starts_with($argument['php'], '?Enum') ? '?->value' : ''));
         }
         $code[] = '            ],';
     }
