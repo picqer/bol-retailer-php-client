@@ -44,16 +44,5 @@
         "download-specs": "Picqer\\BolRetailerV10\\OpenApi\\SpecsDownloader::run",
         "generate-client": "Picqer\\BolRetailerV10\\OpenApi\\ClientGenerator::run",
         "generate-models": "Picqer\\BolRetailerV10\\OpenApi\\ModelGenerator::run"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "10.0-dev"
-        }
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": false
-        }
     }
 }
