@@ -17,54 +17,49 @@ class Problem extends AbstractModel
     public function getModelDefinition(): array
     {
         return [
-            'detail' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'instance' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'type' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'host' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'title' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'status' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'detail' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'host' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'instance' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'violations' => [ 'model' => Violation::class, 'enum' => null, 'array' => true ],
-            'causedBy' => [ 'model' => Problem::class, 'enum' => null, 'array' => false ],
         ];
     }
 
     /**
-     * @var string
-     */
-    public $detail;
-
-    /**
-     * @var string
-     */
-    public $instance;
-
-    /**
-     * @var string
+     * @var string Type URI for this problem. Fixed value: https://api.bol.com/problems.
      */
     public $type;
 
     /**
-     * @var string
-     */
-    public $host;
-
-    /**
-     * @var string
+     * @var string Title describing the nature of the problem.
      */
     public $title;
 
     /**
-     * @var int
+     * @var int HTTP status returned from the endpoint causing the problem.
      */
     public $status;
+
+    /**
+     * @var string Detailed error message describing in additional detail what caused the service to return this
+     * problem.
+     */
+    public $detail;
+
+    /**
+     * @var string Host identifier describing the server instance that reported the problem.
+     */
+    public $host;
+
+    /**
+     * @var string Full URI path of the resource that reported the problem.
+     */
+    public $instance;
 
     /**
      * @var Violation[]
      */
     public $violations = [];
-
-    /**
-     * @var Problem Describes a problem that occurred interacting with the API.
-     */
-    public $causedBy;
 }

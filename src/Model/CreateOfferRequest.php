@@ -46,7 +46,10 @@ class CreateOfferRequest extends AbstractModel
     public $reference;
 
     /**
-     * @var bool Indicates whether or not you want to put this offer for sale on the bol.com website. Defaults to false.
+     * @var bool This field specifies whether the retailer has temporarily suspended the listing of this offer on the
+     * bol.com website. When set to true, the offer becomes invisible to customers and is not available for purchase.
+     * The default setting, false, indicates that the offer is active and visible on the website. This feature is useful
+     * for managing inventory or making updates to the offer without permanently removing it from the site.
      */
     public $onHoldByRetailer;
 

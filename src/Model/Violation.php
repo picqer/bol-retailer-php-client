@@ -23,12 +23,12 @@ class Violation extends AbstractModel
     }
 
     /**
-     * @var string
+     * @var string Describes the origin of the error, for instance a field or query parameter validation error.
      */
     public $name;
 
     /**
-     * @var string
+     * @var string Detailed description of the validation error that caused the problem.
      */
     public $reason;
 }

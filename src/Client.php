@@ -66,6 +66,30 @@ class Client extends BaseClient
     }
 
     /**
+     * Gets a list of all commissions using EAN.
+     * @param Model\Ean[] $products
+     * @return Model\BulkCommissionRatesMultiStatusResponse
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getCommissionRates(array $products): Model\BulkCommissionRatesMultiStatusResponse
+    {
+        $url = "retailer/commissions";
+        $options = [
+            'body' => Model\CommissionProducts::constructFromArray(['products' => $products]),
+            'produces' => 'application/vnd.retailer.v10+json',
+            'consumes' => 'application/vnd.retailer.v10+json',
+        ];
+        $responseTypes = [
+        ];
+
+        return $this->request('POST', $url, $options, $responseTypes);
+    }
+
+    /**
      * Gets the details of a catalog product by means of its EAN.
      * @param string $ean The EAN number associated with this product.
      * @param string|null $AcceptLanguage The language in which the catalog product details will be retrieved.
@@ -227,6 +251,41 @@ class Client extends BaseClient
         ];
 
         return $this->request('GET', $url, $options, $responseTypes)->performanceIndicators;
+    }
+
+    /**
+     * Gets a list of product ranks.
+     * @param string $ean The EAN number associated with this product.
+     * @param string $date Filters search results to a specific date. The date must be in the past, no more than three
+     * months back, and up to yesterday.
+     * @param Enum\GetProductRanksType|null $type Determines the search type, either 'SEARCH' for specific queries or
+     * 'BROWSE' for broader category searches. In order to retrieve all results, it can be sent as "null".
+     * @param int|null $page The requested page number with a page size of 50 items.
+     * @param string|null $AcceptLanguage The language to search for.
+     * @return Model\ProductRanks
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getProductRanks(string $ean, string $date, ?Enum\GetProductRanksType $type = null, ?int $page = 1, ?string $AcceptLanguage = null): Model\ProductRanks
+    {
+        $url = "retailer/insights/product-ranks";
+        $options = [
+            'query' => [
+                'ean' => $ean,
+                'date' => $date,
+                'type' => $type?->value,
+                'page' => $page,
+            ],
+            'produces' => 'application/vnd.retailer.v10+json',
+        ];
+        $responseTypes = [
+            '200' => Model\ProductRanks::class,
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes);
     }
 
     /**

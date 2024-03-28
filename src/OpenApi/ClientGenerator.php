@@ -2,6 +2,8 @@
 
 namespace Picqer\BolRetailerV10\OpenApi;
 
+use Exception;
+
 class ClientGenerator
 {
     protected $specs;
@@ -501,9 +503,9 @@ class ClientGenerator
 
     protected function getReturnType(array $responses): array
     {
-        $response = $responses['200'] ?? $responses['202'] ?? null;
+        $response = $responses['200'] ?? $responses['202'] ?? $responses['207'] ?? null;
         if ($response === null) {
-            throw new \Exception('Could not fit responseType');
+            throw new Exception('Could not fit responseType: ' . print_r($responses, true));
         }
 
         $response = current($response['content'] ?? []);
@@ -537,7 +539,7 @@ class ClientGenerator
             // currently only array is support
 
             if ($response['schema']['type'] != 'string' || $response['schema']['format'] != 'byte') {
-                throw new \Exception("Only Models and raw bytes are supported as response type");
+                throw new Exception("Only Models and raw bytes are supported as response type");
             }
             return ['doc' => 'string', 'php' => 'string', ''];
         }

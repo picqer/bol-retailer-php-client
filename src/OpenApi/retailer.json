@@ -225,6 +225,48 @@
                 }
             }
         },
+        "/retailer/commissions": {
+            "post": {
+                "tags": [
+                    "Commissions"
+                ],
+                "summary": "Get a list of commissions by EAN (BETA)",
+                "description": "Gets a list of all commissions using EAN.",
+                "operationId": "get-commission-rates",
+                "requestBody": {
+                    "content": {
+                        "application/vnd.retailer.v10+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CommissionProducts"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "207": {
+                        "description": "Multi-status: Retrieved successful and unsuccessful results.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BulkCommissionRatesMultiStatusResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/retailer/content/catalog-products/{ean}": {
             "get": {
                 "tags": [
@@ -583,6 +625,111 @@
                 }
             }
         },
+        "/retailer/insights/product-ranks": {
+            "get": {
+                "tags": [
+                    "Insights"
+                ],
+                "summary": "Get product ranks",
+                "description": "Gets a list of product ranks.",
+                "operationId": "get-product-ranks",
+                "parameters": [
+                    {
+                        "name": "ean",
+                        "in": "query",
+                        "description": "The EAN number associated with this product.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Filters search results to a specific date. The date must be in the past, no more than three months back, and up to yesterday.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Determines the search type, either 'SEARCH' for specific queries or 'BROWSE' for broader category searches. In order to retrieve all results, it can be sent as \"null\".",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "SEARCH",
+                                "BROWSE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The requested page number with a page size of 50 items.",
+                        "required": false,
+                        "schema": {
+                            "maximum": 200,
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "The language to search for.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "nl-NL",
+                                "nl",
+                                "nl-BE",
+                                "fr",
+                                "fr-BE"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok: Successfully processed the request.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRanks"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not acceptable: The sent request header does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/retailer/insights/sales-forecast": {
             "get": {
                 "tags": [
@@ -819,7 +966,7 @@
                     "Invoices"
                 ],
                 "summary": "Get all invoices",
-                "description": "Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past, the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls. The available media types differ per invoice and are listed per invoice within the response. Note: the media types listed in the response must be given in our standard API format.",
+                "description": "Gets a list of invoices, by default from the past 4 weeks. The optional period-start-date and period-end-date-date parameters can be used together to retrieve invoices from a specific date range in the past, the period can be no longer than 31 days. Invoices and their specifications can be downloaded separately in different media formats with the ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls. The available media types differ per invoice and are listed per invoice within the response. Note: the media types listed in the response must be given in our standard API format.",
                 "operationId": "get-invoices",
                 "parameters": [
                     {
@@ -3344,7 +3491,7 @@
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/problem"
+                                    "$ref": "#/components/schemas/Problem"
                                 }
                             }
                         }
@@ -3593,7 +3740,7 @@
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/problem"
+                                    "$ref": "#/components/schemas/Problem"
                                 }
                             }
                         }
@@ -4187,39 +4334,8 @@
                 "properties": {
                     "transporterCode": {
                         "type": "string",
-                        "example": "TNT",
-                        "enum": [
-                            "AMPERE",
-                            "BPOST_BE",
-                            "BPOST_BRIEF",
-                            "BRIEFPOST",
-                            "BUDBEE",
-                            "COURIER",
-                            "CYCLOON",
-                            "DHL",
-                            "DHL-GLOBAL-MAIL",
-                            "DHL-SD",
-                            "DHLFORYOU",
-                            "DHL_DE",
-                            "DPD-BE",
-                            "DPD-NL",
-                            "DYL",
-                            "FEDEX_BE",
-                            "FEDEX_NL",
-                            "GLS",
-                            "OTHER",
-                            "PACKS",
-                            "PARCEL-NL",
-                            "PES",
-                            "TNT",
-                            "TNT-EXPRESS",
-                            "TNT-EXTRA",
-                            "TNT_BRIEF",
-                            "TRANSMISSION",
-                            "TRUNKRS",
-                            "TSN",
-                            "UPS"
-                        ]
+                        "description": "Specify the transporter that carries out the shipment.",
+                        "example": "TNT"
                     },
                     "trackAndTrace": {
                         "type": "string",
@@ -4553,8 +4669,7 @@
             },
             "UpdateOfferRequest": {
                 "required": [
-                    "fulfilment",
-                    "onHoldByRetailer"
+                    "fulfilment"
                 ],
                 "type": "object",
                 "properties": {
@@ -4567,8 +4682,9 @@
                     },
                     "onHoldByRetailer": {
                         "type": "boolean",
-                        "description": "Indicates whether or not you want to put this offer for sale on the bol.com website. Defaults to false.",
-                        "example": false
+                        "description": "This field specifies whether the retailer has temporarily suspended the listing of this offer on the bol.com website. When set to true, the offer becomes invisible to customers and is not available for purchase. The default setting, false, indicates that the offer is active and visible on the website. This feature is useful for managing inventory or making updates to the offer without permanently removing it from the site.",
+                        "example": false,
+                        "default": false
                     },
                     "unknownProductTitle": {
                         "maxLength": 500,
@@ -5198,7 +5314,7 @@
                     "ean": {
                         "type": "string",
                         "description": "The EAN number associated with this product.",
-                        "example": "The EAN number associated with this product."
+                        "example": "0000007740404"
                     }
                 }
             },
@@ -5530,7 +5646,6 @@
                     "condition",
                     "ean",
                     "fulfilment",
-                    "onHoldByRetailer",
                     "pricing",
                     "stock"
                 ],
@@ -5553,8 +5668,9 @@
                     },
                     "onHoldByRetailer": {
                         "type": "boolean",
-                        "description": "Indicates whether or not you want to put this offer for sale on the bol.com website. Defaults to false.",
-                        "example": false
+                        "description": "This field specifies whether the retailer has temporarily suspended the listing of this offer on the bol.com website. When set to true, the offer becomes invisible to customers and is not available for purchase. The default setting, false, indicates that the offer is active and visible on the website. This feature is useful for managing inventory or making updates to the offer without permanently removing it from the site.",
+                        "example": false,
+                        "default": false
                     },
                     "unknownProductTitle": {
                         "maxLength": 500,
@@ -5649,8 +5765,6 @@
                             "FRONT"
                         ],
                         "items": {
-                            "maxLength": 2,
-                            "minLength": 1,
                             "type": "string",
                             "description": "The label(s) of the asset.",
                             "example": "[\"FRONT\"]"
@@ -5681,7 +5795,7 @@
                         }
                     }
                 },
-                "description": "A list of attributes."
+                "description": "A list of attributes. Every content update request should have one \"EAN\" attribute to link changes to a proper product."
             },
             "AttributeValue": {
                 "required": [
@@ -5726,7 +5840,7 @@
                         "maxItems": 150,
                         "minItems": 1,
                         "type": "array",
-                        "description": "A list of attributes.",
+                        "description": "A list of attributes. Every content update request should have one \"EAN\" attribute to link changes to a proper product.",
                         "items": {
                             "$ref": "#/components/schemas/Attribute"
                         }
@@ -5852,6 +5966,214 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/ChunkRecommendationsPredictions"
+                        }
+                    }
+                }
+            },
+            "CommissionProducts": {
+                "required": [
+                    "products"
+                ],
+                "type": "object",
+                "properties": {
+                    "products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Ean"
+                        }
+                    }
+                }
+            },
+            "BulkCommissionRatesMultiStatusResponse": {
+                "required": [
+                    "failedQueries",
+                    "successfulQueries"
+                ],
+                "type": "object",
+                "properties": {
+                    "successfulQueries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CommissionSuccessfulQuery"
+                        }
+                    },
+                    "failedQueries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CommissionFailedQuery"
+                        }
+                    }
+                }
+            },
+            "CommissionDateRange": {
+                "required": [
+                    "endDate",
+                    "rates",
+                    "startDate"
+                ],
+                "type": "object",
+                "properties": {
+                    "startDate": {
+                        "type": "string",
+                        "description": "The inclusive start date (in ISO 8601 format) from which the commission applies",
+                        "example": "1970-01-01"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "description": "The exclusive end date (in ISO 8601 format) after which the commission no longer applies.",
+                        "example": "1970-01-01"
+                    },
+                    "rates": {
+                        "type": "array",
+                        "description": "An array of objects, each describing commission rates for a specific condition.",
+                        "items": {
+                            "$ref": "#/components/schemas/CommissionDateRate"
+                        }
+                    }
+                },
+                "description": "An array of objects, each describing a period during which certain commission rates apply."
+            },
+            "CommissionDateRate": {
+                "required": [
+                    "condition",
+                    "priceRanges"
+                ],
+                "type": "object",
+                "properties": {
+                    "condition": {
+                        "type": "string",
+                        "description": "Condition of the product.",
+                        "example": "NEW"
+                    },
+                    "priceRanges": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CommissionPriceRange"
+                        }
+                    }
+                },
+                "description": "An array of objects, each describing commission rates for a specific condition."
+            },
+            "CommissionFailedQuery": {
+                "required": [
+                    "index",
+                    "status",
+                    "violations"
+                ],
+                "type": "object",
+                "properties": {
+                    "index": {
+                        "type": "number",
+                        "description": "This provides the location of the entity where it was provided in the original response body.",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP status code for individual entity operation.",
+                        "format": "int32",
+                        "example": 400
+                    },
+                    "violations": {
+                        "type": "array",
+                        "description": "Outlines the list of violations encountered in the API for the specific index detailing the nature and reason for the issue.",
+                        "items": {
+                            "$ref": "#/components/schemas/Violation"
+                        }
+                    }
+                }
+            },
+            "CommissionPriceRange": {
+                "required": [
+                    "fixedAmount",
+                    "percentage",
+                    "range",
+                    "reductionApplied"
+                ],
+                "type": "object",
+                "properties": {
+                    "range": {
+                        "$ref": "#/components/schemas/CommissionRange"
+                    },
+                    "fixedAmount": {
+                        "type": "number",
+                        "description": "The fixed commission amount excluding VAT.",
+                        "example": 0
+                    },
+                    "percentage": {
+                        "type": "number",
+                        "description": "A percentage of commission, based on the intended selling price per unit, excluding VAT.",
+                        "example": 20
+                    },
+                    "reductionApplied": {
+                        "type": "boolean",
+                        "description": "A boolean flag indicating whether a reduction is applied to the commission or not.",
+                        "example": true
+                    }
+                }
+            },
+            "CommissionRange": {
+                "required": [
+                    "lower"
+                ],
+                "type": "object",
+                "properties": {
+                    "lower": {
+                        "type": "number",
+                        "description": "The inclusive lower price threshold for which the commission is valid.",
+                        "example": 0
+                    },
+                    "upper": {
+                        "type": "number",
+                        "description": "The exclusive upper price threshold for which the commission is valid.",
+                        "example": 10
+                    }
+                },
+                "description": "Defines a specific price range for which the commission rates apply including VAT."
+            },
+            "CommissionRate": {
+                "required": [
+                    "dateRanges",
+                    "ean"
+                ],
+                "type": "object",
+                "properties": {
+                    "ean": {
+                        "type": "string",
+                        "description": "The EAN number associated with this product.",
+                        "example": "0000007740404"
+                    },
+                    "dateRanges": {
+                        "type": "array",
+                        "description": "An array of objects, each describing a period during which certain commission rates apply.",
+                        "items": {
+                            "$ref": "#/components/schemas/CommissionDateRange"
+                        }
+                    }
+                }
+            },
+            "CommissionSuccessfulQuery": {
+                "required": [
+                    "commissionRates",
+                    "index",
+                    "status"
+                ],
+                "type": "object",
+                "properties": {
+                    "index": {
+                        "type": "number",
+                        "description": "This provides the location of the entity where it was provided in the original response body.",
+                        "example": 0
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "HTTP status code for individual entity operation.",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "commissionRates": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CommissionRate"
                         }
                     }
                 }
@@ -6111,52 +6433,6 @@
                         "items": {
                             "$ref": "#/components/schemas/KeySet"
                         }
-                    }
-                }
-            },
-            "problem": {
-                "type": "object",
-                "properties": {
-                    "detail": {
-                        "type": "string"
-                    },
-                    "instance": {
-                        "type": "string",
-                        "format": "uri"
-                    },
-                    "type": {
-                        "type": "string",
-                        "format": "uri"
-                    },
-                    "host": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "status": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "violations": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/violation"
-                        }
-                    },
-                    "causedBy": {
-                        "$ref": "#/components/schemas/problem"
-                    }
-                }
-            },
-            "violation": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "reason": {
-                        "type": "string"
                     }
                 }
             },
@@ -9130,7 +9406,7 @@
                     },
                     "onHoldByRetailer": {
                         "type": "boolean",
-                        "description": "Indicates whether or not you want to put this offer for sale on the bol.com website. Defaults to false.",
+                        "description": "This field specifies whether the retailer has temporarily suspended the listing of this offer on the bol.com website. When set to true, the offer becomes invisible to customers and is not available for purchase. The default setting, false, indicates that the offer is active and visible on the website. This feature is useful for managing inventory or making updates to the offer without permanently removing it from the site.",
                         "example": false
                     },
                     "unknownProductTitle": {
@@ -9510,6 +9786,65 @@
                         "example": 20.5
                     }
                 }
+            },
+            "ProductRanks": {
+                "required": [
+                    "hasNextPage",
+                    "ranks"
+                ],
+                "type": "object",
+                "properties": {
+                    "ranks": {
+                        "type": "array",
+                        "description": "The list of ranks associated with the product.",
+                        "items": {
+                            "$ref": "#/components/schemas/Rank"
+                        }
+                    },
+                    "hasNextPage": {
+                        "type": "boolean",
+                        "description": "Indicator if there is a next page of ranks (true/false).",
+                        "example": false
+                    }
+                }
+            },
+            "Rank": {
+                "required": [
+                    "impressions",
+                    "rank",
+                    "wasSponsored"
+                ],
+                "type": "object",
+                "properties": {
+                    "categoryId": {
+                        "type": "string",
+                        "description": "The ID of the category to which the product belongs.",
+                        "example": "53495"
+                    },
+                    "searchTerm": {
+                        "type": "string",
+                        "description": "Search term related to the rank.",
+                        "example": "dvd"
+                    },
+                    "wasSponsored": {
+                        "type": "boolean",
+                        "description": "Indicator if the product is sponsored or not.",
+                        "example": false
+                    },
+                    "rank": {
+                        "type": "integer",
+                        "description": "The rank of the product in the category or search page.",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "impressions": {
+                        "type": "integer",
+                        "description": "Number of impressions of the product.",
+                        "format": "int32",
+                        "example": 100
+                    }
+                },
+                "description": "The list of ranks associated with the product."
             },
             "Details": {
                 "required": [

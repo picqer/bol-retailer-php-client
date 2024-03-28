@@ -29,7 +29,8 @@ class CreateProductContentSingleRequest extends AbstractModel
     public $language;
 
     /**
-     * @var Attribute[] A list of attributes.
+     * @var Attribute[] A list of attributes. Every content update request should have one "EAN" attribute to link
+     * changes to a proper product.
      */
     public $attributes = [];
 
