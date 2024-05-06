@@ -105,6 +105,7 @@ class Client extends BaseClient
         $url = "retailer/content/catalog-products/{$ean}";
         $options = [
             'produces' => 'application/vnd.retailer.v10+json',
+            'language' => $AcceptLanguage,
         ];
         $responseTypes = [
             '200' => Model\CatalogProduct::class,
@@ -280,6 +281,7 @@ class Client extends BaseClient
                 'page' => $page,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
+            'language' => $AcceptLanguage,
         ];
         $responseTypes = [
             '200' => Model\ProductRanks::class,
@@ -831,6 +833,7 @@ class Client extends BaseClient
             'body' => $productListRequest,
             'produces' => 'application/vnd.retailer.v10+json',
             'consumes' => 'application/json',
+            'language' => $AcceptLanguage,
         ];
         $responseTypes = [
             '200' => Model\ProductListResponse::class,
@@ -864,6 +867,7 @@ class Client extends BaseClient
                 'category-id' => $categoryId,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
+            'language' => $AcceptLanguage,
         ];
         $responseTypes = [
             '200' => Model\ProductListFiltersResponse::class,
@@ -958,6 +962,7 @@ class Client extends BaseClient
                 'country-code' => $countryCode?->value,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
+            'language' => $AcceptLanguage,
         ];
         $responseTypes = [
             '200' => Model\ProductPlacementResponse::class,
