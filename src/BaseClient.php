@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV10;
+namespace Jobjen\BolRetailerV10;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
@@ -9,15 +9,15 @@ use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use Picqer\BolRetailerV10\Exception\RateLimitException;
-use Picqer\BolRetailerV10\Exception\ServerException;
-use Picqer\BolRetailerV10\Model\AbstractModel;
-use Picqer\BolRetailerV10\Exception\ConnectException;
-use Picqer\BolRetailerV10\Exception\Exception;
-use Picqer\BolRetailerV10\Exception\ResponseException;
-use Picqer\BolRetailerV10\Exception\UnauthorizedException;
-use Picqer\BolRetailerV10\Model\Authentication\TokenResponse;
-use Picqer\BolRetailerV10\Model\Authentication\TokenRequest;
+use Jobjen\BolRetailerV10\Exception\RateLimitException;
+use Jobjen\BolRetailerV10\Exception\ServerException;
+use Jobjen\BolRetailerV10\Model\AbstractModel;
+use Jobjen\BolRetailerV10\Exception\ConnectException;
+use Jobjen\BolRetailerV10\Exception\Exception;
+use Jobjen\BolRetailerV10\Exception\ResponseException;
+use Jobjen\BolRetailerV10\Exception\UnauthorizedException;
+use Jobjen\BolRetailerV10\Model\Authentication\TokenResponse;
+use Jobjen\BolRetailerV10\Model\Authentication\TokenRequest;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV10\Tests\Model;
+namespace Jobjen\BolRetailerV10\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class GeneratedEnumsTest extends TestCase
         });
 
         return array_map(function ($fileName) {
-            return ['Picqer\\BolRetailerV10\\Enum\\' . substr($fileName, 0, -4)];
+            return ['Jobjen\\BolRetailerV10\\Enum\\' . substr($fileName, 0, -4)];
         }, $fileNames);
     }
 
