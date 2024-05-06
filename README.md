@@ -1,3 +1,5 @@
+Froked from: https://github.com/picqer/bol-retailer-php-client.
+
 # Bol.com Retailer API client for PHP
 This is an open source PHP client for the [Bol.com Retailer API](https://api.bol.com/retailer/public/Retailer-API/v10/releasenotes.html) version 10.6.
 
