@@ -617,13 +617,14 @@ class BaseClient
     }
 
     private function retryDelay()
-    {
-        return function (
-            $retries,
-            ?ResponseInterface $response = null,
-            RequestInterface $request
-        ) {
-            return (int)$response->getHeaderLine('Retry-After') * 1000;
-        };
-    }
+	{
+    	return function (
+        	$retries,
+        	RequestInterface $request,
+        	?ResponseInterface $response = null
+    	) {
+        	return (int)$response->getHeaderLine('Retry-After') * 1000;
+    	};
+	}
+
 }
