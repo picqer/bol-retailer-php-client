@@ -423,6 +423,11 @@ class BaseClient
             'Authorization' => sprintf('Bearer %s', $this->accessToken->getToken()),
         ];
 
+        // pass through Accept-Language header
+        if (!empty($options['language'])) {
+            $httpOptions['headers']['Accept-Language'] = $options['language'];
+        }
+
         // encode the body if a model is supplied for it
         if (isset($options['body']) && $options['body'] instanceof AbstractModel) {
             $httpOptions['headers']['Content-Type'] = $options['consumes'] ?? static::API_CONTENT_TYPE_FALLBACK;
