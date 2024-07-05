@@ -423,7 +423,8 @@ class BaseClient
             'Authorization' => sprintf('Bearer %s', $this->accessToken->getToken()),
         ];
 
-        if (! empty($options['language'])) {
+        // pass through Accept-Language header
+        if (!empty($options['language'])) {
             $httpOptions['headers']['Accept-Language'] = $options['language'];
         }
 
