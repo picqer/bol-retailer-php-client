@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jobjen\BolRetailerV10\Exception;
+namespace Picqer\BolRetailerV10\Exception;
 
 class ServerException extends ConnectException
 {

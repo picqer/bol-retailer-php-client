@@ -1,12 +1,21 @@
 {
-    "name": "jobjen/bol-retailer-php-client",
+    "name": "picqer/bol-retailer-php-client",
     "type": "library",
     "description": "Bol.com Retailer API client",
     "keywords": [
+        "picqer",
         "bol-retailer-php-client"
     ],
-    "homepage": "https://github.com/jobjen02/bol-retailer-php-client",
+    "homepage": "https://github.com/picqer/bol-retailer-php-client",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Ramon Kleiss",
+            "email": "ramon@picqer.com",
+            "homepage": "https://picqer.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "ext-json": "*",
@@ -20,20 +29,20 @@
     },
     "autoload": {
         "psr-4": {
-            "Jobjen\\BolRetailerV10\\": "src"
+            "Picqer\\BolRetailerV10\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Jobjen\\BolRetailerV10\\Tests\\": "tests"
+            "Picqer\\BolRetailerV10\\Tests\\": "tests"
         }
     },
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs src tests",
         "fix-style": "phpcbf src tests",
-        "download-specs": "Jobjen\\BolRetailerV10\\OpenApi\\SpecsDownloader::run",
-        "generate-client": "Jobjen\\BolRetailerV10\\OpenApi\\ClientGenerator::run",
-        "generate-models": "Jobjen\\BolRetailerV10\\OpenApi\\ModelGenerator::run"
+        "download-specs": "Picqer\\BolRetailerV10\\OpenApi\\SpecsDownloader::run",
+        "generate-client": "Picqer\\BolRetailerV10\\OpenApi\\ClientGenerator::run",
+        "generate-models": "Picqer\\BolRetailerV10\\OpenApi\\ModelGenerator::run"
     }
 }

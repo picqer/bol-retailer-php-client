@@ -1,6 +1,6 @@
 <?php
 
-namespace Jobjen\BolRetailerV10\OpenApi;
+namespace Picqer\BolRetailerV10\OpenApi;
 
 class SpecsDownloader
 {

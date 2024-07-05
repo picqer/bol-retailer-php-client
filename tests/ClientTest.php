@@ -1,15 +1,15 @@
 <?php
 
-namespace Jobjen\BolRetailerV10\Tests;
+namespace Picqer\BolRetailerV10\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use Jobjen\BolRetailerV10\Client;
+use Picqer\BolRetailerV10\Client;
 use GuzzleHttp\Client as HttpClient;
-use Jobjen\BolRetailerV10\Model\AbstractModel;
-use Jobjen\BolRetailerV10\Model\OrderItem;
+use Picqer\BolRetailerV10\Model\AbstractModel;
+use Picqer\BolRetailerV10\Model\OrderItem;
 
 class ClientTest extends TestCase
 {
