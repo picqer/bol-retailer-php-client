@@ -1638,6 +1638,7 @@
                         "required": false,
                         "schema": {
                             "type": "string",
+                            "default": "FBR",
                             "enum": [
                                 "FBR",
                                 "FBB",
@@ -1648,10 +1649,11 @@
                     {
                         "name": "status",
                         "in": "query",
-                        "description": "To filter on order status. You can filter on either all orders independent from their status, open orders (excluding shipped and cancelled orders), and shipped orders.",
+                        "description": "You can filter orders based on their status with the following options: all orders, which include every order regardless of its current status; open orders, which show only the active orders excluding those that have been shipped or cancelled; and shipped orders, which display only the orders that have been shipped.",
                         "required": false,
                         "schema": {
                             "type": "string",
+                            "default": "OPEN",
                             "enum": [
                                 "OPEN",
                                 "SHIPPED",
@@ -9108,12 +9110,20 @@
                     "fulfilmentMethod": {
                         "type": "string",
                         "description": "The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).",
-                        "example": "FBR"
+                        "example": "FBR",
+                        "enum": [
+                            "FBR",
+                            "FBB"
+                        ]
                     },
                     "fulfilmentStatus": {
                         "type": "string",
-                        "description": "To filter on order status. You can filter on either all orders independent from their status, open orders (excluding shipped and cancelled orders), and shipped orders.",
-                        "example": "OPEN"
+                        "description": "This field indicates the processing state of an order. It can have two values: \"OPEN,\" which corresponds to active order items excluding those that have been shipped or cancelled, and \"HANDLED,\" which means the order item has either been shipped or cancelled.",
+                        "example": "OPEN",
+                        "enum": [
+                            "OPEN",
+                            "HANDLED"
+                        ]
                     },
                     "quantity": {
                         "type": "integer",

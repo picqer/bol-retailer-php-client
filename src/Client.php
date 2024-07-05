@@ -729,8 +729,10 @@ class Client extends BaseClient
      * @param int|null $page The requested page number with a page size of 50 items.
      * @param Enum\GetOrdersFulfilmentMethod|null $fulfilmentMethod Fulfilled by the retailer (FBR) or fulfilled by
      * bol.com (FBB). In order to retrieve both FBR and FBB orders, ALL can be used as a parameter.
-     * @param Enum\GetOrdersStatus|null $status To filter on order status. You can filter on either all orders
-     * independent from their status, open orders (excluding shipped and cancelled orders), and shipped orders.
+     * @param Enum\GetOrdersStatus|null $status You can filter orders based on their status with the following options:
+     * all orders, which include every order regardless of its current status; open orders, which show only the active
+     * orders excluding those that have been shipped or cancelled; and shipped orders, which display only the orders
+     * that have been shipped.
      * @param int|null $changeIntervalMinute To filter on the period in minutes during which the latest change was
      * performed on an order item.
      * @param string|null $latestChangeDate To filter on the date on which the latest change was performed on an order

@@ -19,8 +19,8 @@ class ReducedOrderItem extends AbstractModel
         return [
             'orderItemId' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'ean' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'fulfilmentMethod' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'fulfilmentStatus' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'fulfilmentMethod' => [ 'model' => null, 'enum' => Enum\ReducedOrderItemFulfilmentMethod::class, 'array' => false ],
+            'fulfilmentStatus' => [ 'model' => null, 'enum' => Enum\ReducedOrderItemFulfilmentStatus::class, 'array' => false ],
             'quantity' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'quantityShipped' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'quantityCancelled' => [ 'model' => null, 'enum' => null, 'array' => false ],
@@ -41,13 +41,15 @@ class ReducedOrderItem extends AbstractModel
     public $ean;
 
     /**
-     * @var string The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).
+     * @var Enum\ReducedOrderItemFulfilmentMethod The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by
+     * bol.com (FBB).
      */
     public $fulfilmentMethod;
 
     /**
-     * @var string To filter on order status. You can filter on either all orders independent from their status, open
-     * orders (excluding shipped and cancelled orders), and shipped orders.
+     * @var Enum\ReducedOrderItemFulfilmentStatus This field indicates the processing state of an order. It can have two
+     * values: "OPEN," which corresponds to active order items excluding those that have been shipped or cancelled, and
+     * "HANDLED," which means the order item has either been shipped or cancelled.
      */
     public $fulfilmentStatus;
 
