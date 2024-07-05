@@ -1,6 +1,6 @@
 <?php
 
-namespace Picqer\BolRetailerV10\OpenApi;
+namespace Jobjen\BolRetailerV10\OpenApi;
 
 use Exception;
 
@@ -64,6 +64,26 @@ class ClientGenerator
         file_put_contents(__DIR__ . '/../Client.php', implode("\n", $code));
     }
 
+    /**
+     * @param array $methodDefinition
+     * @param string $parameterName;
+     * @return array|null
+     */
+    public function findMethodDefinitionParameter(array $methodDefinition, string $parameterName): array|null
+    {
+        if (empty($methodDefinition['parameters'])) {
+            return null;
+        }
+
+        foreach ($methodDefinition['parameters'] as $parameter) {
+            if ($parameter['name'] === $parameterName) {
+                return $parameter;
+            }
+        }
+
+        return null;
+    }
+
     protected function generateMethod(string $path, string $httpMethod, array &$code): void
     {
         $methodDefinition = $this->specs['paths'][$path][$httpMethod];
@@ -117,6 +137,12 @@ class ClientGenerator
 
         if ($methodDefinition['requestBody']['content'] ?? false) {
             $code[] = sprintf('            \'consumes\' => \'%s\',', array_key_first($methodDefinition['requestBody']['content']));
+        }
+
+        $acceptLanguage = $this->findMethodDefinitionParameter($methodDefinition, 'Accept-Language');
+
+        if ($acceptLanguage !== null) {
+            $code[] = sprintf('            \'language\' => %s,', '$AcceptLanguage');
         }
 
         $code[] = '        ];';

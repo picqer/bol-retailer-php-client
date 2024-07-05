@@ -1,20 +1,20 @@
 <?php
 
-namespace Picqer\BolRetailerV10\Tests;
+namespace Jobjen\BolRetailerV10\Tests;
 
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use Picqer\BolRetailerV10\BaseClient;
-use Picqer\BolRetailerV10\Exception\Exception;
-use Picqer\BolRetailerV10\Exception\RateLimitException;
-use Picqer\BolRetailerV10\Exception\ResponseException;
-use Picqer\BolRetailerV10\Exception\ServerException;
-use Picqer\BolRetailerV10\Exception\UnauthorizedException;
-use Picqer\BolRetailerV10\AuthToken;
-use Picqer\BolRetailerV10\Model\AbstractModel;
+use Jobjen\BolRetailerV10\BaseClient;
+use Jobjen\BolRetailerV10\Exception\Exception;
+use Jobjen\BolRetailerV10\Exception\RateLimitException;
+use Jobjen\BolRetailerV10\Exception\ResponseException;
+use Jobjen\BolRetailerV10\Exception\ServerException;
+use Jobjen\BolRetailerV10\Exception\UnauthorizedException;
+use Jobjen\BolRetailerV10\AuthToken;
+use Jobjen\BolRetailerV10\Model\AbstractModel;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseClientTest extends TestCase

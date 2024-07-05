@@ -1,8 +1,8 @@
 <?php
 
-namespace Picqer\BolRetailerV10\Model\Authentication;
+namespace Jobjen\BolRetailerV10\Model\Authentication;
 
-use Picqer\BolRetailerV10\Model\AbstractModel;
+use Jobjen\BolRetailerV10\Model\AbstractModel;
 
 class TokenResponse extends AbstractModel
 {
