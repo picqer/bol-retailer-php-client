@@ -84,6 +84,7 @@ class Client extends BaseClient
             'consumes' => 'application/vnd.retailer.v10+json',
         ];
         $responseTypes = [
+            '207' => Model\BulkCommissionRatesMultiStatusResponse::class
         ];
 
         return $this->request('POST', $url, $options, $responseTypes);
