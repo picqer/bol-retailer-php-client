@@ -140,14 +140,14 @@ class ClientGenerator
             $code[] = sprintf('            \'consumes\' => \'%s\',', array_key_first($methodDefinition['requestBody']['content']));
         }
 
-        $code[] = '        ];';
-        $options = '$options';
-
         $acceptLanguage = $this->findMethodDefinitionParameter($methodDefinition, 'Accept-Language');
 
         if ($acceptLanguage !== null) {
             $code[] = sprintf('            \'language\' => %s,', '$AcceptLanguage');
         }
+
+        $code[] = '        ];';
+        $options = '$options';
 
         $this->addResponseTypes($methodDefinition['responses'], $code);
 
