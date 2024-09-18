@@ -14,11 +14,6 @@
             "altText": "bol.com logo"
         }
     },
-    "servers": [
-        {
-            "url": "https://api.bol.com"
-        }
-    ],
     "security": [
         {
             "OAuth2": []
@@ -1770,6 +1765,67 @@
                     },
                     "404": {
                         "description": "Not found: The requested item could not be found.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/retailer/products/categories": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get product categories",
+                "description": "Get a list of available categories and its subcategories.",
+                "operationId": "get-product-categories",
+                "parameters": [
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "The language in which the product categories will be retrieved.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "nl",
+                            "enum": [
+                                "nl",
+                                "nl-BE",
+                                "nl-NL",
+                                "fr-BE"
+                            ]
+                        },
+                        "example": "nl"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok: Successfully processed the request.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductCategoriesResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: The sent request does not meet the API specification. Please check the error message(s) for more information.",
+                        "content": {
+                            "application/vnd.retailer.v10+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not acceptable: The sent request header does not meet the API specification. Please check the error message(s) for more information.",
                         "content": {
                             "application/vnd.retailer.v10+json": {
                                 "schema": {
@@ -4676,10 +4732,10 @@
                 "type": "object",
                 "properties": {
                     "reference": {
-                        "maxLength": 20,
+                        "maxLength": 100,
                         "minLength": 0,
                         "type": "string",
-                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 20 characters.",
+                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 100 characters.",
                         "example": "REF12345"
                     },
                     "onHoldByRetailer": {
@@ -5662,10 +5718,10 @@
                         "$ref": "#/components/schemas/Condition"
                     },
                     "reference": {
-                        "maxLength": 20,
+                        "maxLength": 100,
                         "minLength": 0,
                         "type": "string",
-                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 20 characters.",
+                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 100 characters.",
                         "example": "REF12345"
                     },
                     "onHoldByRetailer": {
@@ -5979,6 +6035,8 @@
                 "type": "object",
                 "properties": {
                     "products": {
+                        "maxItems": 100,
+                        "minItems": 1,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Ean"
@@ -6650,7 +6708,7 @@
                     },
                     "reference": {
                         "type": "string",
-                        "description": "A user-defined reference tied to the offer upon creating the offer.",
+                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 100 characters.",
                         "example": "BOLCOM00123"
                     }
                 }
@@ -9055,6 +9113,54 @@
                     }
                 }
             },
+            "ProductCategoriesResponse": {
+                "required": [
+                    "categories"
+                ],
+                "type": "object",
+                "properties": {
+                    "categories": {
+                        "type": "array",
+                        "description": "A list of product categories and its children.",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductCategory"
+                        }
+                    }
+                }
+            },
+            "ProductCategory": {
+                "required": [
+                    "categoryId",
+                    "categoryName"
+                ],
+                "type": "object",
+                "properties": {
+                    "categoryId": {
+                        "type": "string",
+                        "description": "The id of the category.",
+                        "example": "43646"
+                    },
+                    "categoryName": {
+                        "type": "string",
+                        "description": "The name of the category.",
+                        "example": "Auto & Motor"
+                    },
+                    "order": {
+                        "type": "integer",
+                        "description": "The order of the category in the tree.",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "subcategories": {
+                        "type": "array",
+                        "description": "A list of product subcategories and its children.",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductCategory"
+                        }
+                    }
+                },
+                "description": "A list of product categories and its children."
+            },
             "ReducedOrder": {
                 "required": [
                     "orderId",
@@ -9411,7 +9517,7 @@
                     },
                     "reference": {
                         "type": "string",
-                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 20 characters.",
+                        "description": "A user-defined reference that helps you identify this particular offer when receiving data from us. This element can optionally be left empty and has a maximum amount of 100 characters.",
                         "example": "REF12345"
                     },
                     "onHoldByRetailer": {
