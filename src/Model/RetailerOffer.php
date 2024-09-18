@@ -44,7 +44,7 @@ class RetailerOffer extends AbstractModel
 
     /**
      * @var string A user-defined reference that helps you identify this particular offer when receiving data from us.
-     * This element can optionally be left empty and has a maximum amount of 20 characters.
+     * This element can optionally be left empty and has a maximum amount of 100 characters.
      */
     public $reference;
 

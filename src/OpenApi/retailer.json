@@ -8961,10 +8961,10 @@
                         "type": "string",
                         "writeOnly": true
                     },
-                    "search": {
+                    "category": {
                         "type": "string"
                     },
-                    "category": {
+                    "search": {
                         "type": "string"
                     }
                 }
