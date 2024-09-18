@@ -819,6 +819,30 @@ class Client extends BaseClient
     }
 
     /**
+     * Get a list of available categories and its subcategories.
+     * @param string|null $AcceptLanguage The language in which the product categories will be retrieved.
+     * @return Model\ProductCategory[]
+     * @throws Exception\ConnectException when an error occurred in the HTTP connection.
+     * @throws Exception\ResponseException when an unexpected response was received.
+     * @throws Exception\UnauthorizedException when the request was unauthorized.
+     * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
+     * @throws Exception\Exception when something unexpected went wrong.
+     */
+    public function getProductCategories(?string $AcceptLanguage = 'nl'): array
+    {
+        $url = "retailer/products/categories";
+        $options = [
+            'produces' => 'application/vnd.retailer.v10+json',
+            'language' => $AcceptLanguage,
+        ];
+        $responseTypes = [
+            '200' => Model\ProductCategoriesResponse::class,
+        ];
+
+        return $this->request('GET', $url, $options, $responseTypes)->categories;
+    }
+
+    /**
      * Gets the list of products based on category, search term or filters.
      * @param Model\ProductListRequest $productListRequest
      * @param string|null $AcceptLanguage The language in which the product list will be retrieved.

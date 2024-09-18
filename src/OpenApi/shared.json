@@ -14,11 +14,6 @@
             "altText": "bol.com logo"
         }
     },
-    "servers": [
-        {
-            "url": "https://api.bol.com"
-        }
-    ],
     "security": [
         {
             "OAuth2": []
