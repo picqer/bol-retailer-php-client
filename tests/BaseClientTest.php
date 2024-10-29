@@ -234,7 +234,7 @@ class BaseClientTest extends TestCase
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . $credentials
             ],
-            'query' => [
+            'body' => [
                 'grant_type' => 'client_credentials'
             ]
         ])->willReturn($response);
@@ -375,7 +375,7 @@ class BaseClientTest extends TestCase
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . $credentials
             ],
-            'query' => [
+            'body' => [
                 'grant_type' => 'authorization_code',
                 'code' => '123456',
                 'redirect_uri' => 'http://someserver.xxx/redirect',
@@ -430,7 +430,7 @@ class BaseClientTest extends TestCase
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . $credentials
             ],
-            'query' => [
+            'body' => [
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $this->validRefreshToken->getToken()
             ]

@@ -43,7 +43,7 @@ class ClientTest extends TestCase
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . $credentials
             ],
-            'query' => [
+            'body' => [
                 'grant_type' => 'client_credentials'
             ]
         ])->willReturn($response);
