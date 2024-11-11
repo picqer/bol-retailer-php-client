@@ -272,9 +272,10 @@ class BaseClient
         $response = $this->rawRequest('POST', static::API_TOKEN_URI, [
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => sprintf('Basic %s', $credentials)
+                'Authorization' => sprintf('Basic %s', $credentials),
+                'Content-Type' => 'application/x-www-form-urlencoded',
             ],
-            'query' => $token->toArray()
+            'body' => http_build_query($token->toArray())
         ]);
 
         $responseTypes = [
