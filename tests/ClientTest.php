@@ -41,11 +41,10 @@ class ClientTest extends TestCase
         $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
+                'Authorization' => 'Basic ' . $credentials,
+                'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
+            'body' => 'grant_type=client_credentials'
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards

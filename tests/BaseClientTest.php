@@ -232,11 +232,10 @@ class BaseClientTest extends TestCase
         $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
+                'Authorization' => 'Basic ' . $credentials,
+                'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'query' => [
-                'grant_type' => 'client_credentials'
-            ]
+            'body' => 'grant_type=client_credentials'
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards
@@ -373,13 +372,10 @@ class BaseClientTest extends TestCase
         $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
+                'Authorization' => 'Basic ' . $credentials,
+                'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'query' => [
-                'grant_type' => 'authorization_code',
-                'code' => '123456',
-                'redirect_uri' => 'http://someserver.xxx/redirect',
-            ]
+            'body' => 'grant_type=authorization_code&code=123456&redirect_uri=http%3A%2F%2Fsomeserver.xxx%2Fredirect'
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards
@@ -428,12 +424,10 @@ class BaseClientTest extends TestCase
         $httpClientMock->method('request')->with('POST', 'https://login.bol.com/token', [
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $credentials
+                'Authorization' => 'Basic ' . $credentials,
+                'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'query' => [
-                'grant_type' => 'refresh_token',
-                'refresh_token' => $this->validRefreshToken->getToken()
-            ]
+            'body' => 'grant_type=refresh_token&refresh_token=' . $this->validRefreshToken->getToken()
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards
