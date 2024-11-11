@@ -15,16 +15,14 @@ jobs:
               with:
                   php-version: ${{ matrix.php-versions }}
 
-            - name: Get composer cache directory
+            - name: Cache Composer packages
               id: composer-cache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache dependencies
               uses: actions/cache@v4
               with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: ${{ runner.os }}-composer-
+                  path: vendor
+                  key: composer-cache-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      composer-cache-
 
             - name: Install dependencies
               run: composer install --prefer-dist
