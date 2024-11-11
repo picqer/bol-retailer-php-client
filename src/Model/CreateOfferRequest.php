@@ -18,6 +18,7 @@ class CreateOfferRequest extends AbstractModel
     {
         return [
             'ean' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'economicOperatorId' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'condition' => [ 'model' => Condition::class, 'enum' => null, 'array' => false ],
             'reference' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'onHoldByRetailer' => [ 'model' => null, 'enum' => null, 'array' => false ],
@@ -33,6 +34,13 @@ class CreateOfferRequest extends AbstractModel
      * replaced with the actual EAN belonging to this ISBN.
      */
     public $ean;
+
+    /**
+     * @var string An identifier referring to the Economic operator entity (manufacturer, authorized party, importer,
+     * distributor or other natural person or legal entity for whom the obligations apply with regards to the
+     * manufacturing, or making available on the market of the product in line with the applicable EU laws).
+     */
+    public $economicOperatorId;
 
     /**
      * @var Condition

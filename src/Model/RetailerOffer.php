@@ -21,6 +21,7 @@ class RetailerOffer extends AbstractModel
             'ean' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'reference' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'onHoldByRetailer' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'economicOperatorId' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'unknownProductTitle' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'pricing' => [ 'model' => Pricing::class, 'enum' => null, 'array' => false ],
             'stock' => [ 'model' => Stock::class, 'enum' => null, 'array' => false ],
@@ -55,6 +56,13 @@ class RetailerOffer extends AbstractModel
      * for managing inventory or making updates to the offer without permanently removing it from the site.
      */
     public $onHoldByRetailer;
+
+    /**
+     * @var string An identifier referring to the Economic operator entity (manufacturer, authorized party, importer,
+     * distributor or other natural person or legal entity for whom the obligations apply with regards to the
+     * manufacturing, or making available on the market of the product in line with the applicable EU laws).
+     */
+    public $economicOperatorId;
 
     /**
      * @var string In case the item is not known to bol.com you can use this field to identify this particular product.

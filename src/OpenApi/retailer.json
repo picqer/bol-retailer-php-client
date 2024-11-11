@@ -4515,7 +4515,6 @@
                             "enum": [
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
-                                "OFFER",
                                 "PRICE_STAR_BOUNDARY",
                                 "COMPETING_OFFER"
                             ]
@@ -4731,6 +4730,11 @@
                 ],
                 "type": "object",
                 "properties": {
+                    "economicOperatorId": {
+                        "type": "string",
+                        "description": "An identifier referring to the Economic operator entity (manufacturer, authorized party, importer, distributor or other natural person or legal entity for whom the obligations apply with regards to the manufacturing, or making available on the market of the product in line with the applicable EU laws).",
+                        "example": "90bfddc5-a6d0-4986-9253-407b3a6850ca"
+                    },
                     "reference": {
                         "maxLength": 100,
                         "minLength": 0,
@@ -5714,6 +5718,11 @@
                         "description": "The EAN number associated with this product. Note: in case an ISBN is provided, the ISBN will be replaced with the actual EAN belonging to this ISBN.",
                         "example": "0000007740404"
                     },
+                    "economicOperatorId": {
+                        "type": "string",
+                        "description": "An identifier referring to the Economic operator entity (manufacturer, authorized party, importer, distributor or other natural person or legal entity for whom the obligations apply with regards to the manufacturing, or making available on the market of the product in line with the applicable EU laws).",
+                        "example": "90bfddc5-a6d0-4986-9253-407b3a6850ca"
+                    },
                     "condition": {
                         "$ref": "#/components/schemas/Condition"
                     },
@@ -6413,7 +6422,6 @@
                                 "TEST",
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
-                                "OFFER",
                                 "PRICE_STAR_BOUNDARY",
                                 "COMPETING_OFFER"
                             ]
@@ -8961,10 +8969,10 @@
                         "type": "string",
                         "writeOnly": true
                     },
-                    "category": {
+                    "search": {
                         "type": "string"
                     },
-                    "search": {
+                    "category": {
                         "type": "string"
                     }
                 }
@@ -9524,6 +9532,11 @@
                         "type": "boolean",
                         "description": "This field specifies whether the retailer has temporarily suspended the listing of this offer on the bol.com website. When set to true, the offer becomes invisible to customers and is not available for purchase. The default setting, false, indicates that the offer is active and visible on the website. This feature is useful for managing inventory or making updates to the offer without permanently removing it from the site.",
                         "example": false
+                    },
+                    "economicOperatorId": {
+                        "type": "string",
+                        "description": "An identifier referring to the Economic operator entity (manufacturer, authorized party, importer, distributor or other natural person or legal entity for whom the obligations apply with regards to the manufacturing, or making available on the market of the product in line with the applicable EU laws).",
+                        "example": "90bfddc5-a6d0-4986-9253-407b3a6850ca"
                     },
                     "unknownProductTitle": {
                         "type": "string",

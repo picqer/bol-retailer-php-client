@@ -19,8 +19,8 @@ class ProductListFiltersRequest extends AbstractModel
         return [
             'searchTerm' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'categoryId' => [ 'model' => null, 'enum' => null, 'array' => false ],
-            'category' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'search' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'category' => [ 'model' => null, 'enum' => null, 'array' => false ],
         ];
     }
 
@@ -37,10 +37,10 @@ class ProductListFiltersRequest extends AbstractModel
     /**
      * @var string
      */
-    public $category;
+    public $search;
 
     /**
      * @var string
      */
-    public $search;
+    public $category;
 }
