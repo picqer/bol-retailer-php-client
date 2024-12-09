@@ -10,10 +10,9 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Ramon Kleiss",
-            "email": "ramon@picqer.com",
-            "homepage": "https://picqer.com",
-            "role": "Developer"
+            "name": "Picqer",
+            "email": "info@picqer.com",
+            "homepage": "https://picqer.com"
         }
     ],
     "require": {
