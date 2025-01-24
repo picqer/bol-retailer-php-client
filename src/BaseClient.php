@@ -342,7 +342,7 @@ class BaseClient
      * @param string $url Url
      * @param array $options Request options to apply
      * @param array $responseTypes Expected response type per HTTP status code
-     * @return AbstractModel|string|null Model or array representing response
+     * @return AbstractModel|array|string|null Model or array representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when the request was unauthorized.
      * @throws ResponseException when no suitable responseType could be applied.
@@ -355,6 +355,7 @@ class BaseClient
         $this->validateToken();
 
         try {
+            /** @var ResponseInterface $response */
             $response = $this->prepareAndExecuteRequest($method, $url, $options);
         } catch (UnauthorizedException $e) {
             if (! $e->accessTokenExpired()) {
@@ -373,6 +374,10 @@ class BaseClient
             } else {
                 throw $e;
             }
+        }
+
+        if ($method === 'HEAD' && $response->getStatusCode() === 200) {
+            return $response->getHeaders();
         }
 
         return $this->decodeResponse($response, $responseTypes, $url);
