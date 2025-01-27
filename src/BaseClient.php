@@ -47,6 +47,8 @@ class BaseClient
     /** @var ?callable */
     private $accessTokenExpiredCallback = null;
 
+    private $lastRequestHeaders = null;
+
     /**
      * BaseClient constructor.
      */
@@ -376,9 +378,7 @@ class BaseClient
             }
         }
 
-        if ($method === 'HEAD' && $response->getStatusCode() === 200) {
-            return $response->getHeaders();
-        }
+        $this->lastRequestHeaders = $response->getHeaders();
 
         return $this->decodeResponse($response, $responseTypes, $url);
     }

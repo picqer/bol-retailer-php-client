@@ -1801,31 +1801,6 @@ class Client extends BaseClient
     }
 
     /**
-     * Retrieves the headers of a shipping label by shipping label id. Shipping label metadata, for example the X-Track-And-Trace-Code, are added as headers
-     * in the response.
-     *
-     * @param string $shippingLabelId
-     * @return string|null
-     * @throws Exception\ConnectException
-     * @throws Exception\Exception
-     * @throws Exception\RateLimitException
-     * @throws Exception\ResponseException
-     * @throws Exception\UnauthorizedException
-     */
-    public function getShippingLabelHeaders(string $shippingLabelId): ?array
-    {
-        $url = "retailer/shipping-labels/{$shippingLabelId}";
-        $options = [
-            'produces' => 'application/vnd.retailer.v10+pdf',
-        ];
-        $responseTypes = [
-            '404' => 'null',
-        ];
-
-        return $this->request('HEAD', $url, $options, $responseTypes);
-    }
-
-    /**
      * Retrieves all event notification subscriptions for a given retailer. Each subscription may have different types
      * of events and a destination, which could either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).
      * @return Model\SubscriptionResponse[]
