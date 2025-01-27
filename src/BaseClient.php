@@ -47,7 +47,7 @@ class BaseClient
     /** @var ?callable */
     private $accessTokenExpiredCallback = null;
 
-    private $lastRequestHeaders = null;
+    private $lastResponseHeaders = null;
 
     /**
      * BaseClient constructor.
@@ -357,7 +357,6 @@ class BaseClient
         $this->validateToken();
 
         try {
-            /** @var ResponseInterface $response */
             $response = $this->prepareAndExecuteRequest($method, $url, $options);
         } catch (UnauthorizedException $e) {
             if (! $e->accessTokenExpired()) {
@@ -378,7 +377,7 @@ class BaseClient
             }
         }
 
-        $this->lastRequestHeaders = $response->getHeaders();
+        $this->lastResponseHeaders = $response->getHeaders();
 
         return $this->decodeResponse($response, $responseTypes, $url);
     }
@@ -386,9 +385,9 @@ class BaseClient
     /**
      * @return array|null
      */
-    public function getLastRequestHeaders(): ?array
+    public function getLastResponseHeaders(): ?array
     {
-        return $this->lastRequestHeaders;
+        return $this->lastResponseHeaders;
     }
 
     /**
