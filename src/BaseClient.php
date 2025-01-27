@@ -344,7 +344,7 @@ class BaseClient
      * @param string $url Url
      * @param array $options Request options to apply
      * @param array $responseTypes Expected response type per HTTP status code
-     * @return AbstractModel|array|string|null Model or array representing response
+     * @return AbstractModel|string|null Model or array representing response
      * @throws ConnectException when an error occurred in the HTTP connection.
      * @throws UnauthorizedException when the request was unauthorized.
      * @throws ResponseException when no suitable responseType could be applied.
