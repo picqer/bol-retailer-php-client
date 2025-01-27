@@ -384,6 +384,14 @@ class BaseClient
     }
 
     /**
+     * @return array|null
+     */
+    public function getLastRequestHeaders(): ?array
+    {
+        return $this->lastRequestHeaders;
+    }
+
+    /**
      * Validates the existence of the token and its expiration. If the token is expired, the accessTokenExpiredCallback is
      * called.
      *
