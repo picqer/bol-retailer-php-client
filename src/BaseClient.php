@@ -47,6 +47,8 @@ class BaseClient
     /** @var ?callable */
     private $accessTokenExpiredCallback = null;
 
+    private $lastResponseHeaders = null;
+
     /**
      * BaseClient constructor.
      */
@@ -375,7 +377,17 @@ class BaseClient
             }
         }
 
+        $this->lastResponseHeaders = $response->getHeaders();
+
         return $this->decodeResponse($response, $responseTypes, $url);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getLastResponseHeaders(): ?array
+    {
+        return $this->lastResponseHeaders;
     }
 
     /**
