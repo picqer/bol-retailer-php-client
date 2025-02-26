@@ -277,7 +277,7 @@ class BaseClient
                 'Authorization' => sprintf('Basic %s', $credentials),
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
-            'body' => http_build_query($token->toArray())
+            'form_params' => $token->toArray()
         ]);
 
         $responseTypes = [
