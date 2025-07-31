@@ -61,6 +61,9 @@ class BaseClient
             $this->retryDelay()
         ));
 
+        $handlerStack->remove('http_errors');
+        $handlerStack->unshift(Middleware::httpErrors(new BodySummarizer(1500)), 'http_errors');
+
         $this->setHttp(new HttpClient([
             'handler' => $handlerStack,
         ]));
@@ -541,6 +544,12 @@ class BaseClient
                 $connectException->getMessage(),
                 $connectException->getCode(),
                 $connectException
+            );
+        } catch (ClientException $clientException) {
+            throw new RequestException(
+                $clientException->getMessage(),
+                $clientException->getCode(),
+                $clientException
             );
         } catch (BadResponseException $badResponseException) {
             $response = $badResponseException->getResponse();
