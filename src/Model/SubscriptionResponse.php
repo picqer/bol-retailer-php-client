@@ -22,6 +22,7 @@ class SubscriptionResponse extends AbstractModel
             'url' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'subscriptionType' => [ 'model' => null, 'enum' => Enum\SubscriptionResponseSubscriptionType::class, 'array' => false ],
             'enabled' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'identity' => [ 'model' => null, 'enum' => null, 'array' => false ],
         ];
     }
 
@@ -52,4 +53,10 @@ class SubscriptionResponse extends AbstractModel
      * @var bool Whether the subscription is enabled and will receive notifications or not. Defaults to true.
      */
     public $enabled;
+
+    /**
+     * @var string Identity needed for publishing a notification. Must be provided if subscriptionType = AWS_SQS and
+     * must be in format of AWS ARN.
+     */
+    public $identity;
 }

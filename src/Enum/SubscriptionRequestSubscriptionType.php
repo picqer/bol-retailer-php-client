@@ -7,4 +7,5 @@ enum SubscriptionRequestSubscriptionType: string
 {
     case WEBHOOK = 'WEBHOOK';
     case GCP_PUBSUB = 'GCP_PUBSUB';
+    case AWS_SQS = 'AWS_SQS';
 }
