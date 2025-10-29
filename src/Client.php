@@ -735,10 +735,14 @@ class Client extends BaseClient
      * all orders, which include every order regardless of its current status; open orders, which show only the active
      * orders excluding those that have been shipped or cancelled; and shipped orders, which display only the orders
      * that have been shipped.
-     * @param int|null $changeIntervalMinute To filter on the period in minutes during which the latest change was
-     * performed on an order item.
+     * @param int|null $changeIntervalMinute Indicate the period in minutes, to filter order items based on their most
+     * recent change. If this parameter value is included when polling the API, ensure your polling frequency is at
+     * least one minute shorter than the specified interval.For example, if change-interval-minute is set to 2 minutes,
+     * poll the API every 1 minute or less.
      * @param string|null $latestChangeDate To filter on the date on which the latest change was performed on an order
      * item. Up to 3 months of history is supported.
+     * @param bool|null $vvbOnly Filters results to include only orders fulfilled through VVB. If set to true, the API
+     * will return only VVB orders.
      * @return Model\ReducedOrder[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -746,7 +750,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getOrders(?int $page = 1, ?Enum\GetOrdersFulfilmentMethod $fulfilmentMethod = null, ?Enum\GetOrdersStatus $status = null, ?int $changeIntervalMinute = null, ?string $latestChangeDate = null): array
+    public function getOrders(?int $page = 1, ?Enum\GetOrdersFulfilmentMethod $fulfilmentMethod = null, ?Enum\GetOrdersStatus $status = null, ?int $changeIntervalMinute = null, ?string $latestChangeDate = null, ?bool $vvbOnly = null): array
     {
         $url = "retailer/orders";
         $options = [
@@ -756,6 +760,7 @@ class Client extends BaseClient
                 'status' => $status?->value,
                 'change-interval-minute' => $changeIntervalMinute,
                 'latest-change-date' => $latestChangeDate,
+                'vvb-only' => $vvbOnly,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];
@@ -794,7 +799,7 @@ class Client extends BaseClient
 
     /**
      * Gets an order by order id. The order can be partially shipped or cancelled, and the message contains the quantity
-     * shipped or cancelled items. The unitPrice takes account of volume discounts.
+     * shipped or cancelled items.
      * @param string $orderId The id of the order to get.
      * @return Model\Order|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
@@ -827,7 +832,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getProductCategories(?string $AcceptLanguage = 'nl'): array
+    public function getProductCategories(?string $AcceptLanguage = null): array
     {
         $url = "retailer/products/categories";
         $options = [
@@ -1438,7 +1443,8 @@ class Client extends BaseClient
 
     /**
      * Gets retailer information of a single retailer.
-     * @param string $retailerId The Id of the retailer which information belongs to.
+     * @param string $retailerId The Id of the retailer which information belongs to. Use 'current' to retrieve
+     * information about your own retailer account.
      * @return Model\RetailerInformationResponse|null
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -1686,7 +1692,7 @@ class Client extends BaseClient
                 ],
             ],
             'produces' => 'application/vnd.retailer.v10+json',
-            'consumes' => 'application/json',
+            'consumes' => 'multipart/form-data',
         ];
         $responseTypes = [
             '202' => Model\ProcessStatus::class,
