@@ -1633,7 +1633,6 @@
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "default": "FBR",
                             "enum": [
                                 "FBR",
                                 "FBB",
@@ -1648,7 +1647,6 @@
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "default": "OPEN",
                             "enum": [
                                 "OPEN",
                                 "SHIPPED",
@@ -1659,7 +1657,7 @@
                     {
                         "name": "change-interval-minute",
                         "in": "query",
-                        "description": "To filter on the period in minutes during which the latest change was performed on an order item.",
+                        "description": "Indicate the period in minutes, to filter order items based on their most recent change. If this parameter value is included when polling the API, ensure your polling frequency is at least one minute shorter than the specified interval.For example, if change-interval-minute is set to 2 minutes, poll the API every 1 minute or less.",
                         "required": false,
                         "schema": {
                             "maximum": 60,
@@ -1674,6 +1672,15 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vvb-only",
+                        "in": "query",
+                        "description": "Filters results to include only orders fulfilled through VVB. If set to true, the API will return only VVB orders.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],
@@ -1739,7 +1746,7 @@
                     "Orders"
                 ],
                 "summary": "Get an order by order id",
-                "description": "Gets an order by order id. The order can be partially shipped or cancelled, and the message contains the quantity shipped or cancelled items. The unitPrice takes account of volume discounts.",
+                "description": "Gets an order by order id. The order can be partially shipped or cancelled, and the message contains the quantity shipped or cancelled items.",
                 "operationId": "get-order",
                 "parameters": [
                     {
@@ -1792,7 +1799,6 @@
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "default": "nl",
                             "enum": [
                                 "nl",
                                 "nl-BE",
@@ -3243,7 +3249,7 @@
                     {
                         "name": "retailer-id",
                         "in": "path",
-                        "description": "The Id of the retailer which information belongs to.",
+                        "description": "The Id of the retailer which information belongs to. Use 'current' to retrieve information about your own retailer account.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3694,6 +3700,7 @@
                         "description": "The id of the shipment associated with the invoice.",
                         "required": true,
                         "schema": {
+                            "minLength": 1,
                             "type": "string"
                         },
                         "example": 541757635
@@ -3701,7 +3708,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "required": [
                                     "invoice"
@@ -3778,6 +3785,7 @@
                         "description": "The id of the shipment.",
                         "required": true,
                         "schema": {
+                            "minLength": 1,
                             "type": "string"
                         }
                     }
@@ -3976,7 +3984,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Retrieve Event Notification Subscriptions (BETA)",
+                "summary": "Retrieve Event Notification Subscriptions",
                 "description": "Retrieves all event notification subscriptions for a given retailer. Each subscription may have different types of events and a destination, which could either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "get-push-notification-subscriptions",
                 "responses": {
@@ -4006,7 +4014,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Create Event Notification Subscription (BETA)",
+                "summary": "Create Event Notification Subscription",
                 "description": "Creates a new event notification subscription for a retailer. The subscription can be set up for one or more types of events and the destination can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "post-push-notification-subscription",
                 "requestBody": {
@@ -4114,7 +4122,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Retrieve Specific Event Notification Subscription (BETA)",
+                "summary": "Retrieve Specific Event Notification Subscription",
                 "description": "Fetches the details of a specific event notification subscription for a retailer. The details include the types of events and the destination, which can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "get-push-notification-subscription",
                 "parameters": [
@@ -4166,7 +4174,7 @@
                 "tags": [
                     "Subscriptions"
                 ],
-                "summary": "Update Event Notification Subscription (BETA)",
+                "summary": "Update Event Notification Subscription",
                 "description": "Updates the details of a specific event notification subscription for a retailer. The updates can be made to the types of events and/or the destination, which can either be a URL (for WEBHOOK) or a topic name (for GCP_PUBSUB).",
                 "operationId": "put-push-notification-subscription",
                 "parameters": [
@@ -4396,6 +4404,7 @@
                         "example": "TNT"
                     },
                     "trackAndTrace": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The track and trace code that is associated with this transport.",
                         "example": "3SBOL0987654321"
@@ -4458,7 +4467,7 @@
                     "eventType": {
                         "type": "string",
                         "description": "Name of the requested action that is being processed.",
-                        "example": "CONFIRM_SHIPMENT"
+                        "example": "CREATE_SHIPMENT"
                     },
                     "description": {
                         "type": "string",
@@ -4516,11 +4525,14 @@
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
                                 "PRICE_STAR_BOUNDARY",
-                                "COMPETING_OFFER"
+                                "COMPETING_OFFER",
+                                "OFFER_FOR_SALE",
+                                "OFFER_NOT_FOR_SALE"
                             ]
                         }
                     },
                     "url": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The destination for event notifications. For WEBHOOK subscription types, this is the URL where messages are posted to. For GCP_PUBSUB, this is the topic name.",
                         "example": "https://www.bol.com/webhook"
@@ -4531,13 +4543,19 @@
                         "example": "WEBHOOK",
                         "enum": [
                             "WEBHOOK",
-                            "GCP_PUBSUB"
+                            "GCP_PUBSUB",
+                            "AWS_SQS"
                         ]
                     },
                     "enabled": {
                         "type": "boolean",
                         "description": "Whether the subscription is enabled and will receive notifications or not. Defaults to true.",
                         "example": true
+                    },
+                    "identity": {
+                        "type": "string",
+                        "description": "Identity needed for publishing a notification. Must be provided if subscriptionType = AWS_SQS and must be in format of AWS ARN",
+                        "example": "arn:aws:iam::<numeric AWS account id>:role/<role name>"
                     }
                 }
             },
@@ -4549,6 +4567,7 @@
                 "type": "object",
                 "properties": {
                     "handlingResult": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The handling result requested by the retailer.",
                         "example": "RETURN_RECEIVED",
@@ -4592,6 +4611,7 @@
                 "type": "object",
                 "properties": {
                     "sscc": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The Serial Shipping Container Code (SSCC) for this load carrier.",
                         "example": "020001200000007000"
@@ -4656,11 +4676,13 @@
                 "type": "object",
                 "properties": {
                     "orderItemId": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The id for the order item. One order can have multiple order items, but the list can only take one item.",
                         "example": "2012345678"
                     },
                     "reasonCode": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The code representing the reason for cancellation of this item.",
                         "example": "BAD_CONDITION",
@@ -4689,6 +4711,7 @@
                 "type": "object",
                 "properties": {
                     "method": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The fulfilment method. Fulfilled by the retailer (FBR) or fulfilled by bol.com (FBB).",
                         "example": "FBR",
@@ -4842,6 +4865,7 @@
                 "type": "object",
                 "properties": {
                     "orderItemId": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The id for the order item (1 order can have multiple order items).",
                         "example": "2012345678"
@@ -4863,6 +4887,7 @@
                 "type": "object",
                 "properties": {
                     "orderItems": {
+                        "minItems": 1,
                         "type": "array",
                         "description": "Order items for which the delivery options are requested.",
                         "items": {
@@ -4870,6 +4895,7 @@
                         }
                     },
                     "shippingLabelOfferId": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "Shipping label offer id for which you request a shipping label.",
                         "example": "027b79fa-5743-40f0-94c7-0eac761af611"
@@ -4884,6 +4910,7 @@
                 "type": "object",
                 "properties": {
                     "orderItems": {
+                        "minItems": 1,
                         "type": "array",
                         "description": "Order items for which the delivery options are requested.",
                         "items": {
@@ -5038,6 +5065,7 @@
                 "type": "object",
                 "properties": {
                     "orderItemId": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The order item being confirmed.",
                         "example": "2012345678"
@@ -5123,6 +5151,7 @@
                         "example": 1
                     },
                     "handlingResult": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The handling result requested by the retailer.",
                         "example": "RETURN_RECEIVED",
@@ -5148,6 +5177,7 @@
                 "type": "object",
                 "properties": {
                     "streetName": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The street name of the pickup address.",
                         "example": "Dorpstraat"
@@ -5158,6 +5188,7 @@
                         "example": "1"
                     },
                     "zipCode": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The zip code in '1234AB' format for NL and '0000' for BE addresses.",
                         "example": "1111ZZ"
@@ -5168,16 +5199,19 @@
                         "example": "B"
                     },
                     "city": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The city of the pickup address.",
                         "example": "Utrecht"
                     },
                     "countryCode": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The ISO 3166-2 country code.",
                         "example": "NL"
                     },
                     "attentionOf": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "Name of the person responsible for this replenishment.",
                         "example": "Billie Bol"
@@ -5407,11 +5441,13 @@
                 "type": "object",
                 "properties": {
                     "streetName": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The street name of the pickup address.",
                         "example": "Dorpstraat"
                     },
                     "houseNumber": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The house number of the pickup address.",
                         "example": "1"
@@ -5429,11 +5465,13 @@
                         "example": "1111ZZ"
                     },
                     "city": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The city of the pickup address.",
                         "example": "Utrecht"
                     },
                     "countryCode": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The ISO 3166-2 country code.",
                         "example": "NL"
@@ -5674,6 +5712,7 @@
                 "type": "object",
                 "properties": {
                     "name": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The condition of the offered product.",
                         "example": "AS_NEW",
@@ -5714,6 +5753,7 @@
                 "type": "object",
                 "properties": {
                     "ean": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The EAN number associated with this product. Note: in case an ISBN is provided, the ISBN will be replaced with the actual EAN belonging to this ISBN.",
                         "example": "0000007740404"
@@ -5786,6 +5826,7 @@
                 "type": "object",
                 "properties": {
                     "format": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The file format in which to return the export.",
                         "example": "CSV",
@@ -5802,6 +5843,7 @@
                 "type": "object",
                 "properties": {
                     "format": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The file format in which to return the export.",
                         "example": "CSV",
@@ -5893,6 +5935,7 @@
                 "type": "object",
                 "properties": {
                     "language": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The language in which content is submitted.",
                         "example": "nl",
@@ -5930,6 +5973,7 @@
                 "type": "object",
                 "properties": {
                     "id": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The identifier of the attribute.",
                         "example": "Name"
@@ -6255,6 +6299,7 @@
                 "type": "object",
                 "properties": {
                     "ean": {
+                        "minLength": 1,
                         "type": "string",
                         "description": "The EAN number associated with this product.",
                         "example": "0000007740404"
@@ -6423,7 +6468,9 @@
                                 "PROCESS_STATUS",
                                 "SHIPMENT",
                                 "PRICE_STAR_BOUNDARY",
-                                "COMPETING_OFFER"
+                                "COMPETING_OFFER",
+                                "OFFER_FOR_SALE",
+                                "OFFER_NOT_FOR_SALE"
                             ]
                         }
                     },
@@ -6438,13 +6485,19 @@
                         "example": "WEBHOOK",
                         "enum": [
                             "WEBHOOK",
-                            "GCP_PUBSUB"
+                            "GCP_PUBSUB",
+                            "AWS_SQS"
                         ]
                     },
                     "enabled": {
                         "type": "boolean",
                         "description": "Whether the subscription is enabled and will receive notifications or not. Defaults to true.",
                         "example": true
+                    },
+                    "identity": {
+                        "type": "string",
+                        "description": "Identity needed for publishing a notification. Must be provided if subscriptionType = AWS_SQS and must be in format of AWS ARN.",
+                        "example": "arn:aws:iam::<numeric AWS account id>:role/<role name>"
                     }
                 }
             },
@@ -6948,7 +7001,13 @@
                     },
                     "quantity": {
                         "type": "integer",
-                        "description": "Amount of the product being ordered.",
+                        "description": "Amount of ordered products for this order item id.",
+                        "format": "int32",
+                        "example": 10
+                    },
+                    "quantityShipped": {
+                        "type": "integer",
+                        "description": "Amount of shipped products for this order item id.",
                         "format": "int32",
                         "example": 10
                     },
@@ -9299,6 +9358,25 @@
                     }
                 }
             },
+            "Discount": {
+                "required": [
+                    "amount",
+                    "title"
+                ],
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the promotion.",
+                        "example": "kiscier x + y promotion"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "The discount price applied, including VAT.",
+                        "example": 10.99
+                    }
+                }
+            },
             "Order": {
                 "required": [
                     "orderId",
@@ -9396,11 +9474,13 @@
                 "required": [
                     "cancellationRequest",
                     "commission",
+                    "discounts",
                     "latestChangedDateTime",
                     "orderItemId",
                     "quantity",
                     "quantityCancelled",
                     "quantityShipped",
+                    "totalPrice",
                     "unitPrice"
                 ],
                 "type": "object",
@@ -9446,6 +9526,17 @@
                         "type": "number",
                         "description": "The selling price to the customer of a single unit including VAT.",
                         "example": 12.99
+                    },
+                    "totalPrice": {
+                        "type": "number",
+                        "description": "The price the customer paid for the entirety of this item, including VAT.",
+                        "example": 78.99
+                    },
+                    "discounts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Discount"
+                        }
                     },
                     "commission": {
                         "type": "number",

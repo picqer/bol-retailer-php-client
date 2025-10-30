@@ -26,6 +26,8 @@ class OrderOrderItem extends AbstractModel
             'quantityShipped' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'quantityCancelled' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'unitPrice' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'totalPrice' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'discounts' => [ 'model' => Discount::class, 'enum' => null, 'array' => true ],
             'commission' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'additionalServices' => [ 'model' => AdditionalService::class, 'enum' => null, 'array' => true ],
             'latestChangedDateTime' => [ 'model' => null, 'enum' => null, 'array' => false ],
@@ -78,6 +80,16 @@ class OrderOrderItem extends AbstractModel
      * @var float The selling price to the customer of a single unit including VAT.
      */
     public $unitPrice;
+
+    /**
+     * @var float The price the customer paid for the entirety of this item, including VAT.
+     */
+    public $totalPrice;
+
+    /**
+     * @var Discount[]
+     */
+    public $discounts = [];
 
     /**
      * @var float The commission for all quantities of this order item.

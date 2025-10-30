@@ -22,6 +22,7 @@ class ShipmentItem extends AbstractModel
             'offer' => [ 'model' => OrderOffer::class, 'enum' => null, 'array' => false ],
             'product' => [ 'model' => OrderProduct::class, 'enum' => null, 'array' => false ],
             'quantity' => [ 'model' => null, 'enum' => null, 'array' => false ],
+            'quantityShipped' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'unitPrice' => [ 'model' => null, 'enum' => null, 'array' => false ],
             'commission' => [ 'model' => null, 'enum' => null, 'array' => false ],
         ];
@@ -48,9 +49,14 @@ class ShipmentItem extends AbstractModel
     public $product;
 
     /**
-     * @var int Amount of the product being ordered.
+     * @var int Amount of ordered products for this order item id.
      */
     public $quantity;
+
+    /**
+     * @var int Amount of shipped products for this order item id.
+     */
+    public $quantityShipped;
 
     /**
      * @var float The selling price to the customer of a single unit including VAT.

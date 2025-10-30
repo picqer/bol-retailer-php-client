@@ -14,6 +14,11 @@
             "altText": "bol.com logo"
         }
     },
+    "servers": [
+        {
+            "url": "https://api.bol.com"
+        }
+    ],
     "security": [
         {
             "OAuth2": []
@@ -53,7 +58,6 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "CONFIRM_SHIPMENT",
                                 "CREATE_SHIPMENT",
                                 "CANCEL_ORDER",
                                 "CHANGE_TRANSPORT",
@@ -75,17 +79,6 @@
                                 "CREATE_SHIPPING_LABEL",
                                 "CREATE_REPLENISHMENT",
                                 "UPDATE_REPLENISHMENT",
-                                "CREATE_CAMPAIGN",
-                                "UPDATE_CAMPAIGN",
-                                "CREATE_AD_GROUP",
-                                "UPDATE_AD_GROUP",
-                                "CREATE_TARGET_PRODUCT",
-                                "UPDATE_TARGET_PRODUCT",
-                                "CREATE_NEGATIVE_KEYWORD",
-                                "DELETE_NEGATIVE_KEYWORD",
-                                "CREATE_KEYWORD",
-                                "UPDATE_KEYWORD",
-                                "DELETE_KEYWORD",
                                 "REQUEST_PRODUCT_DESTINATIONS",
                                 "CREATE_SOV_SEARCH_TERM_REPORT",
                                 "CREATE_SOV_CATEGORY_REPORT",
@@ -93,7 +86,7 @@
                                 "CREATE_CAMPAIGN_PERFORMANCE_REPORT"
                             ]
                         },
-                        "example": "CONFIRM_SHIPMENT"
+                        "example": "CREATE_SHIPMENT"
                     },
                     {
                         "name": "page",
@@ -408,7 +401,7 @@
                     "eventType": {
                         "type": "string",
                         "description": "Name of the requested action that is being processed.",
-                        "example": "CONFIRM_SHIPMENT"
+                        "example": "CREATE_SHIPMENT"
                     },
                     "description": {
                         "type": "string",
