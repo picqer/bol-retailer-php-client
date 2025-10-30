@@ -44,7 +44,9 @@ class ClientTest extends TestCase
                 'Authorization' => 'Basic ' . $credentials,
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'body' => 'grant_type=client_credentials'
+            'form_params' => [
+                'grant_type' => 'client_credentials',
+            ],
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards

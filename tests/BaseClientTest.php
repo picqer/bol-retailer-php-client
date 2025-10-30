@@ -235,7 +235,9 @@ class BaseClientTest extends TestCase
                 'Authorization' => 'Basic ' . $credentials,
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'body' => 'grant_type=client_credentials'
+            'form_params' => [
+                'grant_type' => 'client_credentials',
+            ],
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards
@@ -375,7 +377,11 @@ class BaseClientTest extends TestCase
                 'Authorization' => 'Basic ' . $credentials,
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'body' => 'grant_type=authorization_code&code=123456&redirect_uri=http%3A%2F%2Fsomeserver.xxx%2Fredirect'
+            'form_params' => [
+                'grant_type' => 'authorization_code',
+                'code' => '123456',
+                'redirect_uri' => 'http://someserver.xxx/redirect',
+            ],
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards
@@ -427,7 +433,10 @@ class BaseClientTest extends TestCase
                 'Authorization' => 'Basic ' . $credentials,
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ],
-            'body' => 'grant_type=refresh_token&refresh_token=' . $this->validRefreshToken->getToken()
+            'form_params' => [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $this->validRefreshToken->getToken(),
+            ],
         ])->willReturn($response);
 
         // use the HttpClient mock created in this method for authentication, put the original one back afterwards
