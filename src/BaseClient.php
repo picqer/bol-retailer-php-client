@@ -2,6 +2,7 @@
 
 namespace Picqer\BolRetailerV10;
 
+use GuzzleHttp\BodySummarizer;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
