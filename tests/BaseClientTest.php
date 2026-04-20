@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV10\BaseClient;
@@ -18,6 +19,7 @@ use Picqer\BolRetailerV10\AuthToken;
 use Picqer\BolRetailerV10\Model\AbstractModel;
 use Psr\Http\Message\ResponseInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 class BaseClientTest extends TestCase
 {
 
