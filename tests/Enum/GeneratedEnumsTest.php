@@ -2,11 +2,12 @@
 
 namespace Picqer\BolRetailerV10\Tests\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class GeneratedEnumsTest extends TestCase
 {
-    public function provideGeneratedEnumClassnames()
+    public static function provideGeneratedEnumClassnames(): array
     {
         $fileNames = scandir("src/Enum");
 
@@ -19,9 +20,7 @@ class GeneratedEnumsTest extends TestCase
         }, $fileNames);
     }
 
-    /**
-     * @dataProvider provideGeneratedEnumClassnames
-     */
+    #[DataProvider('provideGeneratedEnumClassnames')]
     public function testGeneratedEnumCanBeInstantiated(string $enumClassname)
     {
         $cases = $enumClassname::cases();

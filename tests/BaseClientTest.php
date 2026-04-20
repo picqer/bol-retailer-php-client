@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Picqer\BolRetailerV10\BaseClient;
 use Picqer\BolRetailerV10\Exception\Exception;
@@ -34,7 +35,7 @@ class BaseClientTest extends TestCase
     private $validRefreshToken;
     private $expiredRefreshToken;
 
-    public function setup(): void
+    protected function setUp(): void
     {
         $this->httpClientMock = $this->createMock(HttpClient::class);
         $this->client = new BaseClient();
@@ -175,11 +176,9 @@ class BaseClientTest extends TestCase
             Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/401-jwt-expired'))
         );
 
-        $this->httpClientMock->method('request')->will(
-            $this->onConsecutiveCalls(
-                $this->throwException($clientException),
-                Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'))
-            )
+        $this->httpClientMock->method('request')->willReturnOnConsecutiveCalls(
+            $this->throwException($clientException),
+            Message::parseResponse(file_get_contents(__DIR__ . '/Fixtures/http/200-foo'))
         );
 
         $this->client->setAccessTokenExpiredCallback(function (BaseClient $client) use (&$callbackCalled) {
@@ -489,7 +488,7 @@ class BaseClientTest extends TestCase
         $this->client->authenticateByRefreshToken('secret_id', 'somesupersecretvaluethatshouldnotbeshared', $this->validRefreshToken);
     }
 
-    public function providerMalformedTokenResponses()
+    public static function providerMalformedTokenResponses(): array
     {
         $files = [
             '200-token-missing-access_token',
@@ -508,9 +507,7 @@ class BaseClientTest extends TestCase
         }, $files);
     }
 
-    /**
-     * @dataProvider providerMalformedTokenResponses
-     */
+    #[DataProvider('providerMalformedTokenResponses')]
     public function testAuthenticateByClientCredentialsThrowsResponseExceptionWhenTokenIsMalformed($response)
     {
         $credentials = base64_encode('secret_id' . ':' . 'somesupersecretvaluethatshouldnotbeshared');

@@ -2,11 +2,12 @@
 
 namespace Picqer\BolRetailerV10\Tests\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class GeneratedModelsTest extends TestCase
 {
-    public function provideGeneratedModelClassnames()
+    public static function provideGeneratedModelClassnames(): array
     {
         $fileNames = scandir("src/Model");
 
@@ -19,9 +20,7 @@ class GeneratedModelsTest extends TestCase
         }, $fileNames);
     }
 
-    /**
-     * @dataProvider provideGeneratedModelClassnames
-     */
+    #[DataProvider('provideGeneratedModelClassnames')]
     public function testGeneratedModelCanBeInstantiated(string $modelClassname)
     {
         $instance = new $modelClassname();

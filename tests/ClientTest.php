@@ -20,7 +20,7 @@ class ClientTest extends TestCase
     /** @var HttpClient */
     private $httpClientMock;
 
-    public function setup(): void
+    protected function setUp(): void
     {
         $this->httpClientMock = $this->createMock(HttpClient::class);
         $this->client = new Client();

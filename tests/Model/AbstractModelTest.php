@@ -36,7 +36,7 @@ class AbstractModelTest extends TestCase
 
         $stub->fromArray(['undefinedScalar' => 'bar']);
 
-        $this->assertObjectNotHasAttribute('undefinedScalar', $stub);
+        $this->assertObjectNotHasProperty('undefinedScalar', $stub);
     }
 
     public function testValidAbsentFieldIsUntouchedInModelFromArray()
@@ -111,7 +111,7 @@ class AbstractModelTest extends TestCase
             'undefinedRelation' => [ 'foo' => 'bar' ]
         ]);
 
-        $this->assertObjectNotHasAttribute('undefinedRelation', $stub);
+        $this->assertObjectNotHasProperty('undefinedRelation', $stub);
     }
 
     public function testRelatedModelArrayIsCreatedFromArray()
