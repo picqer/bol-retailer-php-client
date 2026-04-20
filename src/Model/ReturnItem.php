@@ -58,7 +58,53 @@ class ReturnItem extends AbstractModel
     public $expectedQuantity;
 
     /**
-     * @var ReturnReason The reason why the customer returned this product.
+     * @var ReturnReason 
+     * The reason why the customer returned this product.
+     * 
+     * - **mainReason** (required): The main reason describing why the customer returned this product.
+     *   Allowed values (examples): `Verkeerde maat of afmeting`, `Verkeerd besteld`
+     * 
+     * - **detailedReason**: The sub reason describing why the customer returned this product in more detail.
+     *   Allowed values **depend on mainReason**:
+     * 
+     * | mainReason                          | detailedReason values                                                    
+     *                                                                                                                  
+     *           | comments                                                                                       |
+     * |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     * |------------------------------------------------------------------------------------------------|
+     * | Verkeerde maat of afmeting          | Te groot, Te klein, Artikel werkt niet op mijn apparatuur, Meerdere
+     * maten/afmetingen besteld, Aanbevolen accessoire past niet, Meerdere opties/artikelen besteld, Pasvorm valt tegen,
+     * Anders-namelijk | Optional customer text input                                                                  
+     * |
+     * | Verkeerd besteld                    | Onduidelijke productinformatie, Onduidelijke afbeelding, Dubbel besteld,
+     * Artikel had ik toch niet nodig, Aanbevolen accessoire past niet, Anders-namelijk                                 
+     *            | Optional customer text input                                                                   |
+     * | Artikel werkt niet                  | -                                                                        
+     *                                                                                                                  
+     *           | Optional customer text input                                                                   |
+     * | Klacht over artikel                 | Artikel is beschadigd, Artikel werkt niet, Artikel is incompleet,
+     * Kwaliteit valt tegen, Gebruiksaanwijzing onduidelijk, Artikel doet niet wat het belooft, Anders-namelijk         
+     *                   | `customerComments` is mandatory only when "Artikel werkt niet" is selected. Otherwise
+     * Optional |
+     * | Klacht over de bezorging            | Artikel is te laat bezorgd, Verpakking is beschadigd, Artikel is
+     * beschadigd, Ander artikel ontvangen dan besteld, Anders-namelijk                                                 
+     *                    | Optional customer text input                                                                
+     *   |
+     * | Elders goedkoper                    | -                                                                        
+     *                                                                                                                  
+     *           | Optional customer text input                                                                   |
+     * | Ander artikel ontvangen dan besteld | Onduidelijke productinformatie, Onduidelijke afbeelding, Ander artikel
+     * ontvangen dan besteld                                                                                            
+     *              | Optional customer text input                                                                   |
+     * | Anders                              | Artikel cadeau ontvangen, Ik heb me bedacht, Artikel had ik toch niet
+     * nodig, Kwaliteit valt tegen, Andere kleur dan gedacht, Meerdere opties/artikelen besteld, Dubbel besteld,
+     * Anders-namelijk       | Optional customer text input                                                             
+     *      |
+     * |                                     |                                                                          
+     *                                                                                                                  
+     *           |                                                                                                |
+     * - **customerComments** (required): Additional details from the customer about the return. Could be empty
+     *
      */
     public $returnReason;
 

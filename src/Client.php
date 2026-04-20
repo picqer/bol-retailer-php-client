@@ -482,6 +482,7 @@ class Client extends BaseClient
      * Creates a new offer, and adds it to the catalog. After creation, status information can be retrieved to review if
      * the offer is valid and published to the shop.
      * @param Model\CreateOfferRequest $createOfferRequest
+     * @param string|null $XFulfilmentParty
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -489,7 +490,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function postOffer(Model\CreateOfferRequest $createOfferRequest): Model\ProcessStatus
+    public function postOffer(Model\CreateOfferRequest $createOfferRequest, ?string $XFulfilmentParty = null): Model\ProcessStatus
     {
         $url = "retailer/offers";
         $options = [
@@ -705,6 +706,7 @@ class Client extends BaseClient
      * Update stock for offer by id.
      * @param string $offerId Unique identifier for an offer.
      * @param Model\UpdateOfferStockRequest $updateOfferStockRequest
+     * @param string|null $XFulfilmentParty
      * @return Model\ProcessStatus
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -712,7 +714,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function updateOfferStock(string $offerId, Model\UpdateOfferStockRequest $updateOfferStockRequest): Model\ProcessStatus
+    public function updateOfferStock(string $offerId, Model\UpdateOfferStockRequest $updateOfferStockRequest, ?string $XFulfilmentParty = null): Model\ProcessStatus
     {
         $url = "retailer/offers/{$offerId}/stock";
         $options = [
@@ -945,7 +947,9 @@ class Client extends BaseClient
      * @param Enum\GetCompetingOffersCountryCode|null $countryCode Countries in which this offer is currently on sale in
      * the webshop, in ISO-3166-1 format.
      * @param bool|null $bestOfferOnly Indicator to request the best offer within the country for the requested EAN.
-     * @param Enum\GetCompetingOffersCondition|null $condition The condition of the offered product.
+     * @param Enum\GetCompetingOffersCondition|null $condition The condition of the offered product (default='NEW').
+     * @param bool|null $includeRefurbishedConditions Flag to include new refurbished values 'REFURBISHED_A',
+     * 'REFURBISHED_B' and 'REFURBISHED_C' for condition field in the response.
      * @return Model\Offer[]
      * @throws Exception\ConnectException when an error occurred in the HTTP connection.
      * @throws Exception\ResponseException when an unexpected response was received.
@@ -953,7 +957,7 @@ class Client extends BaseClient
      * @throws Exception\RateLimitException when the throttling limit has been reached for the API user.
      * @throws Exception\Exception when something unexpected went wrong.
      */
-    public function getCompetingOffers(string $ean, ?int $page = 1, ?Enum\GetCompetingOffersCountryCode $countryCode = null, ?bool $bestOfferOnly = false, ?Enum\GetCompetingOffersCondition $condition = null): array
+    public function getCompetingOffers(string $ean, ?int $page = 1, ?Enum\GetCompetingOffersCountryCode $countryCode = null, ?bool $bestOfferOnly = false, ?Enum\GetCompetingOffersCondition $condition = null, ?bool $includeRefurbishedConditions = false): array
     {
         $url = "retailer/products/{$ean}/offers";
         $options = [
@@ -962,6 +966,7 @@ class Client extends BaseClient
                 'country-code' => $countryCode?->value,
                 'best-offer-only' => $bestOfferOnly,
                 'condition' => $condition?->value,
+                'include-refurbished-conditions' => $includeRefurbishedConditions,
             ],
             'produces' => 'application/vnd.retailer.v10+json',
         ];

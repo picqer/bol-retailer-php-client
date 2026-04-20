@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
         "title": "v10 - Retailer API",
-        "description": "The bol.com API for retailers.\n\n# Authentication\nOur API requires authentication via OAuth2. The detailed steps to authenticate are explained [here](https://api.bol.com/retailer/public/Retailer-API/authentication.html) \n\n# Demo scenarios\nOur API specification includes examples of the responses you can expect. For more information as well as more examples, we refer you to the following resources:  \n- [Demo environment](https://api.bol.com/retailer/public/Retailer-API/demo/demo.html)\n- [Demo scenarios](https://api.bol.com/retailer/public/Retailer-API/demo/v10-index.html)\n",
+        "description": "The bol.com API for retailers.\n\n# Authentication\nOur API requires authentication via OAuth2. The detailed steps to authenticate are explained [here](https://api.bol.com/retailer/public/Retailer-API/authentication.html)\n\n# Demo scenarios\nOur API specification includes examples of the responses you can expect. For more information as well as more examples, we refer you to the following resources:\n- [Demo environment](https://api.bol.com/retailer/public/Retailer-API/demo/demo.html)\n- [Demo scenarios](https://api.bol.com/retailer/public/Retailer-API/demo/v10-index.html)\n",
         "termsOfService": "https://api.bol.com/retailer/public/Retailer-API/legal/terms-of-service.html",
         "contact": {
             "name": "developers.bol.com",
@@ -1154,6 +1154,16 @@
                 "summary": "Create a new offer",
                 "description": "Creates a new offer, and adds it to the catalog. After creation, status information can be retrieved to review if the offer is valid and published to the shop.",
                 "operationId": "post-offer",
+                "parameters": [
+                    {
+                        "name": "X-Fulfilment-Party",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/vnd.retailer.v10+json": {
@@ -1185,7 +1195,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/export": {
@@ -1227,7 +1245,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/export/{report-id}": {
@@ -1273,7 +1299,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/unpublished": {
@@ -1315,7 +1349,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/unpublished/{report-id}": {
@@ -1361,7 +1403,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/{offer-id}": {
@@ -1404,7 +1454,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -1455,7 +1513,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1496,7 +1562,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/{offer-id}/price": {
@@ -1549,7 +1623,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/offers/{offer-id}/stock": {
@@ -1566,6 +1648,14 @@
                         "in": "path",
                         "description": "Unique identifier for an offer.",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Fulfilment-Party",
+                        "in": "header",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1602,7 +1692,15 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "x-badges": [
+                    {
+                        "name": "DEPRECATED",
+                        "position": "after",
+                        "color": "#f10000"
+                    }
+                ]
             }
         },
         "/retailer/orders": {
@@ -2169,7 +2267,7 @@
                     {
                         "name": "condition",
                         "in": "query",
-                        "description": "The condition of the offered product.",
+                        "description": "The condition of the offered product (default='NEW').",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -2180,10 +2278,24 @@
                                 "REASONABLE",
                                 "GOOD",
                                 "AS_NEW",
-                                "NEW"
+                                "NEW",
+                                "REFURBISHED_A",
+                                "REFURBISHED_B",
+                                "REFURBISHED_C"
                             ]
                         },
                         "example": "NEW"
+                    },
+                    {
+                        "name": "include-refurbished-conditions",
+                        "in": "query",
+                        "description": "Flag to include new refurbished values 'REFURBISHED_A', 'REFURBISHED_B' and 'REFURBISHED_C' for condition field in the response.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": false
                     }
                 ],
                 "responses": {
@@ -4527,7 +4639,8 @@
                                 "PRICE_STAR_BOUNDARY",
                                 "COMPETING_OFFER",
                                 "OFFER_FOR_SALE",
-                                "OFFER_NOT_FOR_SALE"
+                                "OFFER_NOT_FOR_SALE",
+                                "ORDER"
                             ]
                         }
                     },
@@ -6470,7 +6583,8 @@
                                 "PRICE_STAR_BOUNDARY",
                                 "COMPETING_OFFER",
                                 "OFFER_FOR_SALE",
-                                "OFFER_NOT_FOR_SALE"
+                                "OFFER_NOT_FOR_SALE",
+                                "ORDER"
                             ]
                         }
                     },
@@ -7043,9 +7157,6 @@
                 }
             },
             "ShipmentTransport": {
-                "required": [
-                    "trackAndTrace"
-                ],
                 "type": "object",
                 "properties": {
                     "transportId": {
@@ -7425,7 +7536,7 @@
                         "example": "Lorem Ipsum"
                     }
                 },
-                "description": "The reason why the customer returned this product."
+                "description": "\nThe reason why the customer returned this product.\n\n- **mainReason** (required): The main reason describing why the customer returned this product.\n  Allowed values (examples): `Verkeerde maat of afmeting`, `Verkeerd besteld`\n\n- **detailedReason**: The sub reason describing why the customer returned this product in more detail.\n  Allowed values **depend on mainReason**:\n\n| mainReason                          | detailedReason values                                                                                                                                                                                 | comments                                                                                       |\n|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |------------------------------------------------------------------------------------------------|\n| Verkeerde maat of afmeting          | Te groot, Te klein, Artikel werkt niet op mijn apparatuur, Meerdere maten/afmetingen besteld, Aanbevolen accessoire past niet, Meerdere opties/artikelen besteld, Pasvorm valt tegen, Anders-namelijk | Optional customer text input                                                                   |\n| Verkeerd besteld                    | Onduidelijke productinformatie, Onduidelijke afbeelding, Dubbel besteld, Artikel had ik toch niet nodig, Aanbevolen accessoire past niet, Anders-namelijk                                             | Optional customer text input                                                                   |\n| Artikel werkt niet                  | -                                                                                                                                                                                                     | Optional customer text input                                                                   |\n| Klacht over artikel                 | Artikel is beschadigd, Artikel werkt niet, Artikel is incompleet, Kwaliteit valt tegen, Gebruiksaanwijzing onduidelijk, Artikel doet niet wat het belooft, Anders-namelijk                            | `customerComments` is mandatory only when \"Artikel werkt niet\" is selected. Otherwise Optional |\n| Klacht over de bezorging            | Artikel is te laat bezorgd, Verpakking is beschadigd, Artikel is beschadigd, Ander artikel ontvangen dan besteld, Anders-namelijk                                                                     | Optional customer text input                                                                   |\n| Elders goedkoper                    | -                                                                                                                                                                                                     | Optional customer text input                                                                   |\n| Ander artikel ontvangen dan besteld | Onduidelijke productinformatie, Onduidelijke afbeelding, Ander artikel ontvangen dan besteld                                                                                                          | Optional customer text input                                                                   |\n| Anders                              | Artikel cadeau ontvangen, Ik heb me bedacht, Artikel had ik toch niet nodig, Kwaliteit valt tegen, Andere kleur dan gedacht, Meerdere opties/artikelen besteld, Dubbel besteld, Anders-namelijk       | Optional customer text input                                                                   |\n|                                     |                                                                                                                                                                                                       |                                                                                                |\n- **customerComments** (required): Additional details from the customer about the return. Could be empty\n"
             },
             "ReturnsResponse": {
                 "required": [
@@ -9530,7 +9641,7 @@
                     "totalPrice": {
                         "type": "number",
                         "description": "The price the customer paid for the entirety of this item, including VAT.",
-                        "example": 78.99
+                        "example": 118.91
                     },
                     "discounts": {
                         "type": "array",
@@ -10059,7 +10170,7 @@
                     },
                     "impressions": {
                         "type": "integer",
-                        "description": "Number of impressions of the product.",
+                        "description": "Number of viewable impressions of the product.",
                         "format": "int32",
                         "example": 100
                     }

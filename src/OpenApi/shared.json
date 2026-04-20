@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
         "title": "v10 - Shared API",
-        "description": "The bol.com API shared logic.\n\n# Authentication\nOur API requires authentication via OAuth2. The detailed steps to authenticate are explained [here](https://api.bol.com/retailer/public/Retailer-API/authentication.html) \n\n# Demo scenarios\nOur API specification includes examples of the responses you can expect. For more information as well as more examples, we refer you to the following resources:  \n- [Demo environment](https://api.bol.com/retailer/public/Retailer-API/demo/demo.html)\n- [Demo scenarios](https://api.bol.com/retailer/public/Retailer-API/demo/v10-index.html)\n",
+        "description": "The bol.com API shared logic.\n\n# Authentication\nOur API requires authentication via OAuth2. The detailed steps to authenticate are explained [here](https://api.bol.com/retailer/public/Retailer-API/authentication.html)\n\n# Demo scenarios\nOur API specification includes examples of the responses you can expect. For more information as well as more examples, we refer you to the following resources:\n- [Demo environment](https://api.bol.com/retailer/public/Retailer-API/demo/demo.html)\n- [Demo scenarios](https://api.bol.com/retailer/public/Retailer-API/demo/v10-index.html)\n",
         "termsOfService": "https://api.bol.com/retailer/public/Retailer-API/legal/terms-of-service.html",
         "contact": {
             "name": "developers.bol.com",
@@ -14,11 +14,6 @@
             "altText": "bol.com logo"
         }
     },
-    "servers": [
-        {
-            "url": "https://api.bol.com"
-        }
-    ],
     "security": [
         {
             "OAuth2": []
@@ -206,7 +201,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "019bbcbc-1a21-77c9-9de6-0726d1379c91fff"
                     }
                 ],
                 "responses": {

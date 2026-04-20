@@ -46,7 +46,7 @@ class Rank extends AbstractModel
     public $rank;
 
     /**
-     * @var int Number of impressions of the product.
+     * @var int Number of viewable impressions of the product.
      */
     public $impressions;
 }

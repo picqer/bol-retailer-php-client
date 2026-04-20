@@ -12,4 +12,7 @@ enum GetCompetingOffersCondition: string
     case GOOD = 'GOOD';
     case AS_NEW = 'AS_NEW';
     case NEW = 'NEW';
+    case REFURBISHED_A = 'REFURBISHED_A';
+    case REFURBISHED_B = 'REFURBISHED_B';
+    case REFURBISHED_C = 'REFURBISHED_C';
 }
