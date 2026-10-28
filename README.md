@@ -8,6 +8,8 @@ This project can easily be installed through Composer:
 composer require picqer/bol-retailer-php-client "^10"
 ```
 
+This client supports `guzzlehttp/guzzle` versions `^7.0` and `^8.0`.
+
 ## Usage
 Create an instance of the client and authenticate using the [Client Credentials flow](https://api.bol.com/retailer/public/Retailer-API/authentication.html#_client_credentials_flow)
 ```php

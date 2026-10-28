@@ -6,6 +6,7 @@ jobs:
         strategy:
             matrix:
                 php-versions: ['8.3', '8.4', '8.5']
+                guzzle-version: ['^7.0', '^8.0']
         steps:
             - name: Checkout
               uses: actions/checkout@v6
@@ -20,12 +21,15 @@ jobs:
               uses: actions/cache@v5
               with:
                   path: vendor
-                  key: composer-cache-${{ hashFiles('**/composer.lock') }}
+                  key: composer-cache-${{ matrix.guzzle-version }}-${{ hashFiles('**/composer.lock') }}
                   restore-keys: |
-                      composer-cache-
+                      composer-cache-${{ matrix.guzzle-version }}-
 
             - name: Install dependencies
               run: composer install --prefer-dist
+
+            - name: Require Guzzle ${{ matrix.guzzle-version }}
+              run: composer require "guzzlehttp/guzzle:${{ matrix.guzzle-version }}" --no-interaction --no-scripts -W
 
             - name: Run tests
               run: composer test
